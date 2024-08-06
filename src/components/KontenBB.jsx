@@ -76,8 +76,8 @@ const KontenBB = () => {
               <td>{item.bahanBaku}</td>
               <td>{item.harga}</td>
               <td>
-                <Button variant="primary" className="mr-2">Ubah</Button>
-                <Button variant="danger">Hapus</Button>
+                <Button variant="primary" className="action-button">Ubah</Button>
+                <Button variant="danger" className="action-button">Hapus</Button>
               </td>
             </tr>
           ))}
