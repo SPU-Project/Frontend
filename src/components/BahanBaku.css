@@ -1,0 +1,17 @@
+.bahan-baku-page {
+  display: flex;
+  height: 100vh;
+}
+
+#sidebar-wrapper {
+  background-color: #009844;
+  padding: 0;
+}
+
+#page-content-wrapper {
+  padding: 0;
+}
+
+.header-wrapper {
+  margin-bottom: 20px; /* Atur jarak sesuai kebutuhan */
+}

@@ -1,0 +1,28 @@
+.form-group {
+    margin-bottom: 15px;
+  }
+  
+  .button-group {
+    margin-top: 15px;
+  }
+
+  .text-form {
+    color: #009844;
+    font-weight: bold;
+    font-size: large;
+  }
+  
+  .form-group + .form-group {
+    margin-top: 15px; 
+  }
+
+/* Styling untuk button dan search group */
+.button-search-group {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Menambahkan jarak antar elemen */
+  }
+  
+  .search-input {
+    max-width: 200px; 
+  }
