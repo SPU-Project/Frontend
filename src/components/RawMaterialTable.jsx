@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Button, Table, Container, Row, Col } from 'react-bootstrap';
-import './KontenBB.css';  // Import CSS
+import '../styles/RawMaterialTable.css';
 
-const KontenBB = () => {
+const RawMaterialsTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState([
     { id: 1, bahanBaku: 'Cabe Merah', harga: 'Rp71.370,00' },
@@ -61,8 +61,8 @@ const KontenBB = () => {
   );
 
   return (
-    <Container>
-      <Form onSubmit={handleSimpan}>
+    <Container className="admin-table">
+      <Form onSubmit={handleSimpan} className="form-container">
         <Row>
           <Col xs={12} md={6}>
             <Form.Group controlId="formBahanBaku" className="form-group">
@@ -96,19 +96,21 @@ const KontenBB = () => {
               Simpan
             </Button>
           </Col>
-          <Col xs={12} md={6}>
-            <Form.Control
-              type="text"
-              placeholder="Cari Bahan Baku"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="search-input"
-            />
-          </Col>
         </Row>
       </Form>
+      <div className="table-controls">
 
-      <Table striped bordered hover responsive="sm" className="mt-4">
+        <div className="search-container">
+          <input 
+            type="text" 
+            placeholder="Cari Bahan Baku" 
+            value={searchTerm} 
+            onChange={handleSearchChange}
+            className="search-input"
+          />
+        </div>
+      </div>
+      <Table striped bordered hover responsive="sm" className="admin-table">
         <thead>
           <tr>
             <th>No</th>
@@ -147,4 +149,4 @@ const KontenBB = () => {
   );
 };
 
-export default KontenBB;
+export default RawMaterialsTable;

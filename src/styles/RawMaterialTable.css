@@ -1,0 +1,105 @@
+/* General styling for the RawMaterialsTable */
+
+.table-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 8px 8px 8px 30px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 12px; /* Border melengkung */
+  width: 200px;
+}
+
+.add-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 12px; /* Border melengkung */
+  padding: 10px 35px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.add-button:hover {
+  background-color: darkgreen;
+}
+
+.admin-table {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+  width: 100%; /* Ubah dari 1000% ke 100% untuk menyesuaikan lebar */
+}
+
+.admin-table table {
+  width: 100%; /* Ubah dari 1000% ke 100% */
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
+.admin-table th, .admin-table td {
+  border: 2px solid #aaa;
+  padding: 12px;
+  text-align: center;
+}
+
+.admin-table th {
+  background-color: #ffffff; /* Table header color */
+  color: black;
+}
+
+.admin-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.action-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 12px; /* Border melengkung */
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 12px; /* Border melengkung */
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.form-container {
+  padding: 2rem;
+  border-radius: 8px;
+}

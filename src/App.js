@@ -1,12 +1,38 @@
-import './App.css';
-//import Login from "./components/Login"
-import BahanBaku from "./components/BahanBaku"
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import RawMaterialsPage from './pages/RawMaterialsPage'; // Pastikan path benar
+import ProductsPage from './pages/ProductsPage'; // Pastikan path benar
+import TotalCostProductTable from './components/TotalCostProductTable'; // Pastikan path benar
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
-    <div>
-    <BahanBaku/>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/raw-materials"
+          element={<RawMaterialsPage searchTerm={searchTerm} onSearchChange={handleSearchChange} />}
+        />
+        <Route
+          path="/products"
+          element={<ProductsPage />}
+        />
+        <Route
+          path="/total-cost"
+          element={<TotalCostProductTable searchTerm={searchTerm} onSearchChange={handleSearchChange} />}
+        />
+        <Route
+          path="*"
+          element={<div>404 Page Not Found</div>}
+        />
+      </Routes>
+    </Router>
   );
 }
 
