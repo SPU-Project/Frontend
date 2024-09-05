@@ -1,0 +1,119 @@
+.admin-table {
+  position: relative; /* Untuk posisi relatif dalam konteks container */
+}
+
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.add-button {
+  background-color: #009844;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.search-container {
+  position: relative; /* Posisi relatif untuk menempatkan ikon di dalam kontainer */
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute; /* Posisi absolut untuk menempatkan ikon di dalam kotak */
+  left: 10px; /* Jarak dari kiri */
+  font-size: 1rem; /* Ukuran ikon */
+  color: #009844; /* Warna ikon */
+}
+
+.search-input {
+  padding: 0.5rem 2.5rem 0.5rem 2.5rem; /* Padding dengan ruang untuk ikon di kiri */
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  width: 100%;
+}
+
+.search-input:focus {
+  outline: none; /* Menghilangkan outline saat fokus */
+  border-color: #009844; /* Warna border saat fokus */
+}
+
+.table-container {
+  margin-bottom: 2rem; /* Jarak antar tabel */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Untuk menghilangkan spasi antar border sel */
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+th {
+  background-color: #f5f5f5;
+}
+
+.edit-button, .delete-button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #007bff; /* Biru untuk tombol edit */
+}
+
+.delete-button {
+  background-color: #dc3545; /* Merah untuk tombol hapus */
+}
+
+.table-container input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.save-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.9rem;
+  margin: 0.2rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+/* Styling untuk tombol Simpan Semua */
+.save-all-button {
+  background-color: #009844; /* Biru */
+  border: 1px solid #009844;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 46rem;
+  margin-top: 1rem;
+}
+
+.save-all-button:hover {
+  background-color: #45a049; /* Biru lebih gelap saat hover */
+}

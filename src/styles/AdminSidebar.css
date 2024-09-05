@@ -1,0 +1,74 @@
+.admin-sidebar {
+  background-color: #009844;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 92vh;
+  border-radius: 8px;
+  margin: 1rem;
+}
+
+.profile {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.profile img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 0.5rem;
+}
+
+.profile h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: white;
+}
+
+.admin-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+.admin-sidebar li {
+  margin-bottom: 1rem;
+}
+
+.admin-sidebar a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  text-align: left;
+  background-color: #009844;
+  border-radius: 5px;
+}
+
+.admin-sidebar a:hover {
+  background-color: #3dcc5e;
+}
+
+.admin-sidebar ul li {
+  margin-bottom: 10px; /* Jarak antar item daftar */
+}
+
+.admin-sidebar ul li a {
+  text-decoration: none; /* Menghilangkan garis bawah dari link */
+  color: white; /* Warna teks link */
+  font-size: 21px; /* Ukuran teks untuk item daftar */
+  display: block; /* Agar link mengambil seluruh lebar item daftar */
+  padding: 10px; /* Padding dalam link untuk tampilan yang lebih baik */
+}
+
+.admin-sidebar .profile img {
+  height: 120px; /* Sesuaikan ukuran sesuai kebutuhan */
+  width: 120px;  /* Sesuaikan ukuran sesuai kebutuhan */
+  object-fit: cover; /* Pastikan gambar tidak pecah jika ukuran berbeda */
+  border-radius: 50%; /* Jika Anda ingin gambar menjadi bulat */
+  margin-top: 20px; /* Memberikan jarak antara gambar dan teks */
+  margin-bottom: 15px; /* Memberikan jarak antara gambar dan teks */
+}
+
