@@ -1,4 +1,4 @@
-body {
+.login-body {
   font-family: 'Poppins', sans-serif;
   background-color: #f5f5f5;
   background-image: url('../assets/images/login.png'); /* Pastikan path gambar benar */

@@ -20,7 +20,7 @@ function AdminSidebar() {
         </li>
         <hr style={{ width: '100%', borderWidth: '4px', borderColor: 'white' }} />
         <li>
-          <a href="#keluar">Keluar</a>
+          <Link to="/">Keluar</Link> {/* Gunakan Link untuk navigasi */}
         </li>
       </ul>
     </nav>
