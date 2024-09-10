@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import AdminSidebar from '../components/AdminSidebar';
 import AdminHeader from '../components/AdminHeader';
 import TotalCostProductTable from '../components/TotalCostProductTable'; // Pastikan path benar
 import '../styles/TotalCostProductPage.css'; // Buat file CSS jika diperlukan
@@ -12,9 +11,7 @@ const TotalCostProductPage = () => {
   };
 
   return (
-    <div className="admin-dashboard">
-    <AdminSidebar />
-    <div className="main-section">
+    <div className="total-main-section total-admin-header">
       <AdminHeader />
       <div className="total-cost-product-page">
       <TotalCostProductTable 
@@ -23,7 +20,6 @@ const TotalCostProductPage = () => {
       />
     </div>
     </div>
-  </div>
 
   );
 };

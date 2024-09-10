@@ -110,8 +110,11 @@ th {
   color: white;
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.75rem 46rem;
+  padding: 0.75rem 25rem;
   margin-top: 1rem;
+  margin-left: 16rem;
+  border-radius: 4px;
+
 }
 
 .save-all-button:hover {
