@@ -3,6 +3,8 @@ import '../styles/TotalCostProductTable.css'; // Pastikan path CSS benar
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import ProductForm from './ProductFormTable'; // Import komponen form produk jika diperlukan
+import { useNavigate } from 'react-router-dom'; // Menggunakan useNavigate hook
+
 
 const initialProducts = [
   { id: 1, name: 'Bahan Baku 1', hpp: 'Rp. 12.500' },
@@ -18,6 +20,7 @@ function TotalCostProductTable({ searchTerm = '', onSearchChange }) {
   const [editRowId, setEditRowId] = useState(null); // State to manage which row is being edited
   const [editedProduct, setEditedProduct] = useState({ name: '', hpp: '' }); // State to store edited product data
   const [currentTable, setCurrentTable] = useState(null); // State to manage which table is being edited
+  const navigate = useNavigate(); // Gunakan hook useNavigate untuk navigasi
 
   const filteredTable1Products = table1Products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,8 +66,8 @@ function TotalCostProductTable({ searchTerm = '', onSearchChange }) {
     }
   };
 
-  const handleAddProduct = () => {
-    setShowForm(true); // Show the form when the button is clicked
+  const handleSaveProduct = () => {
+    navigate('/products'); // Gunakan navigate alih-alih Navigate
   };
 
   const handleAddRow = (table) => {
@@ -303,7 +306,7 @@ function TotalCostProductTable({ searchTerm = '', onSearchChange }) {
     </tbody>
   </table>
   {/* Add Save Button Here */}
-  <button className="save-all-button" onClick={() => alert('Simpan Semua')}>
+  <button className="save-all-button" onClick={handleSaveProduct}>
     Simpan
   </button>
 </div>

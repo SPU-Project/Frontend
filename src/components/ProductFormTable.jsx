@@ -31,6 +31,14 @@ function ProductForm({ onClose }) {
     navigate('/total'); // Navigate to TotalCostProductPage
   };
 
+  const handleNextPage = () => {
+    navigate('/total-cost'); // Navigate to ProductFormPage
+  };
+
+  const handlePreviousPage = () => {
+    navigate('/products'); // Navigate to ProductFormPage
+  };
+
   return (
     <div className="admin-dashboard">
       <AdminSidebar />
@@ -89,8 +97,8 @@ function ProductForm({ onClose }) {
                 </table>
               </div>
               <div className="form-actions">
-                <button type="submit" className="submit-button">Selanjutnya</button>
-                <button type="button" className="cancel-button" onClick={onClose}>Batal</button>
+                <button type="submit" className="submit-button" onClick={handleNextPage}>Selanjutnya</button>
+                <button type="button" className="cancel-button" onClick={handlePreviousPage}>Batal</button>
               </div>
             </form>
           </div>

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RawMaterialsPage from './pages/RawMaterialsPage'; // Pastikan path benar
 import ProductsPage from './pages/ProductsPage'; // Pastikan path benar
-import TotalCostProductTable from './components/TotalCostProductTable'; // Pastikan path benar
+import TotalCostProductPage from './pages/TotalCostProductPage'; // Pastikan path benar
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import ProductFormPage from './pages/ProductFormPage'; // Pastikan path benar
+
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,9 +25,10 @@ function App() {
           path="/products"
           element={<ProductsPage />}
         />
+        <Route path="/form" element={<ProductFormPage />} />
         <Route
           path="/total-cost"
-          element={<TotalCostProductTable searchTerm={searchTerm} onSearchChange={handleSearchChange} />}
+          element={<TotalCostProductPage searchTerm={searchTerm} onSearchChange={handleSearchChange} />}
         />
         <Route
           path="*"
