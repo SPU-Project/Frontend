@@ -37,7 +37,7 @@
   margin-bottom: 1rem;
 }
 
-.admin-sidebar a {
+.sidebar-link {
   color: white;
   text-decoration: none;
   display: block;
@@ -45,9 +45,10 @@
   text-align: left;
   background-color: #009844;
   border-radius: 5px;
+  font-size: 21px;
 }
 
-.admin-sidebar a:hover {
+.sidebar-link:hover {
   background-color: #3dcc5e;
 }
 
@@ -55,20 +56,11 @@
   margin-bottom: 10px; /* Jarak antar item daftar */
 }
 
-.admin-sidebar ul li a {
-  text-decoration: none; /* Menghilangkan garis bawah dari link */
-  color: white; /* Warna teks link */
-  font-size: 21px; /* Ukuran teks untuk item daftar */
-  display: block; /* Agar link mengambil seluruh lebar item daftar */
-  padding: 10px; /* Padding dalam link untuk tampilan yang lebih baik */
-}
-
 .admin-sidebar .profile img {
   height: 120px; /* Sesuaikan ukuran sesuai kebutuhan */
-  width: 120px;  /* Sesuaikan ukuran sesuai kebutuhan */
+  width: 120px; /* Sesuaikan ukuran sesuai kebutuhan */
   object-fit: cover; /* Pastikan gambar tidak pecah jika ukuran berbeda */
   border-radius: 50%; /* Jika Anda ingin gambar menjadi bulat */
   margin-top: 20px; /* Memberikan jarak antara gambar dan teks */
   margin-bottom: 15px; /* Memberikan jarak antara gambar dan teks */
 }
-
