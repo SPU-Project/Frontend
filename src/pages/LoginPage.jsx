@@ -1,13 +1,28 @@
 import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "../styles/LoginPage.css";
 
 const Login = () => {
   const navigate = useNavigate(); // Inisialisasi useNavigate
+  const [errorMessage, setErrorMessage] = useState(""); // State untuk menyimpan pesan error
 
   const handleLogin = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Menghentikan submit default
+
+    const email = event.target.formBasicEmail.value;
+    const password = event.target.formBasicPassword.value;
+
+    if (!email || !password) {
+      // Jika field email atau password kosong
+      setErrorMessage("Email dan password harus diisi.");
+      return; // Jangan lanjutkan jika form tidak lengkap
+    }
+
+    // Reset pesan error jika tidak ada masalah
+    setErrorMessage("");
+
     // Logika autentikasi
     console.log("Login submitted!");
 
@@ -22,6 +37,9 @@ const Login = () => {
           <h1 className="login-heading text-center">Sistem Produksi</h1>
           <p className="login-subheading text-center" />
           Masuk untuk melanjutkan i{" "}
+          <p className="login-subheading text-center">
+            Masuk untuk melanjutkan
+          </p>
           <div className="login-box mx-auto">
             <Form onSubmit={handleLogin}>
               <Form.Group controlId="formBasicEmail">
@@ -43,6 +61,14 @@ const Login = () => {
                   required
                 />
               </Form.Group>
+              {errorMessage && (
+                <p style={{ color: "red", marginTop: "1rem" }}>
+                  {errorMessage}
+                </p>
+              )}
+              <Button variant="success" type="submit" className="w-100">
+                Masuk
+              </Button>
             </Form>
           </div>
         </Col>
