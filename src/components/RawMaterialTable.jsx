@@ -71,7 +71,7 @@ const RawMaterialsTable = () => {
               <Form.Label className="text-form">Bahan Baku</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter Bahan Baku"
+                placeholder="Masukan Bahan Baku"
                 value={formBahanBaku}
                 onChange={(e) => setFormBahanBaku(e.target.value)}
               />
@@ -81,10 +81,10 @@ const RawMaterialsTable = () => {
         <Row>
           <Col xs={12} md={6}>
             <Form.Group controlId="formHargaKilo" className="form-group">
-              <Form.Label className="text-form">Harga/Kilo</Form.Label>
+              <Form.Label className="text-form">Harga</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter Harga/Kilo"
+                placeholder="Masukan Harga/kg"
                 value={formHarga}
                 onChange={(e) => setFormHarga(e.target.value)}
               />

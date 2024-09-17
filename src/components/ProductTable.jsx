@@ -70,7 +70,8 @@ function ProductTable({ searchTerm = '', onSearchChange }) {
             <th rowSpan="2">Produk</th>
             <th rowSpan="2">HPP</th>
             <th colSpan="9">Margin</th>
-            <th rowSpan="2">Aksi</th>
+            <th rowSpan="2" style={{width: '5%'
+            }}>Aksi</th>
           </tr>
           <tr>
             <th>20%</th>

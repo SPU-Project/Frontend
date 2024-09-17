@@ -121,7 +121,7 @@ function TotalCostProductTable({ searchTerm = '', onSearchChange }) {
           <thead>
             <tr>
               <th style={{ width: '0.3%' }}>No</th>
-              <th style={{ width: '5%' }}>Nama Bahan Baku</th>
+              <th style={{ width: '5%' }}>Bahan Baku</th>
               <th style={{ width: '5%' }}>Harga/gr</th>
             </tr>
           </thead>
