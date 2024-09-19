@@ -3,31 +3,37 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "../styles/LoginPage.css";
+import { useDispatch } from "react-redux";
+import { loginUser, fetchUser } from "../redux/userSlice"; // Import loginUser action dari Redux slice
 
 const Login = () => {
-  const navigate = useNavigate(); // Inisialisasi useNavigate
-  const [errorMessage, setErrorMessage] = useState(""); // State untuk menyimpan pesan error
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = (event) => {
-    event.preventDefault(); // Menghentikan submit default
+  const handleLogin = async (event) => {
+    event.preventDefault();
 
     const email = event.target.formBasicEmail.value;
     const password = event.target.formBasicPassword.value;
 
     if (!email || !password) {
-      // Jika field email atau password kosong
       setErrorMessage("Email dan password harus diisi.");
-      return; // Jangan lanjutkan jika form tidak lengkap
+      return;
     }
 
-    // Reset pesan error jika tidak ada masalah
     setErrorMessage("");
 
-    // Logika autentikasi
-    console.log("Login submitted!");
+    try {
+      await dispatch(loginUser({ email, password })).unwrap();
 
-    // Setelah login sukses, arahkan ke ProductsPage
-    navigate("/raw-materials"); // Atau path yang sesuai dengan rute ProductsPage
+      // Fetch user data again after login to update Redux state
+      await dispatch(fetchUser()).unwrap();
+
+      navigate("/raw-materials");
+    } catch (error) {
+      setErrorMessage(error.message || "Login failed. Please try again.");
+    }
   };
 
   return (
