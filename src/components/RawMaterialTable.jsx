@@ -50,7 +50,11 @@ const RawMaterialsTable = () => {
           BahanBaku: formBahanBaku,
           Harga: formHarga,
         })
-      );
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(fetchBahanBaku()); // Fetch ulang data setelah tambah data
+        });
     }
 
     setFormBahanBaku("");
@@ -60,9 +64,16 @@ const RawMaterialsTable = () => {
   // Fungsi untuk mengisi form dengan data yang ingin diedit
   const handleUbah = (id) => {
     const itemToEdit = bahanBaku.find((item) => item.id === id);
-    setFormBahanBaku(itemToEdit.BahanBaku);
-    setFormHarga(itemToEdit.Harga);
-    setEditId(id);
+
+    if (itemToEdit) {
+      console.log("Editing item:", itemToEdit); // Logging untuk memeriksa data yang akan diedit
+      // Mengisi form dengan data yang ingin diubah
+      setFormBahanBaku(itemToEdit.BahanBaku); // Nama bahan baku yang ingin diubah
+      setFormHarga(itemToEdit.Harga); // Harga bahan baku yang ingin diubah
+      setEditId(id); // Set ID item yang sedang diedit agar saat disimpan dapat terupdate
+    } else {
+      console.error("Item not found for ID:", id); // Log jika item tidak ditemukan
+    }
   };
 
   // Fungsi untuk menghapus data

@@ -66,18 +66,36 @@ export const updateBahanBaku = createAsyncThunk(
   async ({ id, BahanBaku, Harga }, { rejectWithValue }) => {
     try {
       const response = await fetch(`http://localhost:5000/bahanbaku/${id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ BahanBaku, Harga }),
       });
-      const data = await response.json();
-      if (!response.ok) {
-        return rejectWithValue(data.message);
+
+      // Logging untuk melihat status dan isi dari respons
+      console.log("Response status:", response.status);
+      const contentType = response.headers.get("content-type");
+      console.log("Response content-type:", contentType);
+
+      // Cek apakah respons adalah JSON
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+
+        if (!response.ok) {
+          return rejectWithValue(data.message);
+        }
+
+        return data.data;
+      } else {
+        // Jika respons tidak berupa JSON, log responsnya
+        const text = await response.text();
+        console.error("Response is not JSON:", text);
+        return rejectWithValue("Unexpected response format");
       }
-      return data.data; // Return the updated item
     } catch (error) {
+      // Tangani error di sisi frontend
+      console.error("Error caught in updateBahanBaku:", error.message);
       return rejectWithValue(error.message);
     }
   }
