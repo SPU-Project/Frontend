@@ -4,6 +4,7 @@ import {
   fetchBahanBaku,
   deleteBahanBaku,
   updateBahanBaku,
+  addBahanBaku,
 } from "../redux/bahanbakuslice";
 import { Form, Button, Table, Container, Row, Col } from "react-bootstrap";
 import "../styles/RawMaterialTable.css";
@@ -29,6 +30,8 @@ const RawMaterialsTable = () => {
   // Fungsi untuk menyimpan data baru atau memperbarui data yang ada
   const handleSimpan = (e) => {
     e.preventDefault();
+    console.log("Form Bahan Baku: ", formBahanBaku);
+    console.log("Form Harga: ", formHarga);
 
     if (editId) {
       // Jika ada id yang diedit, lakukan update
@@ -40,6 +43,14 @@ const RawMaterialsTable = () => {
         })
       );
       setEditId(null); // Reset editId setelah menyimpan
+    } else {
+      // Jika tidak ada editId, tambahkan data baru
+      dispatch(
+        addBahanBaku({
+          BahanBaku: formBahanBaku,
+          Harga: formHarga,
+        })
+      );
     }
 
     setFormBahanBaku("");
