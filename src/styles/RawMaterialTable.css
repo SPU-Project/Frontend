@@ -1,5 +1,78 @@
 /* General styling for the RawMaterialsTable */
 
+/* Sidebar visibility adjustments */
+.admin-dashboard {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  transition: all 0.3s ease;
+}
+
+.admin-sidebar {
+  width: 250px; /* Default sidebar width */
+  transition: all 0.3s ease;
+}
+
+.main-section {
+  flex: 1;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.main-section.expand {
+  margin-left: 0;
+}
+
+.main-section.shrink {
+  margin-left: 0px;
+}
+
+/* Admin Table Container */
+.admin-table-container {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Horizontal scroll for smaller screens */
+  width: 100%;
+  margin-bottom: 20px; /* Add some spacing below the table */
+}
+
+/* Admin Table */
+.admin-table {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Horizontal scroll for smaller screens */
+  width: 100%; /* Adjust width to 100% */
+}
+
+.admin-table table {
+  width: 100%; /* Full width table */
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  border: 2px solid #aaa;
+  padding: 12px;
+  text-align: center;
+}
+
+.admin-table th {
+  background-color: #ffffff; /* Table header color */
+  color: black;
+}
+
+.admin-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Controls for table */
 .table-controls {
   display: flex;
   justify-content: flex-end;
@@ -38,39 +111,6 @@
   background-color: darkgreen;
 }
 
-.admin-table {
-  padding: 1rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: auto;
-  width: 100%; /* Ubah dari 1000% ke 100% untuk menyesuaikan lebar */
-}
-
-.admin-table table {
-  width: 100%; /* Ubah dari 1000% ke 100% */
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-
-.admin-table th, .admin-table td {
-  border: 2px solid #aaa;
-  padding: 12px;
-  text-align: center;
-}
-
-.admin-table th {
-  background-color: #ffffff; /* Table header color */
-  color: black;
-}
-
-.admin-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
 .action-button {
   background-color: #007bff;
   color: white;
@@ -102,4 +142,29 @@
 .form-container {
   padding: 2rem;
   border-radius: 8px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .search-input {
+    width: 150px;
+  }
+
+  .admin-sidebar {
+    width: 60px;
+  }
+
+  .main-section.shrink {
+    margin-left: 60px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 8px;
+  }
+
+  .admin-table-container {
+    padding: 0.5rem;
+    margin-bottom: 10px;
+  }
 }

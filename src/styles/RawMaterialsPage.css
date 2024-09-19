@@ -1,8 +1,9 @@
 /* General styling for the ProductsPage */
 .admin-dashboard {
-  height: 103vh;
-  margin-left:0%;
-  background-color: #cecbcb; /* General background color */
+  display: flex;
+  height: 100vh;
+  background-color: #cecbcb;
+  position: relative; /* Ensure main section can expand to the left */
 }
 
 .admin-sidebar {
@@ -15,23 +16,31 @@
   height: 100vh;
 }
 
-/* Specific styles for the header and table */
+/* Fixed hamburger button in the top-left corner */
+.hamburger-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000; /* High z-index to stay on top of sidebar */
+  color: white; /* Optional: color to match the sidebar */
+  background-color: #009844;
+  border-radius: 6px;
+}
+
+.main-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+}
+
 .admin-header {
   background-color: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-.admin-table {
-  width: 100%;
-  background-color: white;
-  border-collapse: collapse;
-  box-sizing: border-box; /* Pastikan padding dan border termasuk dalam width */
-}
-
-.admin-table table {
-  width: 100%;
-  border-collapse: collapse;
-}
-

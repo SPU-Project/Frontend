@@ -6,7 +6,15 @@ import {
   updateBahanBaku,
   addBahanBaku,
 } from "../redux/bahanbakuslice";
-import { Form, Button, Table, Container, Row, Col } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Table,
+  Container,
+  Row,
+  Col,
+  Spinner,
+} from "react-bootstrap";
 import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -19,6 +27,9 @@ const RawMaterialsTable = () => {
   const [formBahanBaku, setFormBahanBaku] = useState("");
   const [formHarga, setFormHarga] = useState("");
   const [editId, setEditId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(""); // Untuk pesan kesalahan
+  const [successMessage, setSuccessMessage] = useState(""); // For success messages
+  const [loading, setLoading] = useState(false); // Loading state
 
   // Fetch data ketika komponen dimuat
   useEffect(() => {
@@ -28,24 +39,37 @@ const RawMaterialsTable = () => {
   }, [dispatch, status]);
 
   // Fungsi untuk menyimpan data baru atau memperbarui data yang ada
-  const handleSimpan = (e) => {
+  const handleSimpan = async (e) => {
     e.preventDefault();
-    console.log("Form Bahan Baku: ", formBahanBaku);
-    console.log("Form Harga: ", formHarga);
+
+    // Validasi form
+    if (!formBahanBaku || !formHarga) {
+      setErrorMessage("Harap masukkan Bahan Baku dan Harga!");
+      return;
+    }
+
+    setErrorMessage(""); // Bersihkan pesan error jika validasi lulus
+    setLoading(true);
 
     if (editId) {
       // Jika ada id yang diedit, lakukan update
-      dispatch(
+      await dispatch(
         updateBahanBaku({
           id: editId,
           BahanBaku: formBahanBaku,
           Harga: formHarga,
         })
-      );
+      )
+        .unwrap()
+        .then(() => {
+          setSuccessMessage("Bahan Baku berhasil diupdate!");
+          setTimeout(() => setSuccessMessage(""), 3000); // Clear success message after 3 seconds
+          dispatch(fetchBahanBaku()); // Fetch ulang data setelah update
+        });
       setEditId(null); // Reset editId setelah menyimpan
     } else {
       // Jika tidak ada editId, tambahkan data baru
-      dispatch(
+      await dispatch(
         addBahanBaku({
           BahanBaku: formBahanBaku,
           Harga: formHarga,
@@ -53,10 +77,13 @@ const RawMaterialsTable = () => {
       )
         .unwrap()
         .then(() => {
+          setSuccessMessage("Bahan Baku berhasil ditambahkan!");
+          setTimeout(() => setSuccessMessage(""), 3000); // Clear success message after 3 seconds
           dispatch(fetchBahanBaku()); // Fetch ulang data setelah tambah data
         });
     }
 
+    setLoading(false);
     setFormBahanBaku("");
     setFormHarga("");
   };
@@ -76,9 +103,11 @@ const RawMaterialsTable = () => {
     }
   };
 
-  // Fungsi untuk menghapus data
+  // Fungsi untuk menghapus data dengan konfirmasi
   const handleHapus = (id) => {
-    dispatch(deleteBahanBaku(id));
+    if (window.confirm("Anda yakin ingin menghapus bahan baku ini?")) {
+      dispatch(deleteBahanBaku(id));
+    }
   };
 
   // Fungsi untuk menyaring hasil pencarian
@@ -98,6 +127,7 @@ const RawMaterialsTable = () => {
                 placeholder="Enter Bahan Baku"
                 value={formBahanBaku}
                 onChange={(e) => setFormBahanBaku(e.target.value)}
+                aria-label="Input Bahan Baku"
               />
             </Form.Group>
           </Col>
@@ -111,15 +141,63 @@ const RawMaterialsTable = () => {
                 placeholder="Enter Harga/Kilo"
                 value={formHarga}
                 onChange={(e) => setFormHarga(e.target.value)}
+                aria-label="Input Harga per Kilo"
               />
             </Form.Group>
           </Col>
         </Row>
 
+        {/* Tampilkan pesan error jika inputan kosong */}
+        {errorMessage && (
+          <Row>
+            <Col>
+              <p
+                style={{
+                  color: "red",
+                  fontWeight: "bold",
+                  animation: "fadeIn 0.5s",
+                }}
+              >
+                {errorMessage}
+              </p>
+            </Col>
+          </Row>
+        )}
+
+        {/* Tampilkan pesan sukses setelah update/tambah */}
+        {successMessage && (
+          <Row>
+            <Col>
+              <p
+                style={{
+                  color: "green",
+                  fontWeight: "bold",
+                  animation: "fadeIn 0.5s",
+                }}
+              >
+                {successMessage}
+              </p>
+            </Col>
+          </Row>
+        )}
+
         <Row className="button-search-group">
           <Col xs={12} md={6}>
             <Button variant="success" type="submit" className="button-group">
-              Simpan
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  Loading...
+                </>
+              ) : (
+                "Simpan"
+              )}
             </Button>
           </Col>
         </Row>
@@ -134,6 +212,7 @@ const RawMaterialsTable = () => {
             className="search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Cari Bahan Baku"
           />
         </div>
       </div>
