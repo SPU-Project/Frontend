@@ -1,49 +1,54 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import '../styles/ProductTable.css'; // Pastikan path CSS benar
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import "../styles/ProductTable.css"; // Pastikan path CSS benar
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 // Dummy product data
 const initialProducts = [
-  { id: 1, name: 'Tepung Terigu', hpp: 'Rp. 12.500' },
-  { id: 2, name: 'Gula Pasir', hpp: 'Rp. 10.000' },
-  { id: 3, name: 'Susu Bubuk', hpp: 'Rp. 15.000' },
-  { id: 4, name: 'Minyak Goreng', hpp: 'Rp. 20.000' },
-  { id: 5, name: 'Telur Ayam', hpp: 'Rp. 22.000' },
-  { id: 6, name: 'Mentega', hpp: 'Rp. 18.000' },
+  { id: 1, name: "Tepung Terigu", hpp: "Rp. 12.500" },
+  { id: 2, name: "Gula Pasir", hpp: "Rp. 10.000" },
+  { id: 3, name: "Susu Bubuk", hpp: "Rp. 15.000" },
+  { id: 4, name: "Minyak Goreng", hpp: "Rp. 20.000" },
+  { id: 5, name: "Telur Ayam", hpp: "Rp. 22.000" },
+  { id: 6, name: "Mentega", hpp: "Rp. 18.000" },
 ];
 
-function ProductTable({ searchTerm = '', onSearchChange }) {
+function ProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate(); // Initialize navigate
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState(
+    JSON.parse(localStorage.getItem("products")) || initialProducts
+  ); // Ambil data dari localStorage
   const [editProductId, setEditProductId] = useState(null);
-  const [editedProductName, setEditedProductName] = useState('');
-  const [editedProductHpp, setEditedProductHpp] = useState('');
+  const [editedProductName, setEditedProductName] = useState("");
+  const [editedProductHpp, setEditedProductHpp] = useState("");
 
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (product) => {
-    setEditProductId(product.id);
-    setEditedProductName(product.name);
-    setEditedProductHpp(product.hpp);
+    // Navigate to ProductFormPage with state
+    navigate("/form", { state: { product } });
   };
 
   const handleUpdate = () => {
-    setProducts(products.map(product =>
-      product.id === editProductId ? { ...product, name: editedProductName, hpp: editedProductHpp } : product
-    ));
+    setProducts(
+      products.map((product) =>
+        product.id === editProductId
+          ? { ...product, name: editedProductName, hpp: editedProductHpp }
+          : product
+      )
+    );
     setEditProductId(null);
   };
 
   const handleDelete = (id) => {
-    setProducts(products.filter(product => product.id !== id));
+    setProducts(products.filter((product) => product.id !== id));
   };
 
   const handleAddProduct = () => {
-    navigate('/form'); // Navigate to ProductFormPage
+    navigate("/form"); // Navigate to ProductFormPage
   };
 
   return (
@@ -54,10 +59,10 @@ function ProductTable({ searchTerm = '', onSearchChange }) {
         </button>
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
-          <input 
-            type="text" 
-            placeholder="Cari Produk" 
-            value={searchTerm} 
+          <input
+            type="text"
+            placeholder="Cari Produk"
+            value={searchTerm}
             onChange={onSearchChange}
             className="search-input"
           />
@@ -122,21 +127,18 @@ function ProductTable({ searchTerm = '', onSearchChange }) {
                 <td>{product.hpp}</td> {/* 100% */}
                 <td>
                   {editProductId === product.id ? (
-                    <button 
-                      className="save-button"
-                      onClick={handleUpdate}
-                    >
+                    <button className="save-button" onClick={handleUpdate}>
                       Simpan
                     </button>
                   ) : (
                     <>
-                      <button 
+                      <button
                         className="edit-button"
                         onClick={() => handleEdit(product)}
                       >
                         Ubah
                       </button>
-                      <button 
+                      <button
                         className="delete-button"
                         onClick={() => handleDelete(product.id)}
                       >

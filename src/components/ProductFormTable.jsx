@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import AdminSidebar from './AdminSidebar';
-import AdminHeader from './AdminHeader';
-import '../styles/ProductForm.css';
-import '../styles/ProductsPage.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AdminHeader from "./AdminHeader";
+import "../styles/ProductForm.css";
+import "../styles/ProductsPage.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
-function ProductForm({ onClose }) {
-  const navigate = useNavigate(); // Initialize navigate
-  const [ingredients, setIngredients] = useState([{ name: '', quantity: '' }]);
+function ProductForm() {
+  const navigate = useNavigate();
+  const [ingredients, setIngredients] = useState([{ name: "", quantity: "" }]);
 
   const handleAddIngredient = () => {
-    setIngredients([...ingredients, { name: '', quantity: '' }]);
+    setIngredients([...ingredients, { name: "", quantity: "" }]);
   };
 
   const handleDeleteIngredient = (index) => {
@@ -27,26 +26,32 @@ function ProductForm({ onClose }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Logic untuk submit data produk baru
-    navigate('/total'); // Navigate to TotalCostProductPage
-  };
 
-  const handleNextPage = () => {
-    navigate('/total-cost'); // Navigate to ProductFormPage
+    const productsWithIds = ingredients.map((ingredient, index) => ({
+      id: index + 1, // ID unik untuk setiap produk
+      name: ingredient.name,
+      hpp: `Rp. ${parseInt(ingredient.quantity, 10).toLocaleString("id-ID")}`, // Format harga
+    }));
+
+    localStorage.setItem("products", JSON.stringify(productsWithIds)); // Simpan data ke localStorage
+    navigate("/total-cost");
   };
 
   const handlePreviousPage = () => {
-    navigate('/products'); // Navigate to ProductFormPage
+    navigate("/products");
   };
 
   return (
     <div className="admin-dashboard">
-      <AdminSidebar />
       <div className="main-section">
         <AdminHeader />
-        <div className="admin-table"> {/* Menambahkan class admin-table agar konsisten */}
+        <div className="admin-table">
           <div className="product-form-container">
-            <button type="button" className="add-ingredient-button" onClick={handleAddIngredient}>
+            <button
+              type="button"
+              className="add-ingredient-button"
+              onClick={handleAddIngredient}
+            >
               Tambah
             </button>
             <form onSubmit={handleSubmit}>
@@ -88,7 +93,7 @@ function ProductForm({ onClose }) {
                             className="delete-ingredient-button"
                             onClick={() => handleDeleteIngredient(index)}
                           >
-                            <i className="fas fa-trash-alt"></i> {/* Ikon Delete */}
+                            <i className="fas fa-trash-alt"></i>
                           </button>
                         </td>
                       </tr>
@@ -97,8 +102,16 @@ function ProductForm({ onClose }) {
                 </table>
               </div>
               <div className="form-actions">
-                <button type="submit" className="submit-button" onClick={handleNextPage}>Selanjutnya</button>
-                <button type="button" className="cancel-button" onClick={handlePreviousPage}>Batal</button>
+                <button type="submit" className="submit-button">
+                  Selanjutnya
+                </button>
+                <button
+                  type="button"
+                  className="cancel-button"
+                  onClick={handlePreviousPage}
+                >
+                  Batal
+                </button>
               </div>
             </form>
           </div>
