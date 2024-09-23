@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "../styles/ProductTable.css"; // Pastikan path CSS benar
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,40 +15,49 @@ const initialProducts = [
 ];
 
 function ProductTable({ searchTerm = "", onSearchChange }) {
-  const navigate = useNavigate(); // Initialize navigate
-  const [products, setProducts] = useState(
-    JSON.parse(localStorage.getItem("products")) || initialProducts
-  ); // Ambil data dari localStorage
+  const navigate = useNavigate();
+  const [products, setProducts] = useState(initialProducts);
   const [editProductId, setEditProductId] = useState(null);
   const [editedProductName, setEditedProductName] = useState("");
   const [editedProductHpp, setEditedProductHpp] = useState("");
+
+  useEffect(() => {
+    const storedProducts =
+      JSON.parse(localStorage.getItem("products")) || initialProducts;
+    setProducts(storedProducts);
+  }, []);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (product) => {
-    // Navigate to ProductFormPage with state
-    navigate("/form", { state: { product } });
+    setEditProductId(product.id);
+    setEditedProductName(product.name);
+    setEditedProductHpp(product.hpp);
   };
 
   const handleUpdate = () => {
-    setProducts(
-      products.map((product) =>
-        product.id === editProductId
-          ? { ...product, name: editedProductName, hpp: editedProductHpp }
-          : product
-      )
+    const updatedProducts = products.map((product) =>
+      product.id === editProductId
+        ? { ...product, name: editedProductName, hpp: editedProductHpp }
+        : product
     );
+    setProducts(updatedProducts);
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
     setEditProductId(null);
+    setEditedProductName("");
+    setEditedProductHpp("");
   };
 
   const handleDelete = (id) => {
-    setProducts(products.filter((product) => product.id !== id));
+    const updatedProducts = products.filter((product) => product.id !== id);
+    setProducts(updatedProducts);
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
 
   const handleAddProduct = () => {
-    navigate("/form"); // Navigate to ProductFormPage
+    navigate("/form");
   };
 
   return (

@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "../styles/TotalCostProductTable.css"; // Pastikan path CSS benar
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom"; // Menggunakan useNavigate hook
 
-const initialProducts = [
-  { id: 1, name: "Bahan Baku 1", hpp: "Rp. 12.500" },
-  { id: 2, name: "Bahan Baku 2", hpp: "Rp. 10.000" },
-  { id: 3, name: "Bahan Baku 3", hpp: "Rp. 15.000" },
-];
-
-function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
+function TotalCostProductTable() {
   const [products, setProducts] = useState([]);
+  const [newProductName, setNewProductName] = useState(""); // State untuk nama produk baru
+  const navigate = useNavigate(); // Gunakan hook useNavigate untuk navigasi
 
   useEffect(() => {
     // Ambil data dari localStorage saat komponen dimuat
     const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
     setProducts(storedProducts);
   }, []);
-
-  // Filter produk berdasarkan searchTerm
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   // Function to calculate the total cost for the products
   const calculateTotalCost = (products) => {
@@ -35,21 +26,12 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
     }, 0);
   };
 
-  const [table1Products, setTable1Products] = useState(initialProducts);
-  const [table2Products, setTable2Products] = useState(initialProducts);
-  const [table3Products, setTable3Products] = useState(initialProducts);
+  const [table1Products, setTable1Products] = useState([]);
+  const [table2Products, setTable2Products] = useState([]);
+  const [table3Products, setTable3Products] = useState([]);
   const [editRowId, setEditRowId] = useState(null); // State to manage which row is being edited
   const [editedProduct, setEditedProduct] = useState({ name: "", hpp: "" }); // State to store edited product data
   const [currentTable, setCurrentTable] = useState(null); // State to manage which table is being edited
-  const navigate = useNavigate(); // Gunakan hook useNavigate untuk navigasi
-
-  const filteredTable2Products = table2Products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const filteredTable3Products = table3Products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleEdit = (id, table) => {
     const productToEdit = (table === 2 ? table2Products : table3Products).find(
@@ -94,15 +76,24 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
   };
 
   const handleSaveProduct = () => {
-    // Simpan data produk ke localStorage
-    const allProducts = [
-      ...table1Products,
-      ...table2Products,
-      ...table3Products,
-    ];
+    // Simpan hanya produk dari tabel bahan baku ke localStorage
+    const allProducts = table1Products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      hpp: product.hpp,
+    }));
+
+    // Menambahkan produk baru ke dalam allProducts
+    if (newProductName) {
+      const newProduct = {
+        id: allProducts.length + 1, // ID unik untuk produk baru
+        name: newProductName,
+        hpp: "Rp. 0", // Harga default
+      };
+      allProducts.push(newProduct);
+    }
 
     localStorage.setItem("products", JSON.stringify(allProducts));
-
     navigate("/products"); // Navigasi ke halaman produk
   };
 
@@ -114,13 +105,12 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
           table2Products.length,
           table3Products.length
         ) + 1,
-      name: `Bahan Baku ${
-        Math.max(
-          table1Products.length,
-          table2Products.length,
-          table3Products.length
-        ) + 1
-      }`,
+      name:
+        table === 1
+          ? `Bahan Baku ${table1Products.length + 1}`
+          : table === 2
+          ? `Overhead ${table2Products.length + 1}`
+          : `Kemasan ${table3Products.length + 1}`,
       hpp: "Rp. 0",
     };
 
@@ -140,18 +130,15 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
 
   return (
     <div className="admin-table">
-      <div className="table-controls">
-        <div className="search-container">
-          <FontAwesomeIcon icon={faSearch} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Cari Produk"
-            value={searchTerm}
-            onChange={onSearchChange}
-            className="search-input"
-          />
-        </div>
+      <div className="add-product-container">
+        <input
+          type="text"
+          value={newProductName}
+          placeholder="Ketik nama produk baru"
+          onChange={(e) => setNewProductName(e.target.value)}
+        />
       </div>
+      {/* Tabel Pertama */}
       <div className="table-container">
         <table>
           <thead>
@@ -162,8 +149,8 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product, index) => (
+            {products.length > 0 ? (
+              products.map((product, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{product.name}</td>
@@ -194,8 +181,8 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
             </tr>
           </thead>
           <tbody>
-            {filteredTable2Products.length > 0 ? (
-              filteredTable2Products.map((product, index) => (
+            {table2Products.length > 0 ? (
+              table2Products.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
                   <td>
@@ -279,8 +266,8 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
             </tr>
           </thead>
           <tbody>
-            {filteredTable3Products.length > 0 ? (
-              filteredTable3Products.map((product, index) => (
+            {table3Products.length > 0 ? (
+              table3Products.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
                   <td>
@@ -354,11 +341,10 @@ function TotalCostProductTable({ searchTerm = "", onSearchChange }) {
             </tr>
           </tbody>
         </table>
-        {/* Add Save Button Here */}
-        <button className="save-all-button" onClick={handleSaveProduct}>
-          Simpan
-        </button>
       </div>
+      <button className="save-all-button" onClick={handleSaveProduct}>
+        Simpan
+      </button>
     </div>
   );
 }

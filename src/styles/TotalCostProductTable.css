@@ -51,7 +51,8 @@ table {
   border-collapse: collapse; /* Untuk menghilangkan spasi antar border sel */
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ddd;
   padding: 0.75rem;
   text-align: left;
@@ -61,7 +62,8 @@ th {
   background-color: #f5f5f5;
 }
 
-.edit-button, .delete-button {
+.edit-button,
+.delete-button {
   padding: 0.5rem 1rem;
   margin-right: 0.5rem;
   border: none;
@@ -86,7 +88,7 @@ th {
 }
 
 .save-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 0.5rem 1rem;
@@ -114,9 +116,77 @@ th {
   margin-top: 1rem;
   margin-left: 16rem;
   border-radius: 4px;
-
 }
 
 .save-all-button:hover {
   background-color: #45a049; /* Biru lebih gelap saat hover */
+}
+
+/* General responsive settings */
+@media (max-width: 768px) {
+  .add-button,
+  .edit-button,
+  .delete-button,
+  .save-button,
+  .save-all-button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .table-container th,
+  .table-container td {
+    padding: 0.5rem;
+  }
+
+  .search-input {
+    padding: 0.3rem 2rem 0.3rem 2rem; /* Adjust padding */
+  }
+
+  .save-all-button {
+    padding: 0.5rem;
+    margin-left: 1rem; /* Adjust margin to fit smaller screens */
+  }
+}
+
+/* Adjustments for very small screens */
+@media (max-width: 480px) {
+  .admin-table {
+    padding: 0.5rem; /* Reduce padding */
+  }
+
+  .table-container {
+    overflow-x: auto; /* Allows table to scroll horizontally on very small screens */
+  }
+
+  .search-input,
+  .table-container input[type="text"] {
+    width: 100%; /* Ensure full width */
+    padding: 0.3rem 1rem; /* Reduce padding for better space usage */
+  }
+
+  .save-all-button {
+    width: 90%; /* Full width with some margin */
+    margin: 0.5rem 5%; /* Center button */
+    padding: 0.5rem 0;
+  }
+}
+
+.add-product-container {
+  margin: 20px 0; /* Menambahkan jarak atas dan bawah */
+  display: flex; /* Menggunakan flexbox untuk tata letak */
+  justify-content: center; /* Mengatur posisi konten di tengah */
+}
+
+.add-product-container input {
+  padding: 10px; /* Menambahkan padding untuk input */
+  border: 2px solid #ccc; /* Mengatur warna border */
+  border-radius: 5px; /* Membuat sudut lebih bulat */
+  width: 300px; /* Mengatur lebar input */
+  font-size: 16px; /* Mengatur ukuran font */
+  transition: border-color 0.3s; /* Transisi border saat fokus */
+}
+
+.add-product-container input:focus {
+  border-color: #ccc; /* Mengubah warna border saat fokus */
+  outline: none; /* Menghilangkan outline default */
 }

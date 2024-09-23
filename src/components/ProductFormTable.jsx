@@ -5,7 +5,7 @@ import "../styles/ProductForm.css";
 import "../styles/ProductsPage.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-function ProductForm() {
+function ProductFormTable() {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState([{ name: "", quantity: "" }]);
 
@@ -26,7 +26,6 @@ function ProductForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const productsWithIds = ingredients.map((ingredient, index) => ({
       id: index + 1, // ID unik untuk setiap produk
       name: ingredient.name,
@@ -62,7 +61,7 @@ function ProductForm() {
                       <th>Nomor</th>
                       <th>Bahan Baku</th>
                       <th>Jumlah (gram)</th>
-                      <th></th>
+                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -121,4 +120,4 @@ function ProductForm() {
   );
 }
 
-export default ProductForm;
+export default ProductFormTable;
