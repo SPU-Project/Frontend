@@ -3,11 +3,22 @@ import { useNavigate } from "react-router-dom";
 import AdminHeader from "./AdminHeader";
 import "../styles/ProductForm.css";
 import "../styles/ProductsPage.css";
+import Select from "react-select";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function ProductFormTable() {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState([{ name: "", quantity: "" }]);
+
+  // Options for the Select dropdown
+  const ingredientOptions = [
+    { value: "Tepung", label: "Tepung" },
+    { value: "Gula", label: "Gula" },
+    { value: "Telur", label: "Telur" },
+    { value: "Mentega", label: "Mentega" },
+    { value: "Susu", label: "Susu" },
+    // Add more options here
+  ];
 
   const handleAddIngredient = () => {
     setIngredients([...ingredients, { name: "", quantity: "" }]);
@@ -18,9 +29,15 @@ function ProductFormTable() {
     setIngredients(newIngredients);
   };
 
-  const handleIngredientChange = (index, event) => {
+  const handleIngredientChange = (index, selectedOption) => {
     const newIngredients = [...ingredients];
-    newIngredients[index][event.target.name] = event.target.value;
+    newIngredients[index].name = selectedOption.value;
+    setIngredients(newIngredients);
+  };
+
+  const handleQuantityChange = (index, event) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index].quantity = event.target.value;
     setIngredients(newIngredients);
   };
 
@@ -69,27 +86,29 @@ function ProductFormTable() {
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>
-                          <select
-                            name="name"
-                            value={ingredient.name}
-                            onChange={(e) => handleIngredientChange(index, e)}
+                          <Select
+                            options={ingredientOptions}
+                            value={ingredientOptions.find(
+                              (option) => option.value === ingredient.name
+                            )}
+                            onChange={(selectedOption) =>
+                              handleIngredientChange(index, selectedOption)
+                            }
+                            placeholder="Pilih Bahan Baku"
+                            isSearchable
+                            menuPortalTarget={document.body} // Memastikan dropdown tampil di luar container
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Mengatur z-index agar tampil di atas elemen lain
+                            }}
                             required
-                          >
-                            <option value="">Pilih Bahan Baku</option>
-                            <option value="Tepung">Tepung</option>
-                            <option value="Gula">Gula</option>
-                            <option value="Telur">Telur</option>
-                            <option value="Mentega">Mentega</option>
-                            <option value="Susu">Susu</option>
-                            {/* Add more options here */}
-                          </select>
+                          />
                         </td>
                         <td>
                           <input
                             type="number"
                             name="quantity"
                             value={ingredient.quantity}
-                            onChange={(e) => handleIngredientChange(index, e)}
+                            onChange={(e) => handleQuantityChange(index, e)}
                             required
                           />
                         </td>
