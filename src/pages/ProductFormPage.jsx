@@ -1,5 +1,5 @@
-import React from 'react';
-import ProductForm from '../components/ProductFormTable';
+import React from "react";
+import ProductForm from "../components/ProductFormTable";
 
 function ProductFormPage() {
   // Jika Anda memerlukan onClose atau props lain, Anda bisa menambahkannya di sini
@@ -11,7 +11,6 @@ function ProductFormPage() {
     <div>
       <ProductForm onClose={handleClose} />
     </div>
-    
   );
 }
 

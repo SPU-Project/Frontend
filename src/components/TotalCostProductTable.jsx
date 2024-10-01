@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import "../styles/TotalCostProductTable.css"; // Pastikan path CSS benar
+import "../styles/TotalCostProductTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom"; // Menggunakan useNavigate hook
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addProduk } from "../redux/produkSlice";
 
 function TotalCostProductTable() {
   const [products, setProducts] = useState([]);
-  const [newProductName, setNewProductName] = useState(""); // State untuk nama produk baru
-  const navigate = useNavigate(); // Gunakan hook useNavigate untuk navigasi
+  const [newProductName, setNewProductName] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Ambil data dari localStorage saat komponen dimuat
@@ -15,23 +18,11 @@ function TotalCostProductTable() {
     setProducts(storedProducts);
   }, []);
 
-  // Function to calculate the total cost for the products
-  const calculateTotalCost = (products) => {
-    return products.reduce((total, product) => {
-      const cost = parseInt(
-        product.hpp.replace("Rp. ", "").replace(/\./g, ""),
-        10
-      );
-      return total + (isNaN(cost) ? 0 : cost);
-    }, 0);
-  };
-
-  const [table1Products, setTable1Products] = useState([]);
   const [table2Products, setTable2Products] = useState([]);
   const [table3Products, setTable3Products] = useState([]);
-  const [editRowId, setEditRowId] = useState(null); // State to manage which row is being edited
-  const [editedProduct, setEditedProduct] = useState({ name: "", hpp: "" }); // State to store edited product data
-  const [currentTable, setCurrentTable] = useState(null); // State to manage which table is being edited
+  const [editRowId, setEditRowId] = useState(null);
+  const [editedProduct, setEditedProduct] = useState({ name: "", hpp: "" });
+  const [currentTable, setCurrentTable] = useState(null);
 
   const handleEdit = (id, table) => {
     const productToEdit = (table === 2 ? table2Products : table3Products).find(
@@ -43,20 +34,20 @@ function TotalCostProductTable() {
   };
 
   const handleSaveEdit = (id) => {
+    const updatedProduct = {
+      ...editedProduct,
+      hpp: parseFloat(editedProduct.hpp),
+    };
     if (currentTable === 2) {
       setTable2Products(
         table2Products.map((product) =>
-          product.id === id
-            ? { ...product, name: editedProduct.name, hpp: editedProduct.hpp }
-            : product
+          product.id === id ? { ...product, ...updatedProduct } : product
         )
       );
     } else if (currentTable === 3) {
       setTable3Products(
         table3Products.map((product) =>
-          product.id === id
-            ? { ...product, name: editedProduct.name, hpp: editedProduct.hpp }
-            : product
+          product.id === id ? { ...product, ...updatedProduct } : product
         )
       );
     }
@@ -66,9 +57,7 @@ function TotalCostProductTable() {
   };
 
   const handleDelete = (id, table) => {
-    if (table === 1) {
-      setTable1Products(table1Products.filter((product) => product.id !== id));
-    } else if (table === 2) {
+    if (table === 2) {
       setTable2Products(table2Products.filter((product) => product.id !== id));
     } else if (table === 3) {
       setTable3Products(table3Products.filter((product) => product.id !== id));
@@ -76,57 +65,78 @@ function TotalCostProductTable() {
   };
 
   const handleSaveProduct = () => {
-    // Simpan hanya produk dari tabel bahan baku ke localStorage
-    const allProducts = table1Products.map((product) => ({
-      id: product.id,
-      name: product.name,
-      hpp: product.hpp,
-    }));
+    // Persiapkan data untuk dikirim ke backend
+    const produkData = {
+      namaProduk: newProductName,
+      bahanBaku: products.map((product) => ({
+        id: product.id,
+        jumlah: parseFloat(product.quantity),
+      })),
+      overhead: table2Products.map((product) => ({
+        namaOverhead: product.name,
+        harga: parseFloat(product.hpp),
+      })),
+      kemasan: table3Products.map((product) => ({
+        namaKemasan: product.name,
+        harga: parseFloat(product.hpp),
+      })),
+    };
 
-    // Menambahkan produk baru ke dalam allProducts
-    if (newProductName) {
-      const newProduct = {
-        id: allProducts.length + 1, // ID unik untuk produk baru
-        name: newProductName,
-        hpp: "Rp. 0", // Harga default
-      };
-      allProducts.push(newProduct);
-    }
-
-    localStorage.setItem("products", JSON.stringify(allProducts));
-    navigate("/products"); // Navigasi ke halaman produk
+    // Dispatch addProduk action
+    dispatch(addProduk(produkData))
+      .unwrap()
+      .then(() => {
+        // Jika sukses, navigasi ke halaman produk
+        navigate("/products");
+      })
+      .catch((error) => {
+        // Tangani error
+        console.error("Gagal menambahkan produk:", error);
+      });
   };
 
   const handleAddRow = (table) => {
     const newProduct = {
-      id:
-        Math.max(
-          table1Products.length,
-          table2Products.length,
-          table3Products.length
-        ) + 1,
-      name:
-        table === 1
-          ? `Bahan Baku ${table1Products.length + 1}`
-          : table === 2
-          ? `Overhead ${table2Products.length + 1}`
-          : `Kemasan ${table3Products.length + 1}`,
-      hpp: "Rp. 0",
+      id: new Date().getTime(), // Menggunakan timestamp sebagai ID unik
+      name: "",
+      hpp: 0,
     };
 
-    if (table === 1) {
-      setTable1Products([...table1Products, newProduct]);
-    } else if (table === 2) {
+    if (table === 2) {
       setTable2Products([...table2Products, newProduct]);
     } else if (table === 3) {
       setTable3Products([...table3Products, newProduct]);
     }
   };
 
-  // Calculate total costs for table 2 and table 3
-  const totalCostTable2 = calculateTotalCost(table2Products);
-  const totalCostTable3 = calculateTotalCost(table3Products);
-  const grandTotalCost = totalCostTable2 + totalCostTable3;
+  // Fungsi untuk menghitung biaya per produk
+  const calculateProductCost = (product) => {
+    const pricePerGram = product.pricePerKg / 1000;
+    const quantityInGrams = parseFloat(product.quantity);
+    const cost = pricePerGram * quantityInGrams;
+    return cost;
+  };
+
+  // Hitung total biaya bahan baku
+  const totalCostProducts = products.reduce((total, product) => {
+    const cost = calculateProductCost(product);
+    return total + cost;
+  }, 0);
+
+  // Hitung total biaya overhead
+  const totalCostTable2 = table2Products.reduce((total, product) => {
+    const cost = parseFloat(product.hpp) || 0;
+    return total + cost;
+  }, 0);
+
+  // Hitung total biaya kemasan
+  const totalCostTable3 = table3Products.reduce((total, product) => {
+    const cost = parseFloat(product.hpp) || 0;
+    return total + cost;
+  }, 0);
+
+  // Hitung grand total
+  const grandTotalCost = totalCostProducts + totalCostTable2 + totalCostTable3;
 
   return (
     <div className="admin-table">
@@ -145,23 +155,39 @@ function TotalCostProductTable() {
             <tr>
               <th style={{ width: "0.3%" }}>No</th>
               <th style={{ width: "5%" }}>Nama Bahan Baku</th>
-              <th style={{ width: "5%" }}>Harga/gr</th>
+              <th style={{ width: "5%" }}>Jumlah (gram)</th>
+              <th style={{ width: "5%" }}>Harga per Kg</th>
+              <th style={{ width: "5%" }}>Biaya</th>
             </tr>
           </thead>
           <tbody>
             {products.length > 0 ? (
-              products.map((product, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{product.name}</td>
-                  <td>{product.hpp}</td>
-                </tr>
-              ))
+              products.map((product, index) => {
+                const cost = calculateProductCost(product);
+                return (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{product.name}</td>
+                    <td>{product.quantity}</td>
+                    <td>
+                      Rp. {parseFloat(product.pricePerKg).toLocaleString()}
+                    </td>
+                    <td>Rp. {cost.toLocaleString()}</td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
-                <td colSpan="3">Tidak ada produk yang ditemukan</td>
+                <td colSpan="5">Tidak ada produk yang ditemukan</td>
               </tr>
             )}
+            {/* Total Cost Row */}
+            <tr>
+              <td colSpan="4" style={{ textAlign: "center" }}>
+                Total Biaya Bahan Baku:
+              </td>
+              <td>Rp. {totalCostProducts.toLocaleString()}</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -204,7 +230,7 @@ function TotalCostProductTable() {
                   <td>
                     {editRowId === product.id && currentTable === 2 ? (
                       <input
-                        type="text"
+                        type="number"
                         value={editedProduct.hpp}
                         onChange={(e) =>
                           setEditedProduct({
@@ -214,7 +240,7 @@ function TotalCostProductTable() {
                         }
                       />
                     ) : (
-                      product.hpp
+                      `Rp. ${parseFloat(product.hpp).toLocaleString()}`
                     )}
                   </td>
                   <td>
@@ -244,9 +270,16 @@ function TotalCostProductTable() {
               ))
             ) : (
               <tr>
-                <td colSpan="4">Tidak ada produk yang ditemukan</td>
+                <td colSpan="4">Tidak ada data overhead</td>
               </tr>
             )}
+            {/* Total Cost Row */}
+            <tr>
+              <td colSpan="3" style={{ textAlign: "center" }}>
+                Total Biaya Overhead:
+              </td>
+              <td>Rp. {totalCostTable2.toLocaleString()}</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -289,7 +322,7 @@ function TotalCostProductTable() {
                   <td>
                     {editRowId === product.id && currentTable === 3 ? (
                       <input
-                        type="text"
+                        type="number"
                         value={editedProduct.hpp}
                         onChange={(e) =>
                           setEditedProduct({
@@ -299,7 +332,7 @@ function TotalCostProductTable() {
                         }
                       />
                     ) : (
-                      product.hpp
+                      `Rp. ${parseFloat(product.hpp).toLocaleString()}`
                     )}
                   </td>
                   <td>
@@ -329,18 +362,22 @@ function TotalCostProductTable() {
               ))
             ) : (
               <tr>
-                <td colSpan="4">Tidak ada produk yang ditemukan</td>
+                <td colSpan="4">Tidak ada data kemasan</td>
               </tr>
             )}
             {/* Total Cost Row */}
             <tr>
-              <td colSpan="2" style={{ textAlign: "center" }}>
-                Total Cost:
+              <td colSpan="3" style={{ textAlign: "center" }}>
+                Total Biaya Kemasan:
               </td>
-              <td colSpan="1">Rp. {grandTotalCost.toLocaleString()}</td>
+              <td>Rp. {totalCostTable3.toLocaleString()}</td>
             </tr>
           </tbody>
         </table>
+      </div>
+      {/* Grand Total Cost */}
+      <div className="total-cost-container">
+        <h3>Grand Total Biaya: Rp. {grandTotalCost.toLocaleString()}</h3>
       </div>
       <button className="save-all-button" onClick={handleSaveProduct}>
         Simpan

@@ -106,6 +106,7 @@ const bahanBakuSlice = createSlice({
   initialState: {
     items: [],
     status: "idle",
+    loading: false,
     error: null,
   },
   reducers: {
@@ -113,16 +114,15 @@ const bahanBakuSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Handle fetch Bahan Baku
       .addCase(fetchBahanBaku.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(fetchBahanBaku.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.loading = false;
         state.items = action.payload;
       })
       .addCase(fetchBahanBaku.rejected, (state, action) => {
-        state.status = "failed";
+        state.loading = false;
         state.error = action.payload;
       })
 

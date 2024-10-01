@@ -1,27 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminHeader from "./AdminHeader";
+import Select from "react-select";
 import "../styles/ProductForm.css";
 import "../styles/ProductsPage.css";
-import Select from "react-select";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function ProductFormTable() {
   const navigate = useNavigate();
-  const [ingredients, setIngredients] = useState([{ name: "", quantity: "" }]);
+  const [ingredients, setIngredients] = useState([
+    { id: "", name: "", quantity: "", pricePerKg: 0 },
+  ]);
+  const [ingredientOptions, setIngredientOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Options for the Select dropdown
-  const ingredientOptions = [
-    { value: "Tepung", label: "Tepung" },
-    { value: "Gula", label: "Gula" },
-    { value: "Telur", label: "Telur" },
-    { value: "Mentega", label: "Mentega" },
-    { value: "Susu", label: "Susu" },
-    // Add more options here
-  ];
+  // Fetch data bahan baku dari API saat komponen dimuat
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/bahanbaku");
+        const data = await response.json();
+        console.log(data); // Untuk debugging
+        if (response.ok) {
+          let bahanBakuList = [];
+
+          if (Array.isArray(data.data)) {
+            // Jika data ada di properti 'data'
+            bahanBakuList = data.data;
+          } else {
+            setError("Format data dari API tidak didukung.");
+            setLoading(false);
+            return;
+          }
+
+          const options = bahanBakuList.map((bahanBaku) => ({
+            value: bahanBaku.id,
+            label: bahanBaku.BahanBaku,
+            pricePerKg: bahanBaku.Harga, // Menyertakan harga per kg
+          }));
+          setIngredientOptions(options);
+        } else {
+          setError(data.message || "Gagal mengambil data bahan baku.");
+        }
+      } catch (err) {
+        setError(
+          err.message || "Terjadi kesalahan saat mengambil data bahan baku."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIngredients();
+  }, []);
 
   const handleAddIngredient = () => {
-    setIngredients([...ingredients, { name: "", quantity: "" }]);
+    setIngredients([
+      ...ingredients,
+      { id: "", name: "", quantity: "", pricePerKg: 0 },
+    ]);
   };
 
   const handleDeleteIngredient = (index) => {
@@ -31,7 +69,12 @@ function ProductFormTable() {
 
   const handleIngredientChange = (index, selectedOption) => {
     const newIngredients = [...ingredients];
-    newIngredients[index].name = selectedOption.value;
+    newIngredients[index] = {
+      ...newIngredients[index],
+      id: selectedOption.value,
+      name: selectedOption.label,
+      pricePerKg: selectedOption.pricePerKg, // Menyimpan harga per kg
+    };
     setIngredients(newIngredients);
   };
 
@@ -43,19 +86,28 @@ function ProductFormTable() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const productsWithIds = ingredients.map((ingredient, index) => ({
-      id: index + 1, // ID unik untuk setiap produk
+    const productsWithDetails = ingredients.map((ingredient) => ({
+      id: ingredient.id,
       name: ingredient.name,
-      hpp: `Rp. ${parseInt(ingredient.quantity, 10).toLocaleString("id-ID")}`, // Format harga
+      quantity: ingredient.quantity,
+      pricePerKg: ingredient.pricePerKg,
     }));
 
-    localStorage.setItem("products", JSON.stringify(productsWithIds)); // Simpan data ke localStorage
+    localStorage.setItem("products", JSON.stringify(productsWithDetails));
     navigate("/total-cost");
   };
 
   const handlePreviousPage = () => {
     navigate("/products");
   };
+
+  if (loading) {
+    return <div>Memuat data bahan baku...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="admin-dashboard">
@@ -89,16 +141,16 @@ function ProductFormTable() {
                           <Select
                             options={ingredientOptions}
                             value={ingredientOptions.find(
-                              (option) => option.value === ingredient.name
+                              (option) => option.value === ingredient.id
                             )}
                             onChange={(selectedOption) =>
                               handleIngredientChange(index, selectedOption)
                             }
                             placeholder="Pilih Bahan Baku"
                             isSearchable
-                            menuPortalTarget={document.body} // Memastikan dropdown tampil di luar container
+                            menuPortalTarget={document.body}
                             styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Mengatur z-index agar tampil di atas elemen lain
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                             }}
                             required
                           />

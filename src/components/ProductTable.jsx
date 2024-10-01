@@ -1,64 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import "../styles/ProductTable.css"; // Pastikan path CSS benar
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/ProductTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
-
-// Dummy product data
-const initialProducts = [
-  { id: 1, name: "Tepung Terigu", hpp: "Rp. 12.500" },
-  { id: 2, name: "Gula Pasir", hpp: "Rp. 10.000" },
-  { id: 3, name: "Susu Bubuk", hpp: "Rp. 15.000" },
-  { id: 4, name: "Minyak Goreng", hpp: "Rp. 20.000" },
-  { id: 5, name: "Telur Ayam", hpp: "Rp. 22.000" },
-  { id: 6, name: "Mentega", hpp: "Rp. 18.000" },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProducts, deleteProduct } from "../redux/productTableSlice";
 
 function ProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
-  const [products, setProducts] = useState(initialProducts);
-  const [editProductId, setEditProductId] = useState(null);
-  const [editedProductName, setEditedProductName] = useState("");
-  const [editedProductHpp, setEditedProductHpp] = useState("");
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector(
+    (state) => state.productTable
+  );
 
   useEffect(() => {
-    const storedProducts =
-      JSON.parse(localStorage.getItem("products")) || initialProducts;
-    setProducts(storedProducts);
-  }, []);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.produk.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (product) => {
-    setEditProductId(product.id);
-    setEditedProductName(product.name);
-    setEditedProductHpp(product.hpp);
-  };
-
-  const handleUpdate = () => {
-    const updatedProducts = products.map((product) =>
-      product.id === editProductId
-        ? { ...product, name: editedProductName, hpp: editedProductHpp }
-        : product
-    );
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-    setEditProductId(null);
-    setEditedProductName("");
-    setEditedProductHpp("");
+    navigate(`/form/${product.produkId}`); // Navigasi ke /form/:productId
   };
 
   const handleDelete = (id) => {
-    const updatedProducts = products.filter((product) => product.id !== id);
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
+    dispatch(deleteProduct(id))
+      .unwrap()
+      .catch((err) => {
+        console.error("Gagal menghapus produk:", err);
+      });
   };
 
   const handleAddProduct = () => {
     navigate("/form");
   };
+
+  if (loading) {
+    return <div>Memuat data produk...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="admin-table">
@@ -100,64 +85,57 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
         </thead>
         <tbody>
           {filteredProducts.length > 0 ? (
-            filteredProducts.map((product, index) => (
-              <tr key={product.id}>
-                <td>{index + 1}</td>
-                <td>
-                  {editProductId === product.id ? (
-                    <input
-                      type="text"
-                      value={editedProductName}
-                      onChange={(e) => setEditedProductName(e.target.value)}
-                    />
-                  ) : (
-                    product.name
-                  )}
-                </td>
-                <td>
-                  {editProductId === product.id ? (
-                    <input
-                      type="text"
-                      value={editedProductHpp}
-                      onChange={(e) => setEditedProductHpp(e.target.value)}
-                    />
-                  ) : (
-                    product.hpp
-                  )}
-                </td>
-                <td>{product.hpp}</td> {/* 20% */}
-                <td>{product.hpp}</td> {/* 30% */}
-                <td>{product.hpp}</td> {/* 40% */}
-                <td>{product.hpp}</td> {/* 50% */}
-                <td>{product.hpp}</td> {/* 60% */}
-                <td>{product.hpp}</td> {/* 70% */}
-                <td>{product.hpp}</td> {/* 80% */}
-                <td>{product.hpp}</td> {/* 90% */}
-                <td>{product.hpp}</td> {/* 100% */}
-                <td>
-                  {editProductId === product.id ? (
-                    <button className="save-button" onClick={handleUpdate}>
-                      Simpan
+            filteredProducts.map((product, index) => {
+              const produk = product.produk;
+              return (
+                <tr key={product.id}>
+                  <td>{index + 1}</td>
+                  <td>{produk.namaProduk}</td>
+                  <td>{`Rp. ${parseFloat(produk.hpp).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin20
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin30
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin40
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin50
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin60
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin70
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin80
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin90
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    produk.margin100
+                  ).toLocaleString()}`}</td>
+                  <td>
+                    <button
+                      className="edit-button"
+                      onClick={() => handleEdit(product)}
+                    >
+                      Ubah
                     </button>
-                  ) : (
-                    <>
-                      <button
-                        className="edit-button"
-                        onClick={() => handleEdit(product)}
-                      >
-                        Ubah
-                      </button>
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDelete(product.id)}
-                      >
-                        Hapus
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDelete(product.produkId)}
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan="14">Tidak ada produk yang ditemukan</td>
