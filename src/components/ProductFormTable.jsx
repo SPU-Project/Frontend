@@ -69,13 +69,20 @@ function ProductFormTable() {
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>
-                          <input
-                            type="text"
+                          <select
                             name="name"
                             value={ingredient.name}
                             onChange={(e) => handleIngredientChange(index, e)}
                             required
-                          />
+                          >
+                            <option value="">Pilih Bahan Baku</option>
+                            <option value="Tepung">Tepung</option>
+                            <option value="Gula">Gula</option>
+                            <option value="Telur">Telur</option>
+                            <option value="Mentega">Mentega</option>
+                            <option value="Susu">Susu</option>
+                            {/* Add more options here */}
+                          </select>
                         </td>
                         <td>
                           <input
