@@ -22,12 +22,17 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
   );
 
   const handleEdit = (product) => {
-    navigate(`/form/${product.produkId}`); // Navigasi ke /form/:productId
+    // Pass the product details, including ingredients, to the form page
+    navigate(`/form/${product.produkId}`, { state: { product } });
   };
 
   const handleDelete = (id) => {
     dispatch(deleteProduct(id))
       .unwrap()
+      .then(() => {
+        // Dispatch fetchProducts to refresh the product list
+        dispatch(fetchProducts());
+      })
       .catch((err) => {
         console.error("Gagal menghapus produk:", err);
       });

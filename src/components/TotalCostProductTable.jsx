@@ -13,7 +13,6 @@ function TotalCostProductTable() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Ambil data dari localStorage saat komponen dimuat
     const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
     setProducts(storedProducts);
   }, []);
@@ -65,7 +64,6 @@ function TotalCostProductTable() {
   };
 
   const handleSaveProduct = () => {
-    // Persiapkan data untuk dikirim ke backend
     const produkData = {
       namaProduk: newProductName,
       bahanBaku: products.map((product) => ({
@@ -82,22 +80,20 @@ function TotalCostProductTable() {
       })),
     };
 
-    // Dispatch addProduk action
     dispatch(addProduk(produkData))
       .unwrap()
       .then(() => {
-        // Jika sukses, navigasi ke halaman produk
+        console.log("Produk berhasil ditambahkan."); // Log on success
         navigate("/products");
       })
       .catch((error) => {
-        // Tangani error
         console.error("Gagal menambahkan produk:", error);
       });
   };
 
   const handleAddRow = (table) => {
     const newProduct = {
-      id: new Date().getTime(), // Menggunakan timestamp sebagai ID unik
+      id: new Date().getTime(),
       name: "",
       hpp: 0,
     };
@@ -109,7 +105,6 @@ function TotalCostProductTable() {
     }
   };
 
-  // Fungsi untuk menghitung biaya per produk
   const calculateProductCost = (product) => {
     const pricePerGram = product.pricePerKg / 1000;
     const quantityInGrams = parseFloat(product.quantity);
@@ -117,25 +112,21 @@ function TotalCostProductTable() {
     return cost;
   };
 
-  // Hitung total biaya bahan baku
   const totalCostProducts = products.reduce((total, product) => {
     const cost = calculateProductCost(product);
     return total + cost;
   }, 0);
 
-  // Hitung total biaya overhead
   const totalCostTable2 = table2Products.reduce((total, product) => {
     const cost = parseFloat(product.hpp) || 0;
     return total + cost;
   }, 0);
 
-  // Hitung total biaya kemasan
   const totalCostTable3 = table3Products.reduce((total, product) => {
     const cost = parseFloat(product.hpp) || 0;
     return total + cost;
   }, 0);
 
-  // Hitung grand total
   const grandTotalCost = totalCostProducts + totalCostTable2 + totalCostTable3;
 
   return (
@@ -181,7 +172,6 @@ function TotalCostProductTable() {
                 <td colSpan="5">Tidak ada produk yang ditemukan</td>
               </tr>
             )}
-            {/* Total Cost Row */}
             <tr>
               <td colSpan="4" style={{ textAlign: "center" }}>
                 Total Biaya Bahan Baku:
@@ -256,7 +246,7 @@ function TotalCostProductTable() {
                         className="edit-button"
                         onClick={() => handleEdit(product.id, 2)}
                       >
-                        Ubah
+                        Edit
                       </button>
                     )}
                     <button
@@ -270,12 +260,11 @@ function TotalCostProductTable() {
               ))
             ) : (
               <tr>
-                <td colSpan="4">Tidak ada data overhead</td>
+                <td colSpan="4">Tidak ada overhead yang ditemukan</td>
               </tr>
             )}
-            {/* Total Cost Row */}
             <tr>
-              <td colSpan="3" style={{ textAlign: "center" }}>
+              <td colSpan="2" style={{ textAlign: "center" }}>
                 Total Biaya Overhead:
               </td>
               <td>Rp. {totalCostTable2.toLocaleString()}</td>
@@ -348,7 +337,7 @@ function TotalCostProductTable() {
                         className="edit-button"
                         onClick={() => handleEdit(product.id, 3)}
                       >
-                        Ubah
+                        Edit
                       </button>
                     )}
                     <button
@@ -362,12 +351,11 @@ function TotalCostProductTable() {
               ))
             ) : (
               <tr>
-                <td colSpan="4">Tidak ada data kemasan</td>
+                <td colSpan="4">Tidak ada kemasan yang ditemukan</td>
               </tr>
             )}
-            {/* Total Cost Row */}
             <tr>
-              <td colSpan="3" style={{ textAlign: "center" }}>
+              <td colSpan="2" style={{ textAlign: "center" }}>
                 Total Biaya Kemasan:
               </td>
               <td>Rp. {totalCostTable3.toLocaleString()}</td>
@@ -376,11 +364,12 @@ function TotalCostProductTable() {
         </table>
       </div>
       {/* Grand Total Cost */}
-      <div className="total-cost-container">
-        <h3>Grand Total Biaya: Rp. {grandTotalCost.toLocaleString()}</h3>
+      <div className="grand-total">
+        <h2>Grand Total Biaya: Rp. {grandTotalCost.toLocaleString()}</h2>
       </div>
+      {/* Save All Products Button */}
       <button className="save-all-button" onClick={handleSaveProduct}>
-        Simpan
+        Simpan Semua Produk
       </button>
     </div>
   );
