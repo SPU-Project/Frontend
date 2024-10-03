@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Thunk untuk menambahkan produk baru
 export const addProduk = createAsyncThunk(
   "produk/addProduk",
   async (produkData, { rejectWithValue }) => {
@@ -23,15 +22,14 @@ export const addProduk = createAsyncThunk(
   }
 );
 
-// Thunk untuk memperbarui produk
 export const updateProduct = createAsyncThunk(
   "produk/updateProduct",
   async ({ id, updatedData }, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/produkbahanbakudetails/${id}`,
+        `http://localhost:5000/produkbahanbaku/${id}`,
         {
-          method: "PUT",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
@@ -77,7 +75,6 @@ const produkSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
-        // Update product in state if necessary
         state.product = action.payload;
       })
       .addCase(updateProduct.rejected, (state, action) => {

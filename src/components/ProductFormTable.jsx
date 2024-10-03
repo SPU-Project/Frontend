@@ -1,59 +1,90 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AdminHeader from "./AdminHeader";
 import Select from "react-select";
 import "../styles/ProductForm.css";
 import "../styles/ProductsPage.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, fetchProductById } from "../redux/productTableSlice";
 
 function ProductFormTable() {
+  const { id } = useParams();
+  const [productName, setProductName] = useState("");
   const navigate = useNavigate();
-  const [ingredients, setIngredients] = useState([
-    { id: "", name: "", quantity: "", pricePerKg: 0 },
-  ]);
+
+  const dispatch = useDispatch();
+  const [ingredients, setIngredients] = useState([]);
   const [ingredientOptions, setIngredientOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { products } = useSelector((state) => state.productTable);
 
-  // Fetch data bahan baku dari API saat komponen dimuat
   useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/bahanbaku");
-        const data = await response.json();
-        console.log(data); // Untuk debugging
-        if (response.ok) {
-          let bahanBakuList = [];
-
-          if (Array.isArray(data.data)) {
-            // Jika data ada di properti 'data'
-            bahanBakuList = data.data;
-          } else {
-            setError("Format data dari API tidak didukung.");
-            setLoading(false);
-            return;
-          }
-
-          const options = bahanBakuList.map((bahanBaku) => ({
-            value: bahanBaku.id,
-            label: bahanBaku.BahanBaku,
-            pricePerKg: bahanBaku.Harga, // Menyertakan harga per kg
-          }));
-          setIngredientOptions(options);
-        } else {
-          setError(data.message || "Gagal mengambil data bahan baku.");
-        }
-      } catch (err) {
-        setError(
-          err.message || "Terjadi kesalahan saat mengambil data bahan baku."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
+    if (id) {
+      dispatch(fetchProductById(id));
+    } else {
+      dispatch(fetchProducts());
+    }
     fetchIngredients();
-  }, []);
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (id && products.length > 0) {
+      const product = products.find((p) => p.produkId.toString() === id);
+      console.log("Fetched Product Data:", product); // Cek data produk
+      if (product) {
+        setProductName(product.produk?.namaProduk || "");
+
+        // Cek dan konversi bahanBaku menjadi array
+        let bahanBakuArray = Array.isArray(product.bahanBaku)
+          ? product.bahanBaku
+          : product.bahanBaku
+          ? [product.bahanBaku]
+          : [];
+
+        console.log("Bahan Baku Array:", bahanBakuArray); // Cek bahan baku setelah konversi
+
+        const mappedIngredients = [];
+
+        if (product.bahanBaku) {
+          mappedIngredients.push({
+            id: product.bahanBaku.id || "", // ID dari bahan baku
+            name: product.bahanBaku.BahanBaku || "", // Nama dari bahan baku
+            quantity: product.jumlah || 0, // Menggunakan jumlah
+            pricePerKg: product.bahanBaku.Harga || 0, // Harga dari bahan baku
+          });
+        }
+
+        // Log hasil mapping
+        console.log("Mapped Ingredients:", mappedIngredients);
+        setIngredients(mappedIngredients);
+      }
+    }
+  }, [id, products]);
+
+  const fetchIngredients = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/bahanbaku");
+      const data = await response.json();
+      if (response.ok) {
+        const options = data.data.map((bahanBaku) => ({
+          value: bahanBaku.id,
+          label: bahanBaku.BahanBaku,
+          pricePerKg: bahanBaku.Harga,
+        }));
+        setIngredientOptions(options);
+      } else {
+        setError(data.message || "Gagal mengambil data bahan baku.");
+      }
+    } catch (err) {
+      setError(
+        err.message || "Terjadi kesalahan saat mengambil data bahan baku."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddIngredient = () => {
     setIngredients([
@@ -73,7 +104,7 @@ function ProductFormTable() {
       ...newIngredients[index],
       id: selectedOption.value,
       name: selectedOption.label,
-      pricePerKg: selectedOption.pricePerKg, // Menyimpan harga per kg
+      pricePerKg: selectedOption.pricePerKg,
     };
     setIngredients(newIngredients);
   };
@@ -94,7 +125,8 @@ function ProductFormTable() {
     }));
 
     localStorage.setItem("products", JSON.stringify(productsWithDetails));
-    navigate("/total-cost");
+    localStorage.setItem("productName", productName);
+    navigate(id ? `/total-cost/${id}` : "/total-cost");
   };
 
   const handlePreviousPage = () => {

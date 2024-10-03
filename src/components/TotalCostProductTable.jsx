@@ -2,20 +2,77 @@ import React, { useEffect, useState } from "react";
 import "../styles/TotalCostProductTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addProduk } from "../redux/produkSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduk, updateProduct } from "../redux/produkSlice";
+import { fetchProducts, fetchProductById } from "../redux/productTableSlice";
 
 function TotalCostProductTable() {
+  const { id } = useParams();
   const [products, setProducts] = useState([]);
   const [newProductName, setNewProductName] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { currentProduct, loading, error } = useSelector(
+    (state) => state.productTable
+  );
 
   useEffect(() => {
-    const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
-    setProducts(storedProducts);
-  }, []);
+    if (id) {
+      dispatch(fetchProductById(id));
+    } else {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (currentProduct) {
+      setNewProductName(currentProduct.produk.namaProduk);
+      // Ensure that bahanBaku is an array before mapping
+      // Cek dan konversi bahanBaku menjadi array
+      let bahanBakuArray = Array.isArray(currentProduct.bahanBaku)
+        ? currentProduct.bahanBaku
+        : currentProduct.bahanBaku
+        ? [currentProduct.bahanBaku]
+        : [];
+      console.log("Fetched Product:", bahanBakuArray);
+
+      const mappedIngredients = [];
+
+      if (currentProduct.bahanBaku) {
+        mappedIngredients.push({
+          id: currentProduct.bahanBaku.id || "", // ID dari bahan baku
+          name: currentProduct.bahanBaku.BahanBaku || "", // Nama dari bahan baku
+          quantity: currentProduct.jumlah || 0, // Menggunakan jumlah
+          pricePerKg: currentProduct.bahanBaku.Harga || 0, // Harga dari bahan baku
+        });
+      }
+      // Handle overheads and kemasans similarly
+      setTable2Products(
+        Array.isArray(currentProduct.produk.overheads)
+          ? currentProduct.produk.overheads.map((overhead) => ({
+              id: overhead.id,
+              name: overhead.namaOverhead,
+              hpp: overhead.harga,
+            }))
+          : []
+      );
+      setTable3Products(
+        Array.isArray(currentProduct.produk.kemasans)
+          ? currentProduct.produk.kemasans.map((kemasan) => ({
+              id: kemasan.id,
+              name: kemasan.namaKemasan,
+              hpp: kemasan.harga,
+            }))
+          : []
+      );
+    } else {
+      const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
+      const storedProductName = localStorage.getItem("productName") || "";
+      setProducts(storedProducts);
+      setNewProductName(storedProductName);
+    }
+  }, [currentProduct]);
 
   const [table2Products, setTable2Products] = useState([]);
   const [table3Products, setTable3Products] = useState([]);
@@ -80,15 +137,27 @@ function TotalCostProductTable() {
       })),
     };
 
-    dispatch(addProduk(produkData))
-      .unwrap()
-      .then(() => {
-        console.log("Produk berhasil ditambahkan."); // Log on success
-        navigate("/products");
-      })
-      .catch((error) => {
-        console.error("Gagal menambahkan produk:", error);
-      });
+    if (id) {
+      dispatch(updateProduct({ id, updatedData: produkData }))
+        .unwrap()
+        .then(() => {
+          console.log("Produk berhasil diperbarui.");
+          navigate("/products");
+        })
+        .catch((error) => {
+          console.error("Gagal memperbarui produk:", error);
+        });
+    } else {
+      dispatch(addProduk(produkData))
+        .unwrap()
+        .then(() => {
+          console.log("Produk berhasil ditambahkan.");
+          navigate("/products");
+        })
+        .catch((error) => {
+          console.error("Gagal menambahkan produk:", error);
+        });
+    }
   };
 
   const handleAddRow = (table) => {
@@ -128,6 +197,14 @@ function TotalCostProductTable() {
   }, 0);
 
   const grandTotalCost = totalCostProducts + totalCostTable2 + totalCostTable3;
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="admin-table">
@@ -369,7 +446,7 @@ function TotalCostProductTable() {
       </div>
       {/* Save All Products Button */}
       <button className="save-all-button" onClick={handleSaveProduct}>
-        Simpan Semua Produk
+        {id ? "Perbarui Produk" : "Simpan Semua Produk"}
       </button>
     </div>
   );

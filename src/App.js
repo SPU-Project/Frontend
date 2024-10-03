@@ -29,17 +29,9 @@ function App() {
         />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/form" element={<ProductFormPage />} />
-        <Route path="/form/:productId" element={<ProductFormPage />} />{" "}
-        {/* Tambahkan route ini */}
-        <Route
-          path="/total-cost"
-          element={
-            <TotalCostProductPage
-              searchTerm={searchTerm}
-              onSearchChange={handleSearchChange}
-            />
-          }
-        />
+        <Route path="/form/:id" element={<ProductFormPage />} />
+        <Route path="/total-cost" element={<TotalCostProductPage />} />
+        <Route path="/total-cost/:id" element={<TotalCostProductPage />} />
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>
     </Router>
