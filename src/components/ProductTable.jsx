@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ProductTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts, deleteProduct } from "../redux/productTableSlice";
+import { Modal, Button } from "react-bootstrap";
 
 function ProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
@@ -12,6 +13,12 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
   const { products, loading, error } = useSelector(
     (state) => state.productTable
   );
+
+  //Modal Efek Hapus
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -26,16 +33,66 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
     navigate(`/form/${product.produkId}`, { state: { product } });
   };
 
-  const handleDelete = (id) => {
-    dispatch(deleteProduct(id))
-      .unwrap()
-      .then(() => {
-        // Dispatch fetchProducts to refresh the product list
-        dispatch(fetchProducts());
-      })
-      .catch((err) => {
-        console.error("Gagal menghapus produk:", err);
-      });
+  const handleDelete = async (id) => {
+    try {
+      setShowDeleteConfirmation(true);
+      setIdToDelete(id);
+      setModalMessage("Anda yakin ingin menghapus produk ini?");
+      setShowModal(true);
+    } catch (error) {
+      setModalMessage("Maaf, terjadi kesalahan saat menghapus Produk.");
+      setShowModal(true);
+    }
+  };
+
+  const handleDeleteConfirmation = async () => {
+    try {
+      // Dispatch the deleteProduct action directly
+      const { error, payload } = await dispatch(deleteProduct(idToDelete));
+
+      if (error) {
+        // Periksa apakah pesan error mengandung "Produk tidak dapat dihapus"
+        if (payload.includes("Produk tidak dapat dihapus")) {
+          setModalMessage(
+            "Perhatian: Produk tidak dapat dihapus karena sedang digunakan"
+          );
+          setShowModal(true);
+          setTimeout(() => {
+            setShowModal(false);
+          }, 2000);
+        } else {
+          setModalMessage(`Terjadi kesalahan: ${payload}`);
+          setShowModal(true);
+          setTimeout(() => {
+            setShowModal(false);
+          }, 2000);
+        }
+      } else {
+        // Jika penghapusan berhasil, item telah dihapus dari state
+        // Tidak perlu melakukan dispatch lagi
+        setModalMessage("Produk berhasil dihapus!");
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+          // Dispatch fetchProducts to refresh the product list
+          dispatch(fetchProducts());
+        }, 2000);
+        setShowDeleteConfirmation(false); // Hide the delete confirmation after success
+      }
+    } catch (error) {
+      setModalMessage("Maaf, terjadi kesalahan saat menghapus Produk.");
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 2000);
+    } finally {
+      setShowDeleteConfirmation(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setShowDeleteConfirmation(false);
   };
 
   const handleAddProduct = () => {
@@ -148,6 +205,25 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
           )}
         </tbody>
       </table>
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Informasi</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          {showDeleteConfirmation && (
+            <>
+              <Button variant="danger" onClick={handleDeleteConfirmation}>
+                Hapus
+              </Button>
+              <Button variant="secondary" onClick={handleCloseModal}>
+                Batal
+              </Button>
+            </>
+          )}
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

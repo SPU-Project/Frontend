@@ -8,6 +8,7 @@ import {
 } from "../redux/bahanbakuslice";
 import {
   Form,
+  Modal,
   Button,
   Table,
   Container,
@@ -21,6 +22,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const RawMaterialsTable = () => {
   const dispatch = useDispatch();
+
   const bahanBaku = useSelector((state) => state.bahanBaku.items);
   const status = useSelector((state) => state.bahanBaku.status);
   const [searchTerm, setSearchTerm] = useState(""); // Untuk pencarian
@@ -30,6 +32,12 @@ const RawMaterialsTable = () => {
   const [errorMessage, setErrorMessage] = useState(""); // Untuk pesan kesalahan
   const [successMessage, setSuccessMessage] = useState(""); // For success messages
   const [loading, setLoading] = useState(false); // Loading state
+
+  //Modal Efek Hapus
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
 
   // Fetch data ketika komponen dimuat
   useEffect(() => {
@@ -103,11 +111,64 @@ const RawMaterialsTable = () => {
     }
   };
 
-  // Fungsi untuk menghapus data dengan konfirmasi
-  const handleHapus = (id) => {
-    if (window.confirm("Anda yakin ingin menghapus bahan baku ini?")) {
-      dispatch(deleteBahanBaku(id));
+  const handleHapus = async (id) => {
+    try {
+      setShowDeleteConfirmation(true);
+      setIdToDelete(id);
+      setModalMessage("Anda yakin ingin menghapus bahan baku ini?");
+      setShowModal(true);
+    } catch (error) {
+      setModalMessage("Maaf, terjadi kesalahan saat menghapus Bahan Baku.");
+      setShowModal(true);
     }
+  };
+
+  const handleDeleteConfirmation = async () => {
+    try {
+      // Dispatch the deleteBahanBaku action directly
+      const { error, payload } = await dispatch(deleteBahanBaku(idToDelete));
+
+      if (error) {
+        // Periksa apakah pesan error mengandung "Bahan Baku tidak dapat dihapus"
+        if (payload.includes("Bahan Baku tidak dapat dihapus")) {
+          setModalMessage(
+            "Bahan Baku tidak dapat dihapus karena sedang digunakan oleh Produk"
+          );
+          setShowModal(true);
+          setTimeout(() => {
+            setShowModal(false);
+          }, 2000);
+        } else {
+          setModalMessage(`Terjadi kesalahan: ${payload}`);
+          setShowModal(true);
+          setTimeout(() => {
+            setShowModal(false);
+          }, 2000);
+        }
+      } else {
+        // Jika penghapusan berhasil, item telah dihapus dari state
+        // Tidak perlu melakukan dispatch lagi
+        setModalMessage("Bahan Baku berhasil dihapus!");
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+        }, 2000);
+        setShowDeleteConfirmation(false); // Hide the delete confirmation after success
+      }
+    } catch (error) {
+      setModalMessage("Maaf, terjadi kesalahan saat menghapus Bahan Baku.");
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 2000);
+    } finally {
+      setShowDeleteConfirmation(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setShowDeleteConfirmation(false);
   };
 
   // Fungsi untuk menyaring hasil pencarian
@@ -253,6 +314,25 @@ const RawMaterialsTable = () => {
           ))}
         </tbody>
       </Table>
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Informasi</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          {showDeleteConfirmation && (
+            <>
+              <Button variant="danger" onClick={handleDeleteConfirmation}>
+                Hapus
+              </Button>
+              <Button variant="secondary" onClick={handleCloseModal}>
+                Batal
+              </Button>
+            </>
+          )}
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

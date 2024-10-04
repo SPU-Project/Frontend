@@ -20,6 +20,7 @@ function TotalCostProductTable() {
   useEffect(() => {
     if (id) {
       dispatch(fetchProductById(id));
+      // Lakukan refresh hanya sekali saat halaman dimuat
     } else {
       dispatch(fetchProducts());
     }
@@ -30,6 +31,7 @@ function TotalCostProductTable() {
       setNewProductName(currentProduct.produk.namaProduk);
       // Ensure that bahanBaku is an array before mapping
       // Cek dan konversi bahanBaku menjadi array
+
       let bahanBakuArray = Array.isArray(currentProduct.bahanBaku)
         ? currentProduct.bahanBaku
         : currentProduct.bahanBaku
