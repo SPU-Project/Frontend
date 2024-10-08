@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduk, updateProduct } from "../redux/produkSlice";
 import { fetchProducts, fetchProductById } from "../redux/productTableSlice";
+import { Modal } from "react-bootstrap";
 
 function TotalCostProductTable() {
   const { id } = useParams();
@@ -17,6 +18,8 @@ function TotalCostProductTable() {
     (state) => state.productTable
   );
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [showModal, setShowModal] = useState(false); // Add showModal state
+  const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     // Periksa apakah ID ada
@@ -130,6 +133,37 @@ function TotalCostProductTable() {
   };
 
   const handleSaveProduct = () => {
+    // Validate the new product name
+    if (!newProductName.trim()) {
+      setModalMessage("Nama Produk tidak boleh kosong");
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 3000);
+      return;
+    }
+
+    // Check if the new product name contains only letters or a combination of letters and numbers
+    if (!/^[a-zA-Z0-9\s]+$/.test(newProductName)) {
+      setModalMessage(
+        "Nama Produk harus terdiri dari huruf atau kombinasi huruf dan angka"
+      );
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 3000);
+      return;
+    }
+
+    // Check if the new product name contains at least one letter
+    if (!/[a-zA-Z]/.test(newProductName)) {
+      setModalMessage("Nama Produk harus mengandung setidaknya satu huruf");
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 3000);
+      return;
+    }
     const produkData = {
       namaProduk: newProductName,
       bahanBaku: products.map((product) => ({
@@ -167,6 +201,10 @@ function TotalCostProductTable() {
           console.error("Gagal menambahkan produk:", error);
         });
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   const handleAddRow = (table) => {
@@ -457,6 +495,14 @@ function TotalCostProductTable() {
       <button className="save-all-button" onClick={handleSaveProduct}>
         {id ? "Perbarui Produk" : "Simpan Semua Produk"}
       </button>
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Informasi</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer></Modal.Footer>
+      </Modal>
     </div>
   );
 }

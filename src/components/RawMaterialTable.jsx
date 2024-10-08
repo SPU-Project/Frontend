@@ -40,6 +40,7 @@ const RawMaterialsTable = () => {
   const [idToDelete, setIdToDelete] = useState(null);
 
   // Fetch data ketika komponen dimuat
+  // Fetch data ketika komponen dimuat
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchBahanBaku());
@@ -53,6 +54,27 @@ const RawMaterialsTable = () => {
     // Validasi form
     if (!formBahanBaku || !formHarga) {
       setErrorMessage("Harap masukkan Bahan Baku dan Harga!");
+      setTimeout(() => {
+        setErrorMessage(false);
+      }, 3000);
+      return;
+    }
+
+    // Validasi Bahan Baku
+    if (!/^[a-zA-Z\s]+$/.test(formBahanBaku)) {
+      setErrorMessage("Bahan baku harus diisi dengan huruf");
+      setTimeout(() => {
+        setErrorMessage(false);
+      }, 3000);
+      return;
+    }
+
+    // Validasi Harga
+    if (isNaN(formHarga) || parseFloat(formHarga) < 0) {
+      setErrorMessage("Harga hanya bisa diisi dengan Angka");
+      setTimeout(() => {
+        setErrorMessage(false);
+      }, 3000);
       return;
     }
 
