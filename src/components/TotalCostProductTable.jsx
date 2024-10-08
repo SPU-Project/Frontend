@@ -8,6 +8,11 @@ import { addProduk, updateProduct } from "../redux/produkSlice";
 import { fetchProducts, fetchProductById } from "../redux/productTableSlice";
 import { Modal } from "react-bootstrap";
 
+function isValidString(str) {
+  // Regex untuk memastikan string mengandung setidaknya satu huruf
+  return /[a-zA-Z]/.test(str);
+}
+
 function TotalCostProductTable() {
   const { id } = useParams();
   const [products, setProducts] = useState([]);
@@ -164,6 +169,35 @@ function TotalCostProductTable() {
       }, 3000);
       return;
     }
+
+    // Validasi untuk overhead
+    for (const overhead of table2Products) {
+      if (!overhead.name || !isValidString(overhead.name)) {
+        setModalMessage(
+          "Nama Overhead tidak boleh kosong dan harus mengandung huruf (boleh juga angka)"
+        );
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+        }, 3000);
+        return;
+      }
+    }
+
+    // Validasi untuk kemasan
+    for (const kemasan of table3Products) {
+      if (!kemasan.name || !isValidString(kemasan.name)) {
+        setModalMessage(
+          "Nama Kemasan tidak boleh kosong dan harus mengandung huruf (boleh juga angka)"
+        );
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+        }, 3000);
+        return;
+      }
+    }
+
     const produkData = {
       namaProduk: newProductName,
       bahanBaku: products.map((product) => ({
