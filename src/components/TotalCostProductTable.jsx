@@ -16,18 +16,25 @@ function TotalCostProductTable() {
   const { currentProduct, loading, error } = useSelector(
     (state) => state.productTable
   );
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
+    // Periksa apakah ID ada
     if (id) {
+      // Dispatch action untuk memuat produk berdasarkan ID
       dispatch(fetchProductById(id));
-      // Lakukan refresh hanya sekali saat halaman dimuat
     } else {
+      // Dispatch action untuk memuat semua produk
       dispatch(fetchProducts());
     }
+    // Tandai bahwa initial load telah selesai
+    setIsInitialLoad(false);
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (currentProduct) {
+    if (currentProduct && !isInitialLoad) {
+      console.log("Fetched Product:", currentProduct);
+
       setNewProductName(currentProduct.produk.namaProduk);
       // Ensure that bahanBaku is an array before mapping
       // Cek dan konversi bahanBaku menjadi array
@@ -74,7 +81,7 @@ function TotalCostProductTable() {
       setProducts(storedProducts);
       setNewProductName(storedProductName);
     }
-  }, [currentProduct]);
+  }, [currentProduct, isInitialLoad]);
 
   const [table2Products, setTable2Products] = useState([]);
   const [table3Products, setTable3Products] = useState([]);
