@@ -131,4 +131,12 @@ table {
     font-size: 16px;
     color: #aaa;
   }
+
+  .search-input {
+    padding: 8px 8px 8px 30px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    width: 200px;
+  }
 }

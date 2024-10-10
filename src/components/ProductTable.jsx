@@ -117,7 +117,7 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
             type="text"
-            placeholder="Cari Produk"
+            placeholder="    Cari Produk"
             value={searchTerm}
             onChange={onSearchChange}
             className="search-input"
