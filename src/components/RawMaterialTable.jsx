@@ -37,7 +37,9 @@ const RawMaterialsTable = () => {
 
   // Fungsi untuk memformat harga ke dalam format Rupiah
   const formatRupiah = (angka) => {
-    const formattedNumber = angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    const formattedNumber = angka
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return `Rp. ${formattedNumber}`;
   };
 
@@ -194,8 +196,12 @@ const RawMaterialsTable = () => {
           />
         </div>
 
-        {errorMessage && <div className="message error-message">{errorMessage}</div>}
-        {successMessage && <div className="message success-message">{successMessage}</div>}
+        {errorMessage && (
+          <div className="message error-message">{errorMessage}</div>
+        )}
+        {successMessage && (
+          <div className="message success-message">{successMessage}</div>
+        )}
 
         <div className="button-group-container">
           <button type="submit" className="button-group" disabled={loading}>
@@ -206,10 +212,13 @@ const RawMaterialsTable = () => {
 
       <div className="table-controls">
         <div className="search-container">
-          <FontAwesomeIcon icon={faSearch} className="search-icon" />
+          <FontAwesomeIcon
+            icon={faSearch}
+            className={`search-icon ${searchTerm ? "hidden" : ""}`}
+          />
           <input
             type="text"
-            placeholder="Cari Bahan Baku"
+            placeholder="      Cari Bahan Baku"
             className="search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -233,10 +242,16 @@ const RawMaterialsTable = () => {
               <td>{item.BahanBaku}</td>
               <td>{formatRupiah(item.Harga)}</td>
               <td>
-                <button onClick={() => handleUbah(item.id)} className="action-button">
+                <button
+                  onClick={() => handleUbah(item.id)}
+                  className="action-button"
+                >
                   Ubah
                 </button>
-                <button onClick={() => handleHapus(item.id)} className="btn-danger">
+                <button
+                  onClick={() => handleHapus(item.id)}
+                  className="btn-danger"
+                >
                   Hapus
                 </button>
               </td>
@@ -246,23 +261,23 @@ const RawMaterialsTable = () => {
       </table>
 
       <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Informasi</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{modalMessage}</Modal.Body>
-          <Modal.Footer>
-            {showDeleteConfirmation && (
-              <>
-                <Button variant="danger" onClick={handleDeleteConfirmation}>
-                  Hapus
-                </Button>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                  Batal
-                </Button>
-              </>
-            )}
-          </Modal.Footer>
-        </Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Informasi</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          {showDeleteConfirmation && (
+            <>
+              <Button variant="danger" onClick={handleDeleteConfirmation}>
+                Hapus
+              </Button>
+              <Button variant="secondary" onClick={handleCloseModal}>
+                Batal
+              </Button>
+            </>
+          )}
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -5,8 +5,8 @@
   width: 100%;
   max-width: 800px;
   margin: 1rem auto;
-  position: relative; /* Tambahkan posisi relatif untuk dropdown */
-  overflow: visible; /* Izinkan elemen tampil di luar container */
+  position: relative;
+  overflow: visible;
 }
 
 /* Heading untuk form */
@@ -43,8 +43,8 @@
   border-spacing: 0;
   margin-top: 1rem;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative; /* Pastikan dropdown tidak terpotong */
-  overflow: visible; /* Tambahkan overflow visible agar dropdown tampil */
+  position: relative;
+  overflow: visible;
 }
 
 .ingredients-table th,
@@ -82,54 +82,29 @@
 }
 
 /* Styling untuk tombol tambah bahan */
-.add-ingredient-button {
-  padding: 0.8rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #009844;
-  color: white;
-  display: block;
-  width: 20%;
-  margin-top: 0.5rem;
-  margin-bottom: 1.2rem;
-}
-
-.add-ingredient-button:hover {
-  background-color: #007733;
-}
-
-/* Styling untuk tombol submit */
-.submit-button {
-  padding: 0.8rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #009844;
-  color: white;
-  width: 20%;
-  margin-top: 0.1rem;
-  margin-left: 38.4rem; /* Penempatan tombol ke kanan */
-}
-
-.submit-button:hover {
-  background-color: #007733;
-}
-
-/* Styling untuk tombol batal */
+.add-ingredient-button,
+.submit-button,
 .cancel-button {
   padding: 0.8rem 1rem;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
+  background-color: #009844;
+  color: white;
+  width: 100%; /* Change to 100% for full width */
+  margin: 0.5rem 0; /* Margin for spacing */
+}
+
+.add-ingredient-button:hover,
+.submit-button:hover {
+  background-color: #007733;
+}
+
+/* Styling untuk tombol batal */
+.cancel-button {
   background-color: #f0f0f0;
   color: #333;
-  width: 20%;
-  margin-top: 0.5rem;
-  margin-left: 38.4rem; /* Penempatan tombol ke kanan */
 }
 
 .cancel-button:hover {
@@ -145,7 +120,7 @@
   cursor: pointer;
   background-color: #dc3545;
   color: white;
-  width: 100%;
+  width: 100%; /* Change to 100% for full width */
   margin-top: 1rem;
 }
 
@@ -153,7 +128,28 @@
   background-color: #c82333;
 }
 
-/* Atur ulang tombol tambah bahan agar tidak duplikat */
-.add-ingredient-button {
-  padding: 0.5rem 1rem;
+/* Media queries for responsiveness */
+@media (min-width: 576px) {
+  .add-ingredient-button,
+  .submit-button,
+  .cancel-button {
+    width: 30%; /* Adjust width on larger screens */
+  }
+}
+
+@media (min-width: 768px) {
+  .ingredients-table th,
+  .ingredients-table td {
+    padding: 15px; /* Increase padding for larger screens */
+  }
+
+  .admin-table {
+    padding: 2rem; /* Add padding to the table container */
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-table {
+    padding: 1rem; /* Reduce padding on smaller screens */
+  }
 }

@@ -96,6 +96,10 @@ table {
   min-width: 800px;
 }
 
+.search-icon.hidden {
+  display: none; /* Hides the search icon */
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .table-controls {
