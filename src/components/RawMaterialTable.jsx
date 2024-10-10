@@ -6,16 +6,6 @@ import {
   updateBahanBaku,
   addBahanBaku,
 } from "../redux/bahanbakuslice";
-import {
-  Form,
-  Modal,
-  Button,
-  Table,
-  Container,
-  Row,
-  Col,
-  Spinner,
-} from "react-bootstrap";
 import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -30,16 +20,15 @@ const RawMaterialsTable = () => {
   const [formHarga, setFormHarga] = useState("");
   const [editId, setEditId] = useState(null);
   const [errorMessage, setErrorMessage] = useState(""); // Untuk pesan kesalahan
-  const [successMessage, setSuccessMessage] = useState(""); // For success messages
+  const [successMessage, setSuccessMessage] = useState(""); // Untuk pesan sukses
   const [loading, setLoading] = useState(false); // Loading state
 
-  //Modal Efek Hapus
+  // Modal Efek Hapus
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
 
-  // Fetch data ketika komponen dimuat
   // Fetch data ketika komponen dimuat
   useEffect(() => {
     if (status === "idle") {
@@ -55,7 +44,7 @@ const RawMaterialsTable = () => {
     if (!formBahanBaku || !formHarga) {
       setErrorMessage("Harap masukkan Bahan Baku dan Harga!");
       setTimeout(() => {
-        setErrorMessage(false);
+        setErrorMessage("");
       }, 3000);
       return;
     }
@@ -64,7 +53,7 @@ const RawMaterialsTable = () => {
     if (!/^[a-zA-Z\s]+$/.test(formBahanBaku)) {
       setErrorMessage("Bahan baku harus diisi dengan huruf");
       setTimeout(() => {
-        setErrorMessage(false);
+        setErrorMessage("");
       }, 3000);
       return;
     }
@@ -73,7 +62,7 @@ const RawMaterialsTable = () => {
     if (isNaN(formHarga) || parseFloat(formHarga) < 0) {
       setErrorMessage("Harga hanya bisa diisi dengan Angka");
       setTimeout(() => {
-        setErrorMessage(false);
+        setErrorMessage("");
       }, 3000);
       return;
     }
@@ -169,7 +158,6 @@ const RawMaterialsTable = () => {
         }
       } else {
         // Jika penghapusan berhasil, item telah dihapus dari state
-        // Tidak perlu melakukan dispatch lagi
         setModalMessage("Bahan Baku berhasil dihapus!");
         setShowModal(true);
         setTimeout(() => {
@@ -199,100 +187,70 @@ const RawMaterialsTable = () => {
   );
 
   return (
-    <Container className="admin-table">
-      <Form onSubmit={handleSimpan} className="form-container">
-        <Row>
-          <Col xs={12} md={6}>
-            <Form.Group controlId="formBahanBaku" className="form-group">
-              <Form.Label className="text-form">Bahan Baku</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Bahan Baku"
-                value={formBahanBaku}
-                onChange={(e) => setFormBahanBaku(e.target.value)}
-                aria-label="Input Bahan Baku"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={6}>
-            <Form.Group controlId="formHargaKilo" className="form-group">
-              <Form.Label className="text-form">Harga/Kilo</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Harga/Kilo"
-                value={formHarga}
-                onChange={(e) => setFormHarga(e.target.value)}
-                aria-label="Input Harga per Kilo"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+    <div className="admin-table-container">
+      <form onSubmit={handleSimpan} className="form-container">
+        <div className="form-group">
+          <label htmlFor="formBahanBaku" className="text-form">
+            Bahan Baku
+          </label>
+          <input
+            type="text"
+            id="formBahanBaku"
+            placeholder="Enter Bahan Baku"
+            value={formBahanBaku}
+            onChange={(e) => setFormBahanBaku(e.target.value)}
+            aria-label="Input Bahan Baku"
+            className="form-input"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="formHargaKilo" className="text-form">
+            Harga/Kilo
+          </label>
+          <input
+            type="text"
+            id="formHargaKilo"
+            placeholder="Enter Harga/Kilo"
+            value={formHarga}
+            onChange={(e) => setFormHarga(e.target.value)}
+            aria-label="Input Harga per Kilo"
+            className="form-input"
+          />
+        </div>
 
         {/* Tampilkan pesan error jika inputan kosong */}
         {errorMessage && (
-          <Row>
-            <Col>
-              <p
-                style={{
-                  color: "red",
-                  fontWeight: "bold",
-                  animation: "fadeIn 0.5s",
-                }}
-              >
-                {errorMessage}
-              </p>
-            </Col>
-          </Row>
+          <div className="message error-message">
+            <p>{errorMessage}</p>
+          </div>
         )}
 
         {/* Tampilkan pesan sukses setelah update/tambah */}
         {successMessage && (
-          <Row>
-            <Col>
-              <p
-                style={{
-                  color: "green",
-                  fontWeight: "bold",
-                  animation: "fadeIn 0.5s",
-                }}
-              >
-                {successMessage}
-              </p>
-            </Col>
-          </Row>
+          <div className="message success-message">
+            <p>{successMessage}</p>
+          </div>
         )}
 
-        <Row className="button-search-group">
-          <Col xs={12} md={6}>
-            <Button variant="success" type="submit" className="button-group">
-              {loading ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                  Loading...
-                </>
-              ) : (
-                "Simpan"
-              )}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+        <div className="button-group-container">
+          <button type="submit" className="button-group" disabled={loading}>
+            {loading ? (
+              <div className="spinner"></div>
+            ) : (
+              "Simpan"
+            )}
+          </button>
+        </div>
+      </form>
 
       <div className="table-controls">
-        <div className="search-container-raw">
+        <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
             type="text"
             placeholder="Cari Bahan Baku"
-            className="search-input-raw"
+            className="search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Cari Bahan Baku"
@@ -300,7 +258,7 @@ const RawMaterialsTable = () => {
         </div>
       </div>
 
-      <Table striped bordered hover responsive="sm" className="admin-table">
+      <table className="admin-table">
         <thead>
           <tr>
             <th>No</th>
@@ -316,46 +274,62 @@ const RawMaterialsTable = () => {
               <td>{item.BahanBaku}</td>
               <td>{item.Harga}</td>
               <td>
-                <Button
-                  variant="primary"
-                  className="action-button"
+                <button
                   onClick={() => handleUbah(item.id)}
+                  className="action-button"
                 >
                   Ubah
-                </Button>
-                <Button
-                  variant="danger"
-                  className="action-button"
+                </button>
+                <button
                   onClick={() => handleHapus(item.id)}
-                  style={{ marginLeft: "10px" }}
+                  className="btn-danger"
                 >
                   Hapus
-                </Button>
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
-      </Table>
+      </table>
 
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Informasi</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modalMessage}</Modal.Body>
-        <Modal.Footer>
-          {showDeleteConfirmation && (
-            <>
-              <Button variant="danger" onClick={handleDeleteConfirmation}>
-                Hapus
-              </Button>
-              <Button variant="secondary" onClick={handleCloseModal}>
-                Batal
-              </Button>
-            </>
-          )}
-        </Modal.Footer>
-      </Modal>
-    </Container>
+      {/* Modal Kustom */}
+      {showModal && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>Informasi</h2>
+              <span className="close-button" onClick={handleCloseModal}>
+                &times;
+              </span>
+            </div>
+            <div className="modal-body">
+              <p>{modalMessage}</p>
+            </div>
+            <div className="modal-footer">
+              {showDeleteConfirmation && (
+                <>
+                  <button
+                    className="btn-danger modal-button"
+                    onClick={handleDeleteConfirmation}
+                  >
+                    Hapus
+                  </button>
+                  <button
+                    className="btn-secondary modal-button"
+                    onClick={handleCloseModal}
+                  >
+                    Batal
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
