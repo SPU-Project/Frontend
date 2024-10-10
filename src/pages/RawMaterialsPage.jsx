@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AdminSidebar from "../components/AdminSidebar";
-import AdminHeader from "../components/AdminHeader";
+import AdminHeader from "../components/AdminHeader(RawMaterials)";
 import RawMaterialTable from "../components/RawMaterialTable";
 import "../styles/RawMaterialsPage.css";
 
