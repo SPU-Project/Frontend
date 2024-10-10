@@ -124,106 +124,108 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
           />
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th rowSpan="2">No</th>
-            <th rowSpan="2">Produk</th>
-            <th rowSpan="2">HPP</th>
-            <th colSpan="9">Margin</th>
-            <th rowSpan="2">Aksi</th>
-          </tr>
-          <tr>
-            <th>20%</th>
-            <th>30%</th>
-            <th>40%</th>
-            <th>50%</th>
-            <th>60%</th>
-            <th>70%</th>
-            <th>80%</th>
-            <th>90%</th>
-            <th>100%</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product, index) => {
-              const produk = product.produk;
-              return (
-                <tr key={product.id}>
-                  <td>{index + 1}</td>
-                  <td>{produk.namaProduk}</td>
-                  <td>{`Rp. ${parseFloat(produk.hpp).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin20
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin30
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin40
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin50
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin60
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin70
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin80
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin90
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    produk.margin100
-                  ).toLocaleString()}`}</td>
-                  <td>
-                    <button
-                      className="edit-button"
-                      onClick={() => handleEdit(product)}
-                    >
-                      Ubah
-                    </button>
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDelete(product.produkId)}
-                    >
-                      Hapus
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
+      <div className="table-wrapper">
+        <table>
+          <thead>
             <tr>
-              <td colSpan="14">Tidak ada produk yang ditemukan</td>
+              <th rowSpan="2">No</th>
+              <th rowSpan="2">Produk</th>
+              <th rowSpan="2">HPP</th>
+              <th colSpan="9">Margin</th>
+              <th rowSpan="2">Aksi</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+            <tr>
+              <th>20%</th>
+              <th>30%</th>
+              <th>40%</th>
+              <th>50%</th>
+              <th>60%</th>
+              <th>70%</th>
+              <th>80%</th>
+              <th>90%</th>
+              <th>100%</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product, index) => {
+                const produk = product.produk;
+                return (
+                  <tr key={product.id}>
+                    <td>{index + 1}</td>
+                    <td>{produk.namaProduk}</td>
+                    <td>{`Rp. ${parseFloat(produk.hpp).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin20
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin30
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin40
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin50
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin60
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin70
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin80
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin90
+                    ).toLocaleString()}`}</td>
+                    <td>{`Rp. ${parseFloat(
+                      produk.margin100
+                    ).toLocaleString()}`}</td>
+                    <td>
+                      <button
+                        className="edit-button"
+                        onClick={() => handleEdit(product)}
+                      >
+                        Ubah
+                      </button>
+                      <button
+                        className="delete-button"
+                        onClick={() => handleDelete(product.produkId)}
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="14">Tidak ada produk yang ditemukan</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
 
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Informasi</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modalMessage}</Modal.Body>
-        <Modal.Footer>
-          {showDeleteConfirmation && (
-            <>
-              <Button variant="danger" onClick={handleDeleteConfirmation}>
-                Hapus
-              </Button>
-              <Button variant="secondary" onClick={handleCloseModal}>
-                Batal
-              </Button>
-            </>
-          )}
-        </Modal.Footer>
-      </Modal>
+        <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Informasi</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{modalMessage}</Modal.Body>
+          <Modal.Footer>
+            {showDeleteConfirmation && (
+              <>
+                <Button variant="danger" onClick={handleDeleteConfirmation}>
+                  Hapus
+                </Button>
+                <Button variant="secondary" onClick={handleCloseModal}>
+                  Batal
+                </Button>
+              </>
+            )}
+          </Modal.Footer>
+        </Modal>
+      </div>
     </div>
   );
 }

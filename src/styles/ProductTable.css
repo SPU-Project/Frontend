@@ -4,7 +4,6 @@
   align-items: center;
   margin-bottom: 20px;
   gap: 15px;
-  
 }
 
 .search-container {
@@ -24,7 +23,7 @@
   padding: 8px 8px 8px 30px;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 12px; /* Border melengkung */
+  border-radius: 12px; /* Rounded borders */
   width: 200px;
 }
 
@@ -32,7 +31,7 @@
   background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 12px; /* Border melengkung */
+  border-radius: 12px; /* Rounded borders */
   padding: 10px 35px;
   cursor: pointer;
   font-size: 16px;
@@ -45,20 +44,20 @@
 }
 
 .add-button .fa-plus {
-  margin-right: 15px; /* Menambahkan jarak antara ikon dan teks */
+  margin-right: 15px; /* Space between icon and text */
 }
 
 .admin-table {
   padding: 2rem;
   background-color: #f0f0f0;
-  border-radius: 12px; /* Border melengkung */
+  border-radius: 12px; /* Rounded borders */
 }
 
 .edit-button {
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 12px; /* Border melengkung */
+  border-radius: 12px; /* Rounded borders */
   padding: 4px 12px;
   cursor: pointer;
   font-size: 16px;
@@ -73,7 +72,7 @@
   background-color: #dc3545;
   color: white;
   border: none;
-  border-radius: 12px; /* Border melengkung */
+  border-radius: 12px; /* Rounded borders */
   padding: 8px 16px;
   cursor: pointer;
   font-size: 16px;
@@ -83,11 +82,16 @@
   background-color: #c82333;
 }
 
+.table-wrapper {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  margin-bottom: 20px; /* Optional: add some spacing at the bottom */
+}
+
 table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 10px; /* Menambahkan border-radius pada tabel */
-  overflow: hidden; /* Agar border-radius berfungsi */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Opsional: menambahkan bayangan untuk efek */
+  border-radius: 10px; /* Adding border-radius to the table */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adding shadow for effect */
+  min-width: 800px; /* Set a minimum width to enable scrolling */
 }

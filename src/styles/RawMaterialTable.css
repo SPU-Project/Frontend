@@ -81,18 +81,19 @@
   gap: 15px;
 }
 
-.search-container {
+.search-container-raw {
   position: relative;
   display: flex;
   align-items: center;
+  width: 1500px;
 }
 
-.search-input {
+.search-input-raw {
   padding: 8px 8px 8px 30px;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 12px; /* Border melengkung */
-  width: 200px;
+  border-radius: 8px; /* Border melengkung */
+  width: 1298px;
 }
 
 .add-button {

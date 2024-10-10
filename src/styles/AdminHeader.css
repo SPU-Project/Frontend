@@ -15,7 +15,7 @@
   color: #009844; /* Mengubah warna teks menjadi hijau */
   font-weight: bold; /* Menebalkan teks */
   margin: 0; /* Menghapus margin default */
-  padding-left: 30px; /* Menambahkan jarak kiri ke teks */
+  padding-left: 40px; /* Menambahkan jarak kiri ke teks */
 }
 
 .admin-header .logo {

@@ -287,12 +287,12 @@ const RawMaterialsTable = () => {
       </Form>
 
       <div className="table-controls">
-        <div className="search-container">
+        <div className="search-container-raw">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
             type="text"
             placeholder="Cari Bahan Baku"
-            className="search-input"
+            className="search-input-raw"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Cari Bahan Baku"

@@ -2,7 +2,6 @@
 .admin-dashboard {
   display: flex;
   height: 100vh;
-  background-color: #cecbcb;
   position: relative; /* Ensure main section can expand to the left */
 }
 
@@ -19,8 +18,8 @@
 /* Fixed hamburger button in the top-left corner */
 .hamburger-button {
   position: fixed;
-  top: 1rem;
-  left: 1rem;
+  top: 4.9rem;
+  left: 2rem;
   background: none;
   border: none;
   font-size: 24px;
