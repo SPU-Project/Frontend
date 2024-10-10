@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ProductTable.css";
+import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -110,7 +111,7 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
   return (
     <div className="admin-table">
       <div className="table-controls">
-        <button className="add-button" onClick={handleAddProduct}>
+        <button className="button-group" onClick={handleAddProduct}>
           <FontAwesomeIcon icon={faPlus} /> Tambah Produk
         </button>
         <div className="search-container">
@@ -184,13 +185,13 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
                     ).toLocaleString()}`}</td>
                     <td>
                       <button
-                        className="edit-button"
+                        className="action-button"
                         onClick={() => handleEdit(product)}
                       >
                         Ubah
                       </button>
                       <button
-                        className="delete-button"
+                        className="btn-danger"
                         onClick={() => handleDelete(product.produkId)}
                       >
                         Hapus
