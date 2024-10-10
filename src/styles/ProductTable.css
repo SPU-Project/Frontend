@@ -23,7 +23,7 @@
   padding: 8px 8px 8px 30px;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 12px; /* Rounded borders */
+  border-radius: 12px;
   width: 200px;
 }
 
@@ -31,7 +31,7 @@
   background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 12px; /* Rounded borders */
+  border-radius: 12px;
   padding: 10px 35px;
   cursor: pointer;
   font-size: 16px;
@@ -44,20 +44,20 @@
 }
 
 .add-button .fa-plus {
-  margin-right: 15px; /* Space between icon and text */
+  margin-right: 15px;
 }
 
 .admin-table {
   padding: 2rem;
   background-color: #f0f0f0;
-  border-radius: 12px; /* Rounded borders */
+  border-radius: 12px;
 }
 
 .edit-button {
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 12px; /* Rounded borders */
+  border-radius: 12px;
   padding: 4px 12px;
   cursor: pointer;
   font-size: 16px;
@@ -72,7 +72,7 @@
   background-color: #dc3545;
   color: white;
   border: none;
-  border-radius: 12px; /* Rounded borders */
+  border-radius: 12px;
   padding: 8px 16px;
   cursor: pointer;
   font-size: 16px;
@@ -83,15 +83,52 @@
 }
 
 .table-wrapper {
-  overflow-x: auto; /* Enable horizontal scrolling */
-  margin-bottom: 20px; /* Optional: add some spacing at the bottom */
+  overflow-x: auto;
+  margin-bottom: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 10px; /* Adding border-radius to the table */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adding shadow for effect */
-  min-width: 800px; /* Set a minimum width to enable scrolling */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 800px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .table-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+
+  table {
+    min-width: 100%; /* Make the table fully responsive */
+  }
+
+  .delete-button,
+  .edit-button {
+    border-radius: 12px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0.5rem;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 16px;
+    color: #aaa;
+  }
 }
