@@ -111,7 +111,7 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
   return (
     <div className="admin-table">
       <div className="table-controls">
-        <button className="button-group" onClick={handleAddProduct}>
+        <button className="add-button" onClick={handleAddProduct}>
           <FontAwesomeIcon icon={faPlus} /> Tambah Produk
         </button>
         <div className="search-container">
@@ -185,13 +185,13 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
                     ).toLocaleString()}`}</td>
                     <td>
                       <button
-                        className="action-button"
+                        className="edit-product-button"
                         onClick={() => handleEdit(product)}
                       >
                         Ubah
                       </button>
                       <button
-                        className="btn-danger"
+                        className="delete-product-button"
                         onClick={() => handleDelete(product.produkId)}
                       >
                         Hapus

@@ -348,7 +348,10 @@ function TotalCostProductTable() {
               <th style={{ width: "10%" }}>Overhead</th>
               <th style={{ width: "10%" }}>Harga</th>
               <th style={{ width: "5%" }}>
-                <button className="add-button" onClick={() => handleAddRow(2)}>
+                <button
+                  className="add-overhead-button"
+                  onClick={() => handleAddRow(2)}
+                >
                   <FontAwesomeIcon icon={faPlus} /> Tambah
                 </button>
               </th>
@@ -394,21 +397,21 @@ function TotalCostProductTable() {
                   <td>
                     {editRowId === product.id && currentTable === 2 ? (
                       <button
-                        className="save-button"
+                        className="save-overhead-button"
                         onClick={() => handleSaveEdit(product.id)}
                       >
                         Simpan
                       </button>
                     ) : (
                       <button
-                        className="edit-button"
+                        className="edit-overhead-button"
                         onClick={() => handleEdit(product.id, 2)}
                       >
                         Edit
                       </button>
                     )}
                     <button
-                      className="delete-button"
+                      className="delete-overhead-button"
                       onClick={() => handleDelete(product.id, 2)}
                     >
                       Hapus
@@ -439,7 +442,10 @@ function TotalCostProductTable() {
               <th style={{ width: "10%" }}>Kemasan</th>
               <th style={{ width: "10%" }}>Harga</th>
               <th style={{ width: "5%" }}>
-                <button className="add-button" onClick={() => handleAddRow(3)}>
+                <button
+                  className="add-overhead-button"
+                  onClick={() => handleAddRow(3)}
+                >
                   <FontAwesomeIcon icon={faPlus} /> Tambah
                 </button>
               </th>
@@ -485,21 +491,21 @@ function TotalCostProductTable() {
                   <td>
                     {editRowId === product.id && currentTable === 3 ? (
                       <button
-                        className="save-button"
+                        className="save-overhead-button"
                         onClick={() => handleSaveEdit(product.id)}
                       >
                         Simpan
                       </button>
                     ) : (
                       <button
-                        className="edit-button"
+                        className="edit-overhead-button"
                         onClick={() => handleEdit(product.id, 3)}
                       >
                         Edit
                       </button>
                     )}
                     <button
-                      className="delete-button"
+                      className="delete-overhead-button"
                       onClick={() => handleDelete(product.id, 3)}
                     >
                       Hapus
@@ -526,9 +532,17 @@ function TotalCostProductTable() {
         <h2>Grand Total Biaya: Rp. {grandTotalCost.toLocaleString()}</h2>
       </div>
       {/* Save All Products Button */}
-      <button className="save-all-button" onClick={handleSaveProduct}>
-        {id ? "Perbarui Produk" : "Simpan Semua Produk"}
-      </button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <button className="save-all-button" onClick={handleSaveProduct}>
+          {id ? "Perbarui Produk" : "Simpan Produk"}
+        </button>
+      </div>
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>

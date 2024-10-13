@@ -28,10 +28,10 @@
 }
 
 .add-button {
-  background-color: #28a745;
+  background-color: #009844;
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 10px 35px;
   cursor: pointer;
   font-size: 16px;
@@ -40,7 +40,7 @@
 }
 
 .add-button:hover {
-  background-color: darkgreen;
+  background-color: #45a049;
 }
 
 .add-button .fa-plus {
@@ -53,32 +53,31 @@
   border-radius: 12px;
 }
 
-.edit-button {
+.edit-product-button {
   background-color: #007bff;
-  color: white;
+  padding: 10px 38px;
+  margin-right: 0.5rem;
   border: none;
-  border-radius: 12px;
-  padding: 4px 12px;
+  border-radius: 4px;
+  color: #fff;
   cursor: pointer;
-  font-size: 16px;
-  margin-right: 5px;
 }
 
-.edit-button:hover {
+.edit-product-button:hover {
   background-color: #0056b3;
 }
 
-.delete-button {
+.delete-product-button {
   background-color: #dc3545;
-  color: white;
+  padding: 10px 38px;
+  margin-right: 0.5rem;
   border: none;
-  border-radius: 12px;
-  padding: 8px 16px;
+  border-radius: 4px;
+  color: #fff;
   cursor: pointer;
-  font-size: 16px;
 }
 
-.delete-button:hover {
+.delete-product-button:hover {
   background-color: #c82333;
 }
 
@@ -120,13 +119,20 @@ table {
     min-width: 100%; /* Make the table fully responsive */
   }
 
-  .delete-button,
-  .edit-button {
-    border-radius: 12px;
-    padding: 4px 12px;
+  .delete-product-button {
+    border-radius: 4px;
+    padding: 5px 15px;
     cursor: pointer;
-    font-size: 16px;
-    margin: 0.5rem;
+    font-size: 14px;
+    margin: 0.3rem;
+  }
+
+  .edit-product-button {
+    border-radius: 4px;
+    padding: 5px 18px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0.3rem;
   }
 
   .search-icon {

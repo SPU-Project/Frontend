@@ -46,7 +46,7 @@
   background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 12px; /* Rounded corners */
+  border-radius: 4px; /* Rounded corners */
   padding: 10px 35px;
   cursor: pointer;
   font-size: 16px;
@@ -167,29 +167,31 @@
 }
 
 /* Action Buttons */
-.action-button,
-.btn-danger {
+.edit-raw-button {
   background-color: #007bff;
-  color: white;
+  padding: 10px 38px;
+  margin-right: 0.5rem;
   border: none;
-  border-radius: 12px; /* Rounded corners */
-  padding: 8px 16px;
+  border-radius: 4px;
+  color: #fff;
   cursor: pointer;
-  font-size: 16px;
-  margin-right: 5px;
-  margin: 0.5rem;
-  transition: background-color 0.3s ease;
 }
 
-.action-button:hover {
+.edit-raw-button:hover {
   background-color: #0056b3;
 }
 
-.btn-danger {
+.delete-raw-button {
   background-color: #dc3545;
+  padding: 10px 38px;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
 }
 
-.btn-danger:hover {
+.delete-raw-button:hover {
   background-color: #c82333;
 }
 
@@ -223,10 +225,15 @@
     font-size: 14px;
   }
 
-  .action-button,
-  .btn-danger {
-    padding: 6px 12px;
+  .edit-raw-button {
+    padding: 5px 18px;
     font-size: 14px;
-    margin: 0.5rem;
+    margin: 0.3rem;
+  }
+
+  .delete-raw-button {
+    padding: 5px 15px;
+    font-size: 14px;
+    margin: 0.3rem;
   }
 }

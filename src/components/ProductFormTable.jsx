@@ -7,18 +7,19 @@ import "../styles/ProductsPage.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, fetchProductById } from "../redux/productTableSlice";
+import { Modal } from "react-bootstrap"; // Impor modal dari React Bootstrap
 
 function ProductFormTable() {
   const { id } = useParams();
   const [productName, setProductName] = useState("");
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const [ingredients, setIngredients] = useState([]);
   const [ingredientOptions, setIngredientOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { products } = useSelector((state) => state.productTable);
+  const [showModal, setShowModal] = useState(false); // State untuk modal
 
   useEffect(() => {
     if (id) {
@@ -117,6 +118,17 @@ function ProductFormTable() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Cek apakah ada bahan baku yang ditambahkan
+    const hasIngredients = ingredients.some(
+      (ingredient) => ingredient.id && ingredient.quantity > 0
+    );
+
+    if (!hasIngredients) {
+      setShowModal(true); // Tampilkan modal jika tidak ada bahan baku
+      return;
+    }
+
     const productsWithDetails = ingredients.map((ingredient) => ({
       id: ingredient.id,
       name: ingredient.name,
@@ -132,6 +144,8 @@ function ProductFormTable() {
   const handlePreviousPage = () => {
     navigate("/products");
   };
+
+  const handleCloseModal = () => setShowModal(false); // Fungsi untuk menutup modal
 
   if (loading) {
     return <div>Memuat data bahan baku...</div>;
@@ -152,7 +166,7 @@ function ProductFormTable() {
               className="add-ingredient-button"
               onClick={handleAddIngredient}
             >
-              Tambah
+              Tambah Bahan Baku
             </button>
 
             <form onSubmit={handleSubmit}>
@@ -224,6 +238,23 @@ function ProductFormTable() {
                 </button>
               </div>
             </form>
+            {/* Modal untuk menampilkan pesan kesalahan */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Peringatan</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Tolong tambahkan bahan baku sebelum melanjutkan.
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  className="btn btn-secondary"
+                  onClick={handleCloseModal}
+                >
+                  Tutup
+                </button>
+              </Modal.Footer>
+            </Modal>
           </div>
         </div>
       </div>

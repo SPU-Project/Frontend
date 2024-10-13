@@ -244,13 +244,13 @@ const RawMaterialsTable = () => {
               <td>
                 <button
                   onClick={() => handleUbah(item.id)}
-                  className="action-button"
+                  className="edit-raw-button"
                 >
                   Ubah
                 </button>
                 <button
                   onClick={() => handleHapus(item.id)}
-                  className="btn-danger"
+                  className="delete-raw-button"
                 >
                   Hapus
                 </button>
