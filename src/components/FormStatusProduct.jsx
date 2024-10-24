@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import AdminHeader from "./AdminHeader"; // Import AdminHeader
 import "../styles/FormStatusProduct.css"; // Import CSS file
 
 function FormStatusProduct() {
+  const navigate = useNavigate();
   const [productName, setProductName] = useState("");
   const [productionDate, setProductionDate] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -21,7 +23,7 @@ function FormStatusProduct() {
   };
 
   const handleCancel = () => {
-    // navigate("/products");
+    navigate("/status-product");
     console.log("Form canceled");
   };
 
@@ -73,7 +75,9 @@ function FormStatusProduct() {
                 <td>
                   <Select
                     options={[{ value: "margin1", label: "Margin 1" }]}
-                    onChange={(selectedOption) => setMargin(selectedOption.value)}
+                    onChange={(selectedOption) =>
+                      setMargin(selectedOption.value)
+                    }
                     placeholder="Pilih Margin"
                     className="select-input"
                   />

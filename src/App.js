@@ -6,6 +6,7 @@ import TotalCostProductPage from "./pages/TotalCostProductPage";
 import ProductFormPage from "./pages/ProductFormPage";
 import LoginPage from "./pages/LoginPage";
 import FormStatusProductPage from "./pages/FormStatusProductPage";
+import StatusProductPage from "./pages/StatusProductPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/form" element={<ProductFormPage />} />
+        <Route path="/status-product" element={<StatusProductPage />} />
         <Route path="/form-status" element={<FormStatusProductPage />} />
         <Route path="/form/:id" element={<ProductFormPage />} />
         <Route path="/total-cost" element={<TotalCostProductPage />} />
