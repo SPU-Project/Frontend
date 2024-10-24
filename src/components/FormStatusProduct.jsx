@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import AdminHeader from "./AdminHeader"; // Import AdminHeader
+import AdminHeader from "./AdminHeader(Status)"; // Import AdminHeader
 import "../styles/FormStatusProduct.css"; // Import CSS file
 
 function FormStatusProduct() {
