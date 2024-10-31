@@ -75,6 +75,11 @@ function AdminSidebar() {
             Status Produk
           </Link>
         </li>
+        <li>
+          <Link to="/user-management" className="sidebar-link">
+            Manajemen Pengguna
+          </Link>
+        </li>
         <hr
           style={{ width: "100%", borderWidth: "4px", borderColor: "white" }}
         />
