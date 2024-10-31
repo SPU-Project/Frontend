@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import FormStatusProductPage from "./pages/FormStatusProductPage";
 import StatusProductPage from "./pages/StatusProductPage";
 import UserManagementPage from "./pages/UserManagementPage";
+import UserManagementFormPage from "./pages/UserManagementFormPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function App() {
@@ -38,6 +39,10 @@ function App() {
         <Route path="/total-cost" element={<TotalCostProductPage />} />
         <Route path="/total-cost/:id" element={<TotalCostProductPage />} />
         <Route path="/user-management" element={<UserManagementPage />} />
+        <Route
+          path="/user-management-form"
+          element={<UserManagementFormPage />}
+        />
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>
     </Router>

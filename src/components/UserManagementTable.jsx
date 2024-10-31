@@ -73,7 +73,7 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
   };
 
   const handleAddUser = () => {
-    navigate("/form");
+    navigate("/user-management-form");
   };
 
   return (
