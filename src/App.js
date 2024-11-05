@@ -9,6 +9,7 @@ import FormStatusProductPage from "./pages/FormStatusProductPage";
 import StatusProductPage from "./pages/StatusProductPage";
 import UserManagementPage from "./pages/UserManagementPage";
 import UserManagementFormPage from "./pages/UserManagementFormPage";
+import LogHistoryPage from "./pages/LogHistoryPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/total-cost" element={<TotalCostProductPage />} />
         <Route path="/total-cost/:id" element={<TotalCostProductPage />} />
         <Route path="/user-management" element={<UserManagementPage />} />
+        <Route path="/log-history" element={<LogHistoryPage />} />
         <Route
           path="/user-management-form"
           element={<UserManagementFormPage />}

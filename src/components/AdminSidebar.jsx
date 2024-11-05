@@ -80,6 +80,11 @@ function AdminSidebar() {
             Manajemen Pengguna
           </Link>
         </li>
+        <li>
+          <Link to="/log-history" className="sidebar-link">
+            Riwayat Log
+          </Link>
+        </li>
         <hr
           style={{ width: "100%", borderWidth: "4px", borderColor: "white" }}
         />
