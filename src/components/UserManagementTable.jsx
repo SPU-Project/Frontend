@@ -47,8 +47,8 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
     user.namaPengguna.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleEdit = (user) => {
-    navigate(`/form/${user.penggunaId}`, { state: { user } });
+  const handleEdit = () => {
+    navigate("/user-management-form");
   };
 
   const handleDelete = (id) => {
