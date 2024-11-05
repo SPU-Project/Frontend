@@ -92,26 +92,3 @@
     font-size: 0.875rem;
   }
 }
-
-@media (min-width: 992px) {
-  .user-management-container {
-    max-width: 1100px; /* Restrict the max-width on larger screens */
-    margin: 0 auto; /* Center the container */
-  }
-
-  .form-group input {
-    padding: 12px;
-    font-size: 1rem; /* Larger font size */
-  }
-
-  .form-actions {
-    flex-direction: row; /* Align buttons horizontally */
-    gap: 15px;
-  }
-
-  .save-button,
-  .cancel-button {
-    width: auto; /* Adjust button width on larger screens */
-    padding: 12px;
-  }
-}
