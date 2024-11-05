@@ -73,6 +73,45 @@
 /* Responsive styling for smaller screens */
 @media (max-width: 768px) {
   .user-management-container {
-    width: 90%;
+    padding: 15px;
+  }
+
+  .form-group input {
+    padding: 8px;
+    font-size: 0.875rem; /* Smaller font size */
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .save-button,
+  .cancel-button {
+    width: 100%; /* Full-width buttons on smaller screens */
+    padding: 8px;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .user-management-container {
+    max-width: 1100px; /* Restrict the max-width on larger screens */
+    margin: 0 auto; /* Center the container */
+  }
+
+  .form-group input {
+    padding: 12px;
+    font-size: 1rem; /* Larger font size */
+  }
+
+  .form-actions {
+    flex-direction: row; /* Align buttons horizontally */
+    gap: 15px;
+  }
+
+  .save-button,
+  .cancel-button {
+    width: auto; /* Adjust button width on larger screens */
+    padding: 12px;
   }
 }

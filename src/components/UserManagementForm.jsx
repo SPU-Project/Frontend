@@ -28,13 +28,10 @@ function UserManagementForm() {
   };
 
   return (
-    <div className="user-management-page">
-      {" "}
-      {/* Add a new main container */}
-      <AdminHeader /> {/* Include Header component */}
+    <div className="admin-dashboard">
+    <div className="main-section">
+      <AdminHeader />
       <div className="user-management-container">
-        {" "}
-        {/* Separate container for form content */}
         <div className="user-management-form">
           <form onSubmit={handleSave}>
             <div className="form-group">
@@ -98,6 +95,7 @@ function UserManagementForm() {
         </div>
       </div>
     </div>
+  </div>  
   );
 }
 
