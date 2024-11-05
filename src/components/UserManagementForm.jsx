@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminHeader from "./AdminHeader(UserManagement)"; // Import Header component
+import Select from "react-select";
 import "../styles/UserManagementForm.css";
 
 function UserManagementForm() {
@@ -71,13 +72,17 @@ function UserManagementForm() {
               />
             </div>
             <div className="form-group">
-              <label>Role</label>
-              <input
-                type="text"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                required
-              />
+              <label>Hak Akses</label>
+              <Select
+                  options={[
+                    { value: "role1", label: "Admin" },
+                    { value: "role2", label: "Operator" },
+                    { value: "role3", label: "User" },
+                  ]}
+                  onChange={(selectedOption) => setRole(selectedOption.value)}
+                  placeholder="Pilih Hak Akses"
+                  className="select-input"
+                />
             </div>
             <div className="form-actions">
               <button type="submit" className="save-button">
