@@ -60,7 +60,6 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async () => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
   });
 
   if (!response.ok) {
