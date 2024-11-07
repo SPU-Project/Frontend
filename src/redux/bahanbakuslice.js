@@ -8,6 +8,7 @@ export const addBahanBaku = createAsyncThunk(
     try {
       const response = await fetch("http://localhost:5000/bahanbaku", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -29,7 +30,9 @@ export const fetchBahanBaku = createAsyncThunk(
   "bahanBaku/fetchBahanBaku",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/bahanbaku"); // Ubah sesuai dengan endpoint backend Anda
+      const response = await fetch("http://localhost:5000/bahanbaku", {
+        credentials: "include",
+      }); // Ubah sesuai dengan endpoint backend Anda
       const data = await response.json();
       if (!response.ok) {
         return rejectWithValue(data.message);
@@ -48,6 +51,7 @@ export const deleteBahanBaku = createAsyncThunk(
     try {
       const response = await fetch(`http://localhost:5000/bahanbaku/${id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       const data = await response.json();
       if (!response.ok) {
@@ -71,6 +75,7 @@ export const updateBahanBaku = createAsyncThunk(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ BahanBaku, Harga }),
+        credentials: "include",
       });
 
       // Logging untuk melihat status dan isi dari respons

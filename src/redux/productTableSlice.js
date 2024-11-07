@@ -40,6 +40,7 @@ export const deleteProduct = createAsyncThunk(
     try {
       const response = await fetch(`http://localhost:5000/produkdelete/${id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       const data = await response.json();
       if (!response.ok) {
@@ -65,6 +66,7 @@ export const updateProduct = createAsyncThunk(
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updatedData),
+          credentials: "include",
         }
       );
       const data = await response.json();

@@ -10,6 +10,7 @@ export const addProduk = createAsyncThunk(
           "Content-Type": "application/json",
         },
         body: JSON.stringify(produkData),
+        credentials: "include",
       });
       const data = await response.json();
       if (!response.ok) {
@@ -34,6 +35,7 @@ export const updateProduct = createAsyncThunk(
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updatedData),
+          credentials: "include",
         }
       );
       const data = await response.json();
