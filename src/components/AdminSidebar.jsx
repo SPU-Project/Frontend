@@ -9,7 +9,7 @@ import { fetchProfileImage } from "../redux/profileSlice"; // Import fetchProfil
 function AdminSidebar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const role = useSelector((state) => state.user.user?.role);
   const username = useSelector((state) => state.user.user?.username || "User");
   const status = useSelector((state) => state.user.status);
   const profileImage = useSelector(
@@ -57,34 +57,45 @@ function AdminSidebar() {
             objectFit: "cover",
           }}
         />
-        <h3>{username}</h3> {/* Menampilkan username dari Redux */}
+        <h3>{username}</h3>
       </div>
       <ul>
-        <li>
-          <Link to="/raw-materials" className="sidebar-link">
-            Bahan Baku
-          </Link>
-        </li>
-        <li>
-          <Link to="/products" className="sidebar-link">
-            Produk
-          </Link>
-        </li>
-        <li>
-          <Link to="/status-product" className="sidebar-link">
-            Status Produk
-          </Link>
-        </li>
-        <li>
-          <Link to="/user-management" className="sidebar-link">
-            Manajemen Pengguna
-          </Link>
-        </li>
-        <li>
-          <Link to="/log-history" className="sidebar-link">
-            Riwayat Log
-          </Link>
-        </li>
+        {/* Bahan Baku - Visible to all roles */}
+        {["Admin", "Operator", "User"].includes(role) && (
+          <li>
+            <Link to="/raw-materials" className="sidebar-link">
+              Bahan Baku
+            </Link>
+          </li>
+        )}
+        {/* Produk - Visible to Admin and Operator */}
+        {["Admin", "Operator"].includes(role) && (
+          <li>
+            <Link to="/products" className="sidebar-link">
+              Produk
+            </Link>
+          </li>
+        )}
+        {/* Status Produk, Manajemen Pengguna, Riwayat Log - Visible to Admin only */}
+        {role === "Admin" && (
+          <>
+            <li>
+              <Link to="/status-product" className="sidebar-link">
+                Status Produk
+              </Link>
+            </li>
+            <li>
+              <Link to="/user-management" className="sidebar-link">
+                Manajemen Pengguna
+              </Link>
+            </li>
+            <li>
+              <Link to="/log-history" className="sidebar-link">
+                Riwayat Log
+              </Link>
+            </li>
+          </>
+        )}
         <hr
           style={{ width: "100%", borderWidth: "4px", borderColor: "white" }}
         />

@@ -16,6 +16,7 @@ const RawMaterialsTable = () => {
 
   const bahanBaku = useSelector((state) => state.bahanBaku.items);
   const status = useSelector((state) => state.bahanBaku.status);
+  const role = useSelector((state) => state.user.user?.role);
   const [searchTerm, setSearchTerm] = useState("");
   const [formBahanBaku, setFormBahanBaku] = useState("");
   const [formHarga, setFormHarga] = useState("");
@@ -167,49 +168,54 @@ const RawMaterialsTable = () => {
 
   return (
     <div className="admin-table-container">
-      <form onSubmit={handleSimpan} className="form-container">
-        <div className="form-group">
-          <label htmlFor="formBahanBaku" className="text-form">
-            Bahan Baku
-          </label>
-          <input
-            type="text"
-            id="formBahanBaku"
-            placeholder="Enter Bahan Baku"
-            value={formBahanBaku}
-            onChange={(e) => setFormBahanBaku(e.target.value)}
-            className="form-input"
-          />
-        </div>
+      {/* Form for Adding/Updating Bahan Baku - Visible to Admin, Operator, and User */}
+      {["Admin", "Operator", "User"].includes(role) && (
+        <form onSubmit={handleSimpan} className="form-container">
+          {/* Form fields */}
+          <div className="form-group">
+            <label htmlFor="formBahanBaku" className="text-form">
+              Bahan Baku
+            </label>
+            <input
+              type="text"
+              id="formBahanBaku"
+              placeholder="Enter Bahan Baku"
+              value={formBahanBaku}
+              onChange={(e) => setFormBahanBaku(e.target.value)}
+              className="form-input"
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="formHargaKilo" className="text-form">
-            Harga/Kilo
-          </label>
-          <input
-            type="text"
-            id="formHargaKilo"
-            placeholder="Enter Harga/Kilo"
-            value={formHarga}
-            onChange={(e) => setFormHarga(e.target.value)}
-            className="form-input"
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="formHargaKilo" className="text-form">
+              Harga/Kilo
+            </label>
+            <input
+              type="text"
+              id="formHargaKilo"
+              placeholder="Enter Harga/Kilo"
+              value={formHarga}
+              onChange={(e) => setFormHarga(e.target.value)}
+              className="form-input"
+            />
+          </div>
 
-        {errorMessage && (
-          <div className="message error-message">{errorMessage}</div>
-        )}
-        {successMessage && (
-          <div className="message success-message">{successMessage}</div>
-        )}
+          {errorMessage && (
+            <div className="message error-message">{errorMessage}</div>
+          )}
+          {successMessage && (
+            <div className="message success-message">{successMessage}</div>
+          )}
 
-        <div className="button-group-container">
-          <button type="submit" className="button-group" disabled={loading}>
-            {loading ? <div className="spinner"></div> : "Simpan"}
-          </button>
-        </div>
-      </form>
+          <div className="button-group-container">
+            <button type="submit" className="button-group" disabled={loading}>
+              {loading ? <div className="spinner"></div> : "Simpan"}
+            </button>
+          </div>
+        </form>
+      )}
 
+      {/* Table and Search */}
       <div className="table-controls">
         <div className="search-container">
           <FontAwesomeIcon
@@ -242,18 +248,25 @@ const RawMaterialsTable = () => {
               <td>{item.BahanBaku}</td>
               <td>{formatRupiah(item.Harga)}</td>
               <td>
-                <button
-                  onClick={() => handleUbah(item.id)}
-                  className="edit-raw-button"
-                >
-                  Ubah
-                </button>
-                <button
-                  onClick={() => handleHapus(item.id)}
-                  className="delete-raw-button"
-                >
-                  Hapus
-                </button>
+                {/* Action Buttons - Visible to Admin, Operator, and User */}
+                {["Admin", "Operator", "User"].includes(role) ? (
+                  <>
+                    <button
+                      onClick={() => handleUbah(item.id)}
+                      className="edit-raw-button"
+                    >
+                      Ubah
+                    </button>
+                    <button
+                      onClick={() => handleHapus(item.id)}
+                      className="delete-raw-button"
+                    >
+                      Hapus
+                    </button>
+                  </>
+                ) : (
+                  <span>-</span> // Or leave it empty
+                )}
               </td>
             </tr>
           ))}

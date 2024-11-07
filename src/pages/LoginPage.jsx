@@ -26,6 +26,9 @@ const Login = () => {
     try {
       await dispatch(loginUser({ email, password })).unwrap();
 
+      // Fetch user data again after login to update Redux store
+      const user = await dispatch(fetchUser()).unwrap();
+
       // Fetch user data again after login to update Redux state
       await dispatch(fetchUser()).unwrap();
 

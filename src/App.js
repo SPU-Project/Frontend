@@ -11,6 +11,7 @@ import UserManagementPage from "./pages/UserManagementPage";
 import UserManagementFormPage from "./pages/UserManagementFormPage";
 import LogHistoryPage from "./pages/LogHistoryPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,33 +23,106 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<LoginPage />} />
+
+        {/* Protected Routes */}
         <Route
           path="/raw-materials"
           element={
-            <RawMaterialsPage
-              searchTerm={searchTerm}
-              onSearchChange={handleSearchChange}
-            />
+            <ProtectedRoute>
+              <RawMaterialsPage
+                searchTerm={searchTerm}
+                onSearchChange={handleSearchChange}
+              />
+            </ProtectedRoute>
           }
         />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/form" element={<ProductFormPage />} />
-        <Route path="/status-product" element={<StatusProductPage />} />
-        <Route path="/form-status" element={<FormStatusProductPage />} />
-        <Route path="/form/:id" element={<ProductFormPage />} />
-        <Route path="/total-cost" element={<TotalCostProductPage />} />
-        <Route path="/total-cost/:id" element={<TotalCostProductPage />} />
-        <Route path="/user-management" element={<UserManagementPage />} />
-        <Route path="/log-history" element={<LogHistoryPage />} />
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <ProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/form"
+          element={
+            <ProtectedRoute>
+              <ProductFormPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/status-product"
+          element={
+            <ProtectedRoute>
+              <StatusProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/form-status"
+          element={
+            <ProtectedRoute>
+              <FormStatusProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/form/:id"
+          element={
+            <ProtectedRoute>
+              <ProductFormPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/total-cost"
+          element={
+            <ProtectedRoute>
+              <TotalCostProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/total-cost/:id"
+          element={
+            <ProtectedRoute>
+              <TotalCostProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user-management"
+          element={
+            <ProtectedRoute>
+              <UserManagementPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/log-history"
+          element={
+            <ProtectedRoute>
+              <LogHistoryPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/user-management-form"
           element={<UserManagementFormPage />}
         />
         {/* Add the route for editing users */}
+
         <Route
           path="/user-management-form/:id"
-          element={<UserManagementFormPage />}
+          element={
+            <ProtectedRoute>
+              <UserManagementFormPage />
+            </ProtectedRoute>
+          }
         />
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>

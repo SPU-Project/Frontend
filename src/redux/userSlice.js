@@ -2,46 +2,54 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
-  async (credentials, { dispatch, getState }) => {
-    console.log("LoginUser Thunk Triggered"); // Log untuk melihat kapan thunk dipanggil
-    const response = await fetch("http://localhost:5000/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-      credentials: "include",
-    });
+  async (credentials, { rejectWithValue }) => {
+    try {
+      console.log("LoginUser Thunk Triggered");
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.msg || "Failed to log in.");
+      if (!response.ok) {
+        throw new Error(data.msg || "Failed to log in.");
+      }
+
+      // Return the user data, which should include role, uuid, etc.
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
-
-    return { user: data.user, userId: data.uuid };
   }
 );
 
 // Define async thunks for API calls
 export const fetchUser = createAsyncThunk(
   "user/fetchUser",
-  async (_, { getState }) => {
-    const response = await fetch("http://localhost:5000/me", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch("http://localhost:5000/me", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (response.status === 401) {
-      throw new Error("Session expired. Please log in again.");
+      if (response.status === 401) {
+        throw new Error("Session expired. Please log in again.");
+      }
+
+      const data = await response.json();
+      return data.user;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
-
-    const data = await response.json();
-    return data.user;
   }
 );
 
@@ -96,8 +104,8 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload.user;
-        state.userId = action.payload.userId;
+        state.user = action.payload; // The entire user object
+        state.userId = action.payload.uuid;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
