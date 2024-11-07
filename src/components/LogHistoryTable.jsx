@@ -1,74 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/LogHistoryTable.css";
 import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchRiwayat } from "../redux/riwayatSlice"; // Adjust the path as necessary
 
 function LogHistoryTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Dummy user data
-  const [users, setUsers] = useState([
-    {
-      id: 3,
-      penggunaId: 103,
-      namaPengguna: "user1",
-      role: "Admin",
-      date: "2024-10-28 13:10:07",
-      keterangan: "Menambah Bahan Baku",
-    },
-    {
-      id: 3,
-      penggunaId: 103,
-      namaPengguna: "user2",
-      role: "Admin",
-      date: "2024-10-28 13:10:07",
-      keterangan: "Menambah Bahan Baku",
-    },
-    {
-      id: 3,
-      penggunaId: 103,
-      namaPengguna: "user3",
-      role: "Admin",
-      date: "2024-10-28 13:10:07",
-      keterangan: "Menambah Bahan Baku",
-    },
-  ]);
+  // Get log history data from Redux store
+  const { items: logs, loading, error } = useSelector((state) => state.riwayat);
 
-  // Modal and confirmation states
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  useEffect(() => {
+    // Fetch log history when the component mounts
+    dispatch(fetchRiwayat());
+  }, [dispatch]);
 
-  const filteredUsers = users.filter((user) =>
-    user.namaPengguna.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter logs based on the search term (username or description)
+  const filteredLogs = logs.filter(
+    (log) =>
+      log.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      log.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDeleteConfirmation = () => {
-    setModalMessage("Pengguna berhasil dihapus!");
-    setTimeout(() => setShowModal(false), 2000);
-    setShowDeleteConfirmation(false);
-  };
+  // Handle loading and error states
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setShowDeleteConfirmation(false);
-  };
-
-  const handleAddUser = () => {
-    navigate("/user-management-form");
-  };
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <div className="admin-table">
+    <div className="admin-table-container">
       <div className="table-controls">
         <div className="search-container">
-          <FontAwesomeIcon icon={faSearch} className="search-icon" />
+          <FontAwesomeIcon
+            icon={faSearch}
+            className={`search-icon ${searchTerm ? "hidden" : ""}`}
+          />
           <input
             type="text"
-            placeholder="Cari Pengguna"
+            placeholder="Cari Pengguna atau Keterangan"
             value={searchTerm}
             onChange={onSearchChange}
             className="search-input"
@@ -76,7 +54,7 @@ function LogHistoryTable({ searchTerm = "", onSearchChange }) {
         </div>
       </div>
       <div className="table-wrapper">
-        <table>
+        <table className="admin-table">
           <thead>
             <tr>
               <th>No</th>
@@ -87,41 +65,27 @@ function LogHistoryTable({ searchTerm = "", onSearchChange }) {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user, index) => (
-                <tr key={user.id}>
+            {filteredLogs.length > 0 ? (
+              filteredLogs.map((log, index) => (
+                <tr key={log.id}>
                   <td>{index + 1}</td>
-                  <td>{user.namaPengguna}</td>
-                  <td>{user.role}</td>
-                  <td>{user.date}</td>
-                  <td>{user.keterangan}</td>
+                  <td>{log.username}</td>
+                  <td>{log.role}</td>
+                  <td>{new Date(log.date).toLocaleString()}</td>
+                  <td>{log.description}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="4">Tidak ada pengguna yang ditemukan</td>
+                <td colSpan="5">Tidak ada riwayat yang ditemukan</td>
               </tr>
             )}
           </tbody>
         </table>
 
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Informasi</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{modalMessage}</Modal.Body>
-          <Modal.Footer>
-            {showDeleteConfirmation && (
-              <>
-                <Button variant="danger" onClick={handleDeleteConfirmation}>
-                  Hapus
-                </Button>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                  Batal
-                </Button>
-              </>
-            )}
-          </Modal.Footer>
+        {/* Include Modal if needed */}
+        <Modal show={false} onHide={() => {}}>
+          {/* Modal content */}
         </Modal>
       </div>
     </div>
