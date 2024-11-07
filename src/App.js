@@ -45,6 +45,11 @@ function App() {
           path="/user-management-form"
           element={<UserManagementFormPage />}
         />
+        {/* Add the route for editing users */}
+        <Route
+          path="/user-management-form/:id"
+          element={<UserManagementFormPage />}
+        />
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>
     </Router>

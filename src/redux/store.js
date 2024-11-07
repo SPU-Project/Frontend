@@ -4,6 +4,7 @@ import profileReducer from "./profileSlice"; // Import profile slice
 import bahanBakuReducer from "./bahanbakuslice";
 import produkReducer from "./produkSlice";
 import productTableReducer from "./productTableSlice";
+import userManagementReducer from "./userManagementSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     bahanBaku: bahanBakuReducer,
     produk: produkReducer,
     productTable: productTableReducer,
+    userManagement: userManagementReducer,
   },
 });
