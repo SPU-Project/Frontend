@@ -80,11 +80,6 @@ function AdminSidebar() {
         {role === "Admin" && (
           <>
             <li>
-              <Link to="/status-product" className="sidebar-link">
-                Status Produk
-              </Link>
-            </li>
-            <li>
               <Link to="/user-management" className="sidebar-link">
                 Manajemen Pengguna
               </Link>
