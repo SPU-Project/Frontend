@@ -15,7 +15,7 @@ export const fetchUsers = createAsyncThunk(
   "userManagement/fetchUsers",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("http://localhost:5000/users");
+      const response = await axios.get("https://apiv2.pabrikbumbu.com/users");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -29,7 +29,7 @@ export const addUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/users",
+        "https://apiv2.pabrikbumbu.com/users",
         userData
       );
       return response.data;
@@ -45,7 +45,7 @@ export const updateUser = createAsyncThunk(
   async ({ id, userData }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/users/${id}`,
+        `https://apiv2.pabrikbumbu.com/users/${id}`,
         userData
       );
       return { id, ...response.data };
@@ -60,7 +60,9 @@ export const deleteUser = createAsyncThunk(
   "userManagement/deleteUser",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/users/${id}`);
+      const response = await axios.delete(
+        `https://apiv2.pabrikbumbu.com/users/${id}`
+      );
       return { id, ...response.data };
     } catch (error) {
       return rejectWithValue(error.response.data);

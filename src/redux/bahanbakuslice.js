@@ -6,7 +6,7 @@ export const addBahanBaku = createAsyncThunk(
   "bahanBaku/addBahanBaku",
   async ({ BahanBaku, Harga }, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/bahanbaku", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/bahanbaku", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -30,7 +30,7 @@ export const fetchBahanBaku = createAsyncThunk(
   "bahanBaku/fetchBahanBaku",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/bahanbaku", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/bahanbaku", {
         credentials: "include",
       }); // Ubah sesuai dengan endpoint backend Anda
       const data = await response.json();
@@ -49,10 +49,13 @@ export const deleteBahanBaku = createAsyncThunk(
   "bahanBaku/deleteBahanBaku",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/bahanbaku/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `https://apiv2.pabrikbumbu.com/bahanbaku/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         return rejectWithValue(data.message);
@@ -69,14 +72,17 @@ export const updateBahanBaku = createAsyncThunk(
   "bahanBaku/updateBahanBaku",
   async ({ id, BahanBaku, Harga }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/bahanbaku/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ BahanBaku, Harga }),
-        credentials: "include",
-      });
+      const response = await fetch(
+        `https://apiv2.pabrikbumbu.com/bahanbaku/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ BahanBaku, Harga }),
+          credentials: "include",
+        }
+      );
 
       // Logging untuk melihat status dan isi dari respons
       console.log("Response status:", response.status);

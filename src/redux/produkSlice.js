@@ -4,7 +4,7 @@ export const addProduk = createAsyncThunk(
   "produk/addProduk",
   async (produkData, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/produk", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/produk", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export const updateProduct = createAsyncThunk(
   async ({ id, updatedData }, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/produkbahanbaku/${id}`,
+        `https://apiv2.pabrikbumbu.com/produkbahanbaku/${id}`,
         {
           method: "PATCH",
           headers: {

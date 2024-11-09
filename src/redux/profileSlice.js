@@ -5,10 +5,13 @@ export const fetchProfileImage = createAsyncThunk(
   "profile/fetchProfileImage",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/profile-image", {
-        method: "GET",
-        credentials: "include", // Sertakan cookie dalam permintaan jika diperlukan
-      });
+      const response = await fetch(
+        "https://apiv2.pabrikbumbu.com/profile-image",
+        {
+          method: "GET",
+          credentials: "include", // Sertakan cookie dalam permintaan jika diperlukan
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
