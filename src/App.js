@@ -13,6 +13,7 @@ import LogHistoryPage from "./pages/LogHistoryPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+//SPU_Tugas-Akhir_Local
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
