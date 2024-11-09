@@ -13,6 +13,8 @@ import LogHistoryPage from "./pages/LogHistoryPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+//SPU_Magang_Production
+
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
