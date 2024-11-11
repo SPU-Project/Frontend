@@ -9,6 +9,7 @@ import FormStatusProductPage from "./pages/FormStatusProductPage";
 import StatusProductPage from "./pages/StatusProductPage";
 import UserManagementPage from "./pages/UserManagementPage";
 import UserManagementFormPage from "./pages/UserManagementFormPage";
+import StockRawMaterialPage from "./pages/StockRawMaterialPage";
 import LogHistoryPage from "./pages/LogHistoryPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -124,6 +125,10 @@ function App() {
               <UserManagementFormPage />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/stock-raw-materials"
+          element={<StockRawMaterialPage />}
         />
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>
