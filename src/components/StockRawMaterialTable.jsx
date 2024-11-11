@@ -5,40 +5,47 @@ import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../redux/userManagementSlice";
+import { fetchStockItems, updateStockItem } from "../redux/stokbahanbakuSlice";
 
-function UserManagementTable({ searchTerm = "", onSearchChange }) {
+function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
   const dispatch = useDispatch();
 
   const [editingRow, setEditingRow] = useState(null);
   const [tempStock, setTempStock] = useState({});
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchStockItems());
   }, [dispatch]);
 
-  const { users, loading, error } = useSelector(
-    (state) => state.userManagement
+  const { stockItems, status, error } = useSelector(
+    (state) => state.stokbahanbaku
   );
 
-  const filteredUsers = users.filter((user) =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredStockItems = stockItems.filter((item) =>
+    item.BahanBaku.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleEditClick = (userId, stock) => {
-    setEditingRow(userId);
-    setTempStock({ ...tempStock, [userId]: stock });
+  const handleEditClick = (stockItemId, stock) => {
+    setEditingRow(stockItemId);
+    setTempStock({ ...tempStock, [stockItemId]: stock });
   };
 
-  const handleSaveClick = (userId) => {
-    // Logika penyimpanan (misalnya, dispatch ke Redux atau API call)
-    console.log("Simpan perubahan untuk user dengan ID:", userId, "stok:", tempStock[userId]);
+  const handleSaveClick = (stockItemId) => {
+    const updatedStock = tempStock[stockItemId];
 
-    setEditingRow(null); // Kembali ke mode non-edit
+    // Dispatch the updateStockItem action
+    dispatch(updateStockItem({ id: stockItemId, Stok: updatedStock }))
+      .unwrap()
+      .then(() => {
+        setEditingRow(null); // Exit editing mode
+      })
+      .catch((error) => {
+        console.error("Failed to update stock item:", error.message);
+      });
   };
 
-  const handleStockChange = (userId, value) => {
-    setTempStock({ ...tempStock, [userId]: value });
+  const handleStockChange = (stockItemId, value) => {
+    setTempStock({ ...tempStock, [stockItemId]: value });
   };
 
   return (
@@ -56,7 +63,7 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
         </div>
       </div>
       <div className="table-wrapper">
-        {loading ? (
+        {status === "loading" ? (
           <p>Loading...</p>
         ) : error ? (
           <p>Error: {error}</p>
@@ -66,41 +73,47 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
               <tr>
                 <th>No</th>
                 <th>Bahan Baku</th>
-                <th>Stock/kg</th>
+                <th>Stok (kg)</th>
                 <th>Tanggal Pembaruan</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((user, index) => (
-                  <tr key={user.id}>
+              {filteredStockItems.length > 0 ? (
+                filteredStockItems.map((item, index) => (
+                  <tr key={item.id}>
                     <td>{index + 1}</td>
-                    <td>{user.username}</td>
+                    <td>{item.BahanBaku}</td>
                     <td>
-                      {editingRow === user.id ? (
+                      {editingRow === item.id ? (
                         <input
                           type="number"
-                          value={tempStock[user.id] || ""}
-                          onChange={(e) => handleStockChange(user.id, e.target.value)}
+                          value={tempStock[item.id] || ""}
+                          onChange={(e) =>
+                            handleStockChange(item.id, e.target.value)
+                          }
                         />
                       ) : (
-                        user.stock // Gantilah `user.stock` sesuai data yang tersedia
+                        item.Stok
                       )}
                     </td>
-                    <td>{user.updatedAt}</td>
                     <td>
-                      {editingRow === user.id ? (
+                      {new Date(item.TanggalPembaruan).toLocaleDateString(
+                        "id-ID"
+                      )}
+                    </td>
+                    <td>
+                      {editingRow === item.id ? (
                         <button
                           className="save-button"
-                          onClick={() => handleSaveClick(user.id)}
+                          onClick={() => handleSaveClick(item.id)}
                         >
                           Simpan
                         </button>
                       ) : (
                         <button
                           className="edit-product-button"
-                          onClick={() => handleEditClick(user.id, user.stock)}
+                          onClick={() => handleEditClick(item.id, item.Stok)}
                         >
                           Ubah
                         </button>
@@ -110,7 +123,7 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5">Tidak ada pengguna yang ditemukan</td>
+                  <td colSpan="5">Tidak ada stok bahan baku yang ditemukan</td>
                 </tr>
               )}
             </tbody>
@@ -121,4 +134,4 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
   );
 }
 
-export default UserManagementTable;
+export default StockRawMaterialTable;

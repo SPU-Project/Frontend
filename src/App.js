@@ -128,7 +128,11 @@ function App() {
         />
         <Route
           path="/stock-raw-materials"
-          element={<StockRawMaterialPage />}
+          element={
+            <ProtectedRoute>
+              <StockRawMaterialPage />
+            </ProtectedRoute>
+          }
         />
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>

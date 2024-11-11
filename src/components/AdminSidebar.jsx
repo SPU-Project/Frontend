@@ -70,13 +70,20 @@ function AdminSidebar() {
         )}
         {/* Produk - Visible to Admin and Operator */}
         {["Admin", "Operator"].includes(role) && (
-          <li>
-            <Link to="/products" className="sidebar-link">
-              Produk
-            </Link>
-          </li>
+          <>
+            <li>
+              <Link to="/stock-raw-materials" className="sidebar-link">
+                Stok Bahan Baku
+              </Link>
+            </li>
+            <li>
+              <Link to="/products" className="sidebar-link">
+                Produk
+              </Link>
+            </li>
+          </>
         )}
-        {/* Status Produk, Manajemen Pengguna, Riwayat Log - Visible to Admin only */}
+        {/* Stok Bahan Baku, Status Produk, Manajemen Pengguna, Riwayat Log - Visible to Admin only */}
         {role === "Admin" && (
           <>
             <li>
