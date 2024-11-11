@@ -5,9 +5,9 @@ import { fetchProducts, deleteProduct } from "../redux/productTableSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap";
-import "../styles/ProductTable.css";
+import "../styles/SalesProductTable.css";
 
-function StatusProdukTable({ searchTerm = "", onSearchChange }) {
+function SalesProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector(
@@ -62,7 +62,7 @@ function StatusProdukTable({ searchTerm = "", onSearchChange }) {
   };
 
   const handleAddProduct = () => {
-    navigate("/form-status");
+    navigate("/form-sales");
   };
 
   if (loading) {
@@ -165,4 +165,4 @@ function StatusProdukTable({ searchTerm = "", onSearchChange }) {
   );
 }
 
-export default StatusProdukTable;
+export default SalesProductTable;

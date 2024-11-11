@@ -83,12 +83,12 @@ function AdminSidebar() {
             </li>
           </>
         )}
-        {/* Stok Bahan Baku, Status Produk, Manajemen Pengguna, Riwayat Log - Visible to Admin only */}
+        {/* Stok Bahan Baku, Penjualan Produk, Manajemen Pengguna, Riwayat Log - Visible to Admin only */}
         {role === "Admin" && (
           <>
             <li>
-              <Link to="/status-product" className="sidebar-link">
-                Status Produk
+              <Link to="/sales-product" className="sidebar-link">
+                Penjualan Produk
               </Link>
             </li>
             <li>

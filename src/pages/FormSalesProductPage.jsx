@@ -1,5 +1,5 @@
 import React from "react";
-import FormStatusProduct from "../components/FormStatusProduct";
+import FormSalesProduct from "../components/FormSalesProduct";
 
 function ProductFormPage() {
   // Jika Anda memerlukan onClose atau props lain, Anda bisa menambahkannya di sini
@@ -9,7 +9,7 @@ function ProductFormPage() {
 
   return (
     <div>
-      <FormStatusProduct onClose={handleClose} />
+      <FormSalesProduct onClose={handleClose} />
     </div>
   );
 }

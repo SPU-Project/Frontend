@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import AdminSidebar from "../components/AdminSidebar";
-import AdminHeader from "../components/AdminHeader(Status)";
-import StatusProductTable from "../components/StatusProductTable";
-import "../styles/StatusProductPage.css";
+import AdminHeader from "../components/AdminHeader(Sales)";
+import SalesProductTable from "../components/SalesProductTable";
+import "../styles/SalesProductPage.css";
 
-function StatusProductsPage() {
+function ProductSalesPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (event) => {
@@ -29,7 +29,7 @@ function StatusProductsPage() {
       )}
       <div className={`main-section ${isSidebarVisible ? "shrink" : "expand"}`}>
         <AdminHeader />
-        <StatusProductTable
+        <SalesProductTable
           searchTerm={searchTerm}
           onSearchChange={handleSearchChange}
         />
@@ -38,4 +38,4 @@ function StatusProductsPage() {
   );
 }
 
-export default StatusProductsPage;
+export default ProductSalesPage;

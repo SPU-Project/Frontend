@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import AdminHeader from "./AdminHeader(Status)"; // Import AdminHeader
-import "../styles/FormStatusProduct.css"; // Import CSS file
+import AdminHeader from "./AdminHeader(Sales)"; // Import AdminHeader
+import "../styles/FormSalesProduct.css"; // Import CSS file
 
-function FormStatusProduct() {
+function FormSalesProduct() {
   const navigate = useNavigate();
   const [productName, setProductName] = useState("");
   const [productionDate, setProductionDate] = useState("");
@@ -23,16 +23,16 @@ function FormStatusProduct() {
   };
 
   const handleCancel = () => {
-    navigate("/status-product");
+    navigate("/sales-product");
     console.log("Form canceled");
   };
 
   return (
     <div className="product-form-table">
       <AdminHeader />
-      <div className="form-status-product">
+      <div className="form-sales-product">
         <form onSubmit={handleSave}>
-          <table className="status-product-table">
+          <table className="sales-product-table">
             <thead>
               <tr>
                 <th>Nama Produk</th>
@@ -105,4 +105,4 @@ function FormStatusProduct() {
   );
 }
 
-export default FormStatusProduct;
+export default FormSalesProduct;

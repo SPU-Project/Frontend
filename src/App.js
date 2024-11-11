@@ -5,8 +5,8 @@ import ProductsPage from "./pages/ProductsPage";
 import TotalCostProductPage from "./pages/TotalCostProductPage";
 import ProductFormPage from "./pages/ProductFormPage";
 import LoginPage from "./pages/LoginPage";
-import FormStatusProductPage from "./pages/FormStatusProductPage";
-import StatusProductPage from "./pages/StatusProductPage";
+import FormSalesProductPage from "./pages/FormSalesProductPage";
+import ProductSalesPage from "./pages/ProductSalesPage";
 import UserManagementPage from "./pages/UserManagementPage";
 import UserManagementFormPage from "./pages/UserManagementFormPage";
 import StockRawMaterialPage from "./pages/StockRawMaterialPage";
@@ -57,18 +57,18 @@ function App() {
           }
         />
         <Route
-          path="/status-product"
+          path="/sales-product"
           element={
             <ProtectedRoute>
-              <StatusProductPage />
+              <ProductSalesPage />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/form-status"
+          path="/form-sales"
           element={
             <ProtectedRoute>
-              <FormStatusProductPage />
+              <FormSalesProductPage />
             </ProtectedRoute>
           }
         />
