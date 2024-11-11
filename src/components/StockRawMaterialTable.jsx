@@ -4,56 +4,41 @@ import "../styles/StockRawMaterialTable.css";
 import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Modal, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers, deleteUser } from "../redux/userManagementSlice"; // Import actions
+import { fetchUsers } from "../redux/userManagementSlice";
 
 function UserManagementTable({ searchTerm = "", onSearchChange }) {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Fetch users when component mounts
+  const [editingRow, setEditingRow] = useState(null);
+  const [tempStock, setTempStock] = useState({});
+
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  // Get users from Redux store
   const { users, loading, error } = useSelector(
     (state) => state.userManagement
   );
-
-  // Modal and confirmation states
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [idToDelete] = useState(null);
 
   const filteredUsers = users.filter((user) =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleEdit = (user) => {
-    navigate(`/user-management-form/${user.id}`);
+  const handleEditClick = (userId, stock) => {
+    setEditingRow(userId);
+    setTempStock({ ...tempStock, [userId]: stock });
   };
 
-  const handleDeleteConfirmation = () => {
-    dispatch(deleteUser(idToDelete))
-      .unwrap()
-      .then(() => {
-        setModalMessage("Pengguna berhasil dihapus!");
-        setTimeout(() => setShowModal(false), 2000);
-        setShowDeleteConfirmation(false);
-      })
-      .catch((error) => {
-        setModalMessage(`Gagal menghapus pengguna: ${error}`);
-        setTimeout(() => setShowModal(false), 2000);
-        setShowDeleteConfirmation(false);
-      });
+  const handleSaveClick = (userId) => {
+    // Logika penyimpanan (misalnya, dispatch ke Redux atau API call)
+    console.log("Simpan perubahan untuk user dengan ID:", userId, "stok:", tempStock[userId]);
+
+    setEditingRow(null); // Kembali ke mode non-edit
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setShowDeleteConfirmation(false);
+  const handleStockChange = (userId, value) => {
+    setTempStock({ ...tempStock, [userId]: value });
   };
 
   return (
@@ -92,17 +77,34 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
                   <tr key={user.id}>
                     <td>{index + 1}</td>
                     <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    {/* Passwords should not be displayed */}
-                    {/* <td>{user.password}</td> */}
-                    <td>{user.role}</td>
                     <td>
-                      <button
-                        className="edit-product-button"
-                        onClick={() => handleEdit(user)}
-                      >
-                        Ubah
-                      </button>
+                      {editingRow === user.id ? (
+                        <input
+                          type="number"
+                          value={tempStock[user.id] || ""}
+                          onChange={(e) => handleStockChange(user.id, e.target.value)}
+                        />
+                      ) : (
+                        user.stock // Gantilah `user.stock` sesuai data yang tersedia
+                      )}
+                    </td>
+                    <td>{user.updatedAt}</td>
+                    <td>
+                      {editingRow === user.id ? (
+                        <button
+                          className="save-button"
+                          onClick={() => handleSaveClick(user.id)}
+                        >
+                          Simpan
+                        </button>
+                      ) : (
+                        <button
+                          className="edit-product-button"
+                          onClick={() => handleEditClick(user.id, user.stock)}
+                        >
+                          Ubah
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -114,29 +116,6 @@ function UserManagementTable({ searchTerm = "", onSearchChange }) {
             </tbody>
           </table>
         )}
-
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Informasi</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{modalMessage}</Modal.Body>
-          <Modal.Footer>
-            {showDeleteConfirmation ? (
-              <>
-                <Button variant="danger" onClick={handleDeleteConfirmation}>
-                  Hapus
-                </Button>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                  Batal
-                </Button>
-              </>
-            ) : (
-              <Button variant="secondary" onClick={handleCloseModal}>
-                Tutup
-              </Button>
-            )}
-          </Modal.Footer>
-        </Modal>
       </div>
     </div>
   );
