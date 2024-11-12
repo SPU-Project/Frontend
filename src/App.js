@@ -7,6 +7,8 @@ import ProductFormPage from "./pages/ProductFormPage";
 import LoginPage from "./pages/LoginPage";
 import FormSalesProductPage from "./pages/FormSalesProductPage";
 import ProductSalesPage from "./pages/ProductSalesPage";
+import StatusProductFormPage from "./pages/StatusProductFormPage";
+import StatusProductPage from "./pages/StatusProductPage";
 import UserManagementPage from "./pages/UserManagementPage";
 import UserManagementFormPage from "./pages/UserManagementFormPage";
 import StockRawMaterialPage from "./pages/StockRawMaterialPage";
@@ -131,6 +133,22 @@ function App() {
           element={
             <ProtectedRoute>
               <StockRawMaterialPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/status-product"
+          element={
+            <ProtectedRoute>
+              <StatusProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/status-product-form"
+          element={
+            <ProtectedRoute>
+              <StatusProductFormPage />
             </ProtectedRoute>
           }
         />

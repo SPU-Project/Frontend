@@ -81,6 +81,11 @@ function AdminSidebar() {
                 Produk
               </Link>
             </li>
+            <li>
+              <Link to="/status-product" className="sidebar-link">
+                Status Produk
+              </Link>
+            </li>
           </>
         )}
         {/* Stok Bahan Baku, Penjualan Produk, Manajemen Pengguna, Riwayat Log - Visible to Admin only */}
