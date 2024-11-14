@@ -162,9 +162,25 @@ function ProductFormTable() {
       pricePerKg: ingredient.pricePerKg,
     }));
 
-    localStorage.setItem("products", JSON.stringify(productsWithDetails));
-    localStorage.setItem("productName", productName);
-    navigate(id ? `/total-cost/${id}` : "/total-cost");
+    const overheadsDetails = overheads.map((overhead) => ({
+      name: overhead.name,
+      harga: overhead.price,
+    }));
+
+    const kemasansDetails = kemasans.map((kemasan) => ({
+      name: kemasan.name,
+      harga: kemasan.price,
+    }));
+
+    // Navigasi dengan mengirim data melalui state
+    navigate(id ? `/total-cost/${id}` : "/total-cost", {
+      state: {
+        products: productsWithDetails,
+        overheads: overheadsDetails,
+        kemasans: kemasansDetails,
+        productName: productName,
+      },
+    });
   };
 
   const handlePreviousPage = () => {
