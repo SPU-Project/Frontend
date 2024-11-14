@@ -170,17 +170,7 @@ function StatusProductForm() {
                   onChange={(date) => setDate(date)}
                 />
               </div>
-              <div className="form-group">
-                <label>Nama Produk</label>
-                <input
-                  type="nama produk"
-                  value={userData.namaProduk}
-                  onChange={(e) =>
-                    setUserData({ ...userData, namaProduk: e.target.value })
-                  }
-                  required={!isEditing} // Required only when adding a new user
-                />
-              </div>
+
               <div className="form-group">
                 <label>Batch</label>
                 <input
@@ -195,24 +185,7 @@ function StatusProductForm() {
                   required={!isEditing} // Required only when adding a new user
                 />
               </div>
-              <div className="form-group">
-                <label>Bahan Baku</label>
-                <Select
-                  options={roleOptions}
-                  value={roleOptions.find(
-                    (option) => option.value === userData.role
-                  )}
-                  onChange={(selectedOption) =>
-                    setUserData({
-                      ...userData,
-                      bahanbaku: selectedOption.value,
-                    })
-                  }
-                  placeholder="Pilih Bahan Baku"
-                  className="select-input"
-                  required
-                />
-              </div>
+
               <div className="form-group">
                 <label>Jumlah Bahan Baku</label>
                 <input
