@@ -25,6 +25,11 @@ function TotalCostProductTable() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [showModal, setShowModal] = useState(false); // Add showModal state
   const [modalMessage, setModalMessage] = useState("");
+  const [table2Products, setTable2Products] = useState([]);
+  const [table3Products, setTable3Products] = useState([]);
+  const [editRowId, setEditRowId] = useState(null);
+  const [editedProduct, setEditedProduct] = useState({ name: "", hpp: "" });
+  const [currentTable, setCurrentTable] = useState(null);
 
   useEffect(() => {
     // Periksa apakah ID ada
@@ -43,59 +48,79 @@ function TotalCostProductTable() {
     if (currentProduct && !isInitialLoad) {
       console.log("Fetched Product:", currentProduct);
 
-      setNewProductName(currentProduct.produk.namaProduk);
-      // Ensure that bahanBaku is an array before mapping
-      // Cek dan konversi bahanBaku menjadi array
+      // Mengatur nama produk
+      setNewProductName(currentProduct.namaProduk || "");
 
-      let bahanBakuArray = Array.isArray(currentProduct.bahanBaku)
-        ? currentProduct.bahanBaku
-        : currentProduct.bahanBaku
-        ? [currentProduct.bahanBaku]
+      // Memetakan bahan baku
+      let bahanBakuArray = Array.isArray(currentProduct.bahanbakumodel)
+        ? currentProduct.bahanbakumodel
+        : currentProduct.bahanbakumodel
+        ? [currentProduct.bahanbakumodel]
         : [];
-      console.log("Fetched Product:", bahanBakuArray);
 
-      const mappedIngredients = [];
+      const mappedIngredients = bahanBakuArray.map((bahanBaku) => ({
+        id: bahanBaku.id || "",
+        name: bahanBaku.BahanBaku || "",
+        quantity: bahanBaku.jumlah || 0,
+        pricePerKg: bahanBaku.Harga || 0,
+      }));
 
-      if (currentProduct.bahanBaku) {
-        mappedIngredients.push({
-          id: currentProduct.bahanBaku.id || "", // ID dari bahan baku
-          name: currentProduct.bahanBaku.BahanBaku || "", // Nama dari bahan baku
-          quantity: currentProduct.jumlah || 0, // Menggunakan jumlah
-          pricePerKg: currentProduct.bahanBaku.Harga || 0, // Harga dari bahan baku
-        });
-      }
-      // Handle overheads and kemasans similarly
-      setTable2Products(
-        Array.isArray(currentProduct.produk.overheads)
-          ? currentProduct.produk.overheads.map((overhead) => ({
-              id: overhead.id,
-              name: overhead.namaOverhead,
-              hpp: overhead.harga,
-            }))
-          : []
-      );
-      setTable3Products(
-        Array.isArray(currentProduct.produk.kemasans)
-          ? currentProduct.produk.kemasans.map((kemasan) => ({
-              id: kemasan.id,
-              name: kemasan.namaKemasan,
-              hpp: kemasan.harga,
-            }))
-          : []
-      );
+      setProducts(mappedIngredients);
+
+      // Memetakan overheads
+      let overheadsArray = Array.isArray(currentProduct.overheads)
+        ? currentProduct.overheads
+        : currentProduct.overheads
+        ? [currentProduct.overheads]
+        : [];
+
+      const mappedOverheads = overheadsArray.map((overhead) => ({
+        id: overhead.id || "",
+        name: overhead.namaOverhead || "",
+        hpp: overhead.harga || 0,
+      }));
+
+      setTable2Products(mappedOverheads);
+
+      // Memetakan kemasans
+      let kemasansArray = Array.isArray(currentProduct.kemasans)
+        ? currentProduct.kemasans
+        : currentProduct.kemasans
+        ? [currentProduct.kemasans]
+        : [];
+
+      const mappedKemasans = kemasansArray.map((kemasan) => ({
+        id: kemasan.id || "",
+        name: kemasan.namaKemasan || "",
+        hpp: kemasan.harga || 0,
+      }));
+
+      setTable3Products(mappedKemasans);
     } else {
       const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
+      const storedOverheads =
+        JSON.parse(localStorage.getItem("overheads")) || [];
+      const storedKemasans = JSON.parse(localStorage.getItem("kemasans")) || [];
       const storedProductName = localStorage.getItem("productName") || "";
+
       setProducts(storedProducts);
+      setTable2Products(
+        storedOverheads.map((overhead, index) => ({
+          id: index,
+          name: overhead.name,
+          hpp: overhead.harga,
+        }))
+      );
+      setTable3Products(
+        storedKemasans.map((kemasan, index) => ({
+          id: index,
+          name: kemasan.name,
+          hpp: kemasan.harga,
+        }))
+      );
       setNewProductName(storedProductName);
     }
   }, [currentProduct, isInitialLoad]);
-
-  const [table2Products, setTable2Products] = useState([]);
-  const [table3Products, setTable3Products] = useState([]);
-  const [editRowId, setEditRowId] = useState(null);
-  const [editedProduct, setEditedProduct] = useState({ name: "", hpp: "" });
-  const [currentTable, setCurrentTable] = useState(null);
 
   const handleEdit = (id, table) => {
     const productToEdit = (table === 2 ? table2Products : table3Products).find(

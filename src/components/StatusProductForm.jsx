@@ -187,20 +187,6 @@ function StatusProductForm() {
               </div>
 
               <div className="form-group">
-                <label>Jumlah Bahan Baku</label>
-                <input
-                  type="number"
-                  value={userData.jumlahBahanBaku}
-                  onChange={(e) =>
-                    setUserData({
-                      ...userData,
-                      jumlahBahanBaku: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
                 <label>Satuan</label>
                 <input
                   type="text"

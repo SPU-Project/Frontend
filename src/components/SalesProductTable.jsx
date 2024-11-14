@@ -25,7 +25,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
   }, [dispatch]);
 
   const filteredProducts = products.filter((product) =>
-    product.produk.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
+    product.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (product) => {
@@ -109,15 +109,15 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
               filteredProducts.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
-                  <td>{product.produk.namaProduk}</td>
-                  <td>{product.produk.tanggalProduksi}</td>
-                  <td>{product.produk.jumlahProduksi}</td>
-                  <td>{product.produk.terjual}</td>
+                  <td>{product.namaProduk}</td>
+                  <td>{product.tanggalProduksi}</td>
+                  <td>{product.jumlahProduksi}</td>
+                  <td>{product.terjual}</td>
                   <td>{`Rp. ${parseFloat(
-                    product.produk.hargaSatuan
+                    product.hargaSatuan
                   ).toLocaleString()}`}</td>
                   <td>{`Rp. ${(
-                    product.produk.terjual * product.produk.hargaSatuan
+                    product.terjual * product.hargaSatuan
                   ).toLocaleString()}`}</td>
                   <td>
                     <button

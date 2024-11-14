@@ -25,7 +25,7 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
   }, [dispatch]);
 
   const filteredProducts = products.filter((product) =>
-    product.produk.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
+    product.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (product) => {
@@ -112,16 +112,16 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
               filteredProducts.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
-                  <td>{product.produk.kodeProduk}</td>
-                  <td>{product.produk.tanggalProduksi}</td>
-                  <td>{product.produk.namaProduk}</td>
-                  <td>{product.produk.batch}</td>
-                  <td>{product.produk.bahanBaku}</td>
-                  <td>{product.produk.jumlahBahanBaku}</td>
-                  <td>{product.produk.satuan}</td>
-                  <td>{product.produk.jumlahProduksi}</td>
-                  <td>{product.produk.statusProduksi}</td>
-                  <td>{product.produk.tanggalSelesai}</td>
+                  <td>{product.kodeProduk}</td>
+                  <td>{product.tanggalProduksi}</td>
+                  <td>{product.namaProduk}</td>
+                  <td>{product.batch}</td>
+                  <td>{product.bahanBaku}</td>
+                  <td>{product.jumlahBahanBaku}</td>
+                  <td>{product.satuan}</td>
+                  <td>{product.jumlahProduksi}</td>
+                  <td>{product.statusProduksi}</td>
+                  <td>{product.tanggalSelesai}</td>
                 </tr>
               ))
             ) : (

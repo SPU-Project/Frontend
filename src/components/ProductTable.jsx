@@ -26,12 +26,11 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
   }, [dispatch]);
 
   const filteredProducts = products.filter((product) =>
-    product.produk.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
+    product.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (product) => {
-    // Pass the product details, including ingredients, to the form page
-    navigate(`/form/${product.produkId}`, { state: { product } });
+    navigate(`/form/${product.id}`, { state: { product } });
   };
 
   const handleDelete = async (id) => {
@@ -149,57 +148,54 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
           </thead>
           <tbody>
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product, index) => {
-                const produk = product.produk;
-                return (
-                  <tr key={product.id}>
-                    <td>{index + 1}</td>
-                    <td>{produk.namaProduk}</td>
-                    <td>{`Rp. ${parseFloat(produk.hpp).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin20
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin30
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin40
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin50
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin60
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin70
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin80
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin90
-                    ).toLocaleString()}`}</td>
-                    <td>{`Rp. ${parseFloat(
-                      produk.margin100
-                    ).toLocaleString()}`}</td>
-                    <td>
-                      <button
-                        className="edit-product-button"
-                        onClick={() => handleEdit(product)}
-                      >
-                        Ubah
-                      </button>
-                      <button
-                        className="delete-product-button"
-                        onClick={() => handleDelete(product.produkId)}
-                      >
-                        Hapus
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
+              filteredProducts.map((product, index) => (
+                <tr key={product.id}>
+                  <td>{index + 1}</td>
+                  <td>{product.namaProduk}</td>
+                  <td>{`Rp. ${parseFloat(product.hpp).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin20
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin30
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin40
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin50
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin60
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin70
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin80
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin90
+                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(
+                    product.margin100
+                  ).toLocaleString()}`}</td>
+                  <td>
+                    <button
+                      className="edit-product-button"
+                      onClick={() => handleEdit(product)}
+                    >
+                      Ubah
+                    </button>
+                    <button
+                      className="delete-product-button"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))
             ) : (
               <tr>
                 <td colSpan="14">Tidak ada produk yang ditemukan</td>

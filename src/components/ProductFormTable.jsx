@@ -18,8 +18,12 @@ function ProductFormTable() {
   const [ingredientOptions, setIngredientOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { products } = useSelector((state) => state.productTable);
+  const { currentProduct, products } = useSelector(
+    (state) => state.productTable
+  );
   const [showModal, setShowModal] = useState(false); // State untuk modal
+  const [overheads, setOverheads] = useState([]);
+  const [kemasans, setKemasans] = useState([]);
 
   useEffect(() => {
     if (id) {
@@ -31,38 +35,60 @@ function ProductFormTable() {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (id && products.length > 0) {
-      const product = products.find((p) => p.produkId.toString() === id);
-      console.log("Fetched Product Data:", product); // Cek data produk
+    if (id && currentProduct) {
+      const product = currentProduct;
+      console.log("Fetched Product Data:", product);
       if (product) {
-        setProductName(product.produk?.namaProduk || "");
+        setProductName(product.namaProduk || "");
 
-        // Cek dan konversi bahanBaku menjadi array
-        let bahanBakuArray = Array.isArray(product.bahanBaku)
-          ? product.bahanBaku
-          : product.bahanBaku
-          ? [product.bahanBaku]
+        // Handle ingredients
+        let bahanBakuArray = Array.isArray(product.bahanbakumodel)
+          ? product.bahanbakumodel
+          : product.bahanbakumodel
+          ? [product.bahanbakumodel]
           : [];
 
-        console.log("Bahan Baku Array:", bahanBakuArray); // Cek bahan baku setelah konversi
+        const mappedIngredients = bahanBakuArray.map((bahanBaku) => ({
+          id: bahanBaku.id || "",
+          name: bahanBaku.BahanBaku || "",
+          quantity: bahanBaku.jumlah || 0,
+          pricePerKg: bahanBaku.Harga || 0,
+        }));
 
-        const mappedIngredients = [];
-
-        if (product.bahanBaku) {
-          mappedIngredients.push({
-            id: product.bahanBaku.id || "", // ID dari bahan baku
-            name: product.bahanBaku.BahanBaku || "", // Nama dari bahan baku
-            quantity: product.jumlah || 0, // Menggunakan jumlah
-            pricePerKg: product.bahanBaku.Harga || 0, // Harga dari bahan baku
-          });
-        }
-
-        // Log hasil mapping
-        console.log("Mapped Ingredients:", mappedIngredients);
         setIngredients(mappedIngredients);
+
+        // Handle overheads
+        let overheadsArray = Array.isArray(product.overheads)
+          ? product.overheads
+          : product.overheads
+          ? [product.overheads]
+          : [];
+
+        const mappedOverheads = overheadsArray.map((overhead) => ({
+          id: overhead.id || "",
+          name: overhead.namaOverhead || "",
+          price: overhead.harga || 0,
+        }));
+
+        setOverheads(mappedOverheads);
+
+        // Handle kemasans
+        let kemasansArray = Array.isArray(product.kemasans)
+          ? product.kemasans
+          : product.kemasans
+          ? [product.kemasans]
+          : [];
+
+        const mappedKemasans = kemasansArray.map((kemasan) => ({
+          id: kemasan.id || "",
+          name: kemasan.namaKemasan || "",
+          price: kemasan.harga || 0,
+        }));
+
+        setKemasans(mappedKemasans);
       }
     }
-  }, [id, products]);
+  }, [id, currentProduct]);
 
   const fetchIngredients = async () => {
     try {

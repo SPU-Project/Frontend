@@ -26,7 +26,7 @@ export const fetchProductById = createAsyncThunk(
       if (!response.ok) {
         return rejectWithValue(data.message || "Gagal mengambil data produk");
       }
-      return data.data[0]; // Mengambil item pertama dari array data
+      return data.data; // Return the product object directly
     } catch (error) {
       return rejectWithValue(error.message || "Gagal mengambil data produk");
     }
@@ -146,9 +146,7 @@ const productTableSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.products = state.products.map((product) =>
-          product.produkId === action.payload.id
-            ? { ...product, produk: action.payload }
-            : product
+          product.id === action.payload.id ? action.payload : product
         );
       })
       .addCase(updateProduct.rejected, (state, action) => {
