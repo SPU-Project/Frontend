@@ -13,9 +13,12 @@ const initialState = {
 export const fetchStockItems = createAsyncThunk(
   "stokbahanbaku/fetchStockItems",
   async () => {
-    const response = await fetch("http://apiv2.pabrikbumbu.com/stokbahanbaku", {
-      credentials: "include",
-    });
+    const response = await fetch(
+      "https://apiv2.pabrikbumbu.com/stokbahanbaku",
+      {
+        credentials: "include",
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch stock items");
     }
@@ -29,7 +32,7 @@ export const updateStockItem = createAsyncThunk(
   "stokbahanbaku/updateStockItem",
   async ({ id, Stok }) => {
     const response = await fetch(
-      `http://apiv2.pabrikbumbu.com/stokbahanbaku/${id}`,
+      `https://apiv2.pabrikbumbu.com/stokbahanbaku/${id}`,
       {
         method: "PATCH",
         credentials: "include",

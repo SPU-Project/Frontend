@@ -92,7 +92,7 @@ function ProductFormTable() {
 
   const fetchIngredients = async () => {
     try {
-      const response = await fetch("http://apiv2.pabrikbumbu.com/bahanbaku");
+      const response = await fetch("https://apiv2.pabrikbumbu.com/bahanbaku");
       const data = await response.json();
       if (response.ok) {
         const options = data.data.map((bahanBaku) => ({

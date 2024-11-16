@@ -6,7 +6,7 @@ export const fetchProfileImage = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "http://apiv2.pabrikbumbu.com/profile-image",
+        "https://apiv2.pabrikbumbu.com/profile-image",
         {
           method: "GET",
           credentials: "include", // Sertakan cookie dalam permintaan jika diperlukan

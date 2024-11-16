@@ -5,7 +5,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       console.log("LoginUser Thunk Triggered");
-      const response = await fetch("http://apiv2.pabrikbumbu.com/login", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/login", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -33,7 +33,7 @@ export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://apiv2.pabrikbumbu.com/me", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/me", {
         method: "GET",
         credentials: "include",
         headers: {
@@ -54,7 +54,7 @@ export const fetchUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk("user/logoutUser", async () => {
-  const response = await fetch("http://apiv2.pabrikbumbu.com/logout", {
+  const response = await fetch("https://apiv2.pabrikbumbu.com/logout", {
     method: "DELETE",
     credentials: "include",
     headers: {
