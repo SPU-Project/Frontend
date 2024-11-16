@@ -13,7 +13,7 @@ const initialState = {
 export const fetchStockItems = createAsyncThunk(
   "stokbahanbaku/fetchStockItems",
   async () => {
-    const response = await fetch("http://localhost:5000/stokbahanbaku", {
+    const response = await fetch("http://apiv2.pabrikbumbu.com/stokbahanbaku", {
       credentials: "include",
     });
     if (!response.ok) {
@@ -28,14 +28,17 @@ export const fetchStockItems = createAsyncThunk(
 export const updateStockItem = createAsyncThunk(
   "stokbahanbaku/updateStockItem",
   async ({ id, Stok }) => {
-    const response = await fetch(`http://localhost:5000/stokbahanbaku/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ Stok }),
-    });
+    const response = await fetch(
+      `http://apiv2.pabrikbumbu.com/stokbahanbaku/${id}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ Stok }),
+      }
+    );
     if (!response.ok) {
       const data = await response.json();
       throw new Error(data.message || "Failed to update stock item");
