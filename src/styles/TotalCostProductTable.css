@@ -140,6 +140,23 @@ th {
   background-color: #c82333; /* Biru lebih gelap saat hover */
 }
 
+.button-container {
+  display: flex;
+  justify-content: center; /* Menjadikan tombol sejajar di tengah */
+  gap: 10px; /* Memberikan jarak antar tombol */
+}
+
+.export-pdf-button-detail {
+  padding: 0.1rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
 /* General responsive settings */
 @media (max-width: 768px) {
   .add-overhead-button {

@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addProduk, updateProduct } from "../redux/produkSlice";
 import { fetchProductById } from "../redux/productTableSlice";
 import { Modal } from "react-bootstrap";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 
 function isValidString(str) {
   // Regex untuk memastikan string mengandung setidaknya satu huruf
@@ -111,6 +114,78 @@ function TotalCostProductTable() {
       }
     }
   }, [currentProduct, isInitialLoad, id, location.state]);
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(16);
+    doc.text(`Detail Produk: ${newProductName}`, 14, 10);
+    doc.setFontSize(12);
+    doc.text(`Tanggal: ${new Date().toLocaleDateString()}`, 14, 20);
+
+    // Table 1: Bahan Baku
+    autoTable(doc, {
+      startY: 30,
+      head: [
+        ["No", "Nama Bahan Baku", "Jumlah (gram)", "Harga per Kg", "Biaya"],
+      ],
+      body: products.map((product, index) => [
+        index + 1,
+        product.name,
+        product.quantity,
+        `Rp. ${parseFloat(product.pricePerKg).toLocaleString()}`,
+        `Rp. ${calculateProductCost(product).toLocaleString()}`,
+      ]),
+      foot: [
+        [
+          "",
+          "",
+          "",
+          "Total Biaya Bahan Baku",
+          `Rp. ${totalCostProducts.toLocaleString()}`,
+        ],
+      ],
+    });
+
+    // Table 2: Overhead
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [["No", "Nama Overhead", "Harga"]],
+      body: table2Products.map((product, index) => [
+        index + 1,
+        product.name,
+        `Rp. ${parseFloat(product.hpp).toLocaleString()}`,
+      ]),
+      foot: [
+        ["", "Total Biaya Overhead", `Rp. ${totalCostTable2.toLocaleString()}`],
+      ],
+    });
+
+    // Table 3: Kemasan
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [["No", "Nama Kemasan", "Harga"]],
+      body: table3Products.map((product, index) => [
+        index + 1,
+        product.name,
+        `Rp. ${parseFloat(product.hpp).toLocaleString()}`,
+      ]),
+      foot: [
+        ["", "Total Biaya Kemasan", `Rp. ${totalCostTable3.toLocaleString()}`],
+      ],
+    });
+
+    // Total
+    doc.text(
+      `Total Biaya Keseluruhan: Rp. ${grandTotalCost.toLocaleString()}`,
+      14,
+      doc.lastAutoTable.finalY + 20
+    );
+
+    // Save
+    doc.save(`Detail_Produk_${newProductName}.pdf`);
+  };
 
   const handleEdit = (id, table) => {
     const productToEdit = (table === 2 ? table2Products : table3Products).find(
@@ -311,6 +386,9 @@ function TotalCostProductTable() {
           placeholder="Ketik nama produk baru"
           onChange={(e) => setNewProductName(e.target.value)}
         />
+        <button className="export-pdf-button-detail" onClick={exportToPDF}>
+          <FontAwesomeIcon icon={faFilePdf} /> Export to PDF
+        </button>
       </div>
       {/* Tabel Pertama */}
       <div className="table-container">
@@ -555,7 +633,7 @@ function TotalCostProductTable() {
         }}
       >
         <button className="save-all-button" onClick={handleSaveProduct}>
-          {id ? "Perbarui Produk" : "Simpan Produk"}
+          Perbarui Produk
         </button>
       </div>
 

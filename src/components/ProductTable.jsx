@@ -7,6 +7,9 @@ import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts, deleteProduct } from "../redux/productTableSlice";
 import { Modal, Button } from "react-bootstrap";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 
 function ProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
@@ -28,6 +31,58 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
   const filteredProducts = products.filter((product) =>
     product.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    // Header PDF
+    doc.setFontSize(18);
+    doc.text("Daftar Produk", 14, 20);
+    doc.setFontSize(12);
+    doc.text(`Tanggal: ${new Date().toLocaleDateString()}`, 14, 30);
+
+    // Data untuk tabel
+    const tableData = filteredProducts.map((product, index) => [
+      index + 1,
+      product.namaProduk,
+      `Rp. ${parseFloat(product.hpp).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin20).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin30).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin40).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin50).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin60).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin70).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin80).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin90).toLocaleString()}`,
+      `Rp. ${parseFloat(product.margin100).toLocaleString()}`,
+    ]);
+
+    // Kolom tabel
+    const tableHeaders = [
+      "No",
+      "Produk",
+      "HPP",
+      "20%",
+      "30%",
+      "40%",
+      "50%",
+      "60%",
+      "70%",
+      "80%",
+      "90%",
+      "100%",
+    ];
+
+    // Tambahkan tabel ke PDF
+    doc.autoTable({
+      head: [tableHeaders],
+      body: tableData,
+      startY: 40,
+    });
+
+    // Unduh PDF
+    doc.save("Daftar_Produk.pdf");
+  };
 
   const handleEdit = (product) => {
     navigate(`/form/${product.id}`, { state: { product } });
@@ -112,6 +167,9 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
       <div className="table-controls">
         <button className="add-button" onClick={handleAddProduct}>
           <FontAwesomeIcon icon={faPlus} /> Tambah Produk
+        </button>
+        <button className="export-pdf-button-product" onClick={handleExportPDF}>
+          <FontAwesomeIcon icon={faFilePdf} /> Export to PDF
         </button>
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
