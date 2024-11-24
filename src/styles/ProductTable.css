@@ -100,6 +100,21 @@ table {
   display: none; /* Hides the search icon */
 }
 
+.export-pdf-button-product {
+  padding: 0.62rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  margin-left: 0rem;
+  cursor: pointer;
+}
+
+.export-pdf-button:hover {
+  background-color: #c82333;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 1000px) {
   .edit-product-button {
