@@ -55,8 +55,8 @@ const RawMaterialsTable = () => {
       return;
     }
 
-    if (!/^[a-zA-Z\s]+$/.test(formBahanBaku)) {
-      setErrorMessage("Bahan baku harus diisi dengan huruf");
+    if (!/^[\w\s!@#$%^&*()\-+=,.<>?;:'"{}[\]\\|/`~]*$/.test(formBahanBaku)) {
+      setErrorMessage("Input tidak valid");
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
