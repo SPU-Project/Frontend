@@ -116,6 +116,8 @@ const RawMaterialsTable = () => {
       setFormBahanBaku(itemToEdit.BahanBaku);
       setFormHarga(itemToEdit.Harga);
       setEditId(id);
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
