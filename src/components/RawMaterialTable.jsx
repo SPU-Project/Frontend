@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef  } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBahanBaku,
@@ -29,6 +29,8 @@ const RawMaterialsTable = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
+
+  const formRef = useRef(null);
 
   useEffect(() => {
     if (status === "idle") {
@@ -117,7 +119,9 @@ const RawMaterialsTable = () => {
       setFormHarga(itemToEdit.Harga);
       setEditId(id);
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (formRef.current) {
+        formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 
@@ -172,7 +176,7 @@ const RawMaterialsTable = () => {
     <div className="admin-table-container">
       {/* Form for Adding/Updating Bahan Baku - Visible to Admin, Operator, and User */}
       {["Admin", "Operator", "User"].includes(role) && (
-        <form onSubmit={handleSimpan} className="form-container">
+        <form onSubmit={handleSimpan} className="form-container" ref={formRef}>
           {/* Form fields */}
           <div className="form-group">
             <label htmlFor="formBahanBaku" className="text-form">
