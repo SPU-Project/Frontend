@@ -20,10 +20,12 @@ const RawMaterialsTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [formBahanBaku, setFormBahanBaku] = useState("");
   const [formHarga, setFormHarga] = useState("");
+  const [formSatuan, setFormSatuan] = useState("");
   const [editId, setEditId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -75,6 +77,7 @@ const RawMaterialsTable = () => {
 
     setErrorMessage("");
     setLoading(true);
+    const currentDate = new Date().toLocaleString();
 
     if (editId) {
       await dispatch(
@@ -82,6 +85,8 @@ const RawMaterialsTable = () => {
           id: editId,
           BahanBaku: formBahanBaku,
           Harga: formHarga,
+          Satuan: formSatuan,
+          LastUpdated: currentDate,
         })
       )
         .unwrap()
@@ -96,6 +101,8 @@ const RawMaterialsTable = () => {
         addBahanBaku({
           BahanBaku: formBahanBaku,
           Harga: formHarga,
+          Satuan: formSatuan,
+          LastUpdated: currentDate,
         })
       )
         .unwrap()
@@ -109,6 +116,8 @@ const RawMaterialsTable = () => {
     setLoading(false);
     setFormBahanBaku("");
     setFormHarga("");
+    setFormSatuan("");
+    setLastUpdated(currentDate);
   };
 
   const handleUbah = (id) => {
@@ -185,10 +194,22 @@ const RawMaterialsTable = () => {
             <input
               type="text"
               id="formBahanBaku"
-              placeholder="Enter Bahan Baku"
+              placeholder="Masukan Bahan Baku"
               value={formBahanBaku}
               onChange={(e) => setFormBahanBaku(e.target.value)}
               className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Satuan (Maks 3 Huruf)</label>
+            <input
+              type="text"
+              placeholder="cth: Kg"
+              value={formSatuan}
+              onChange={(e) => setFormSatuan(e.target.value.toUpperCase())}
+              className="form-input"
+              maxLength={3}
             />
           </div>
 
@@ -199,7 +220,7 @@ const RawMaterialsTable = () => {
             <input
               type="text"
               id="formHargaKilo"
-              placeholder="Enter Harga/Kilo"
+              placeholder="cth: 10000"
               value={formHarga}
               onChange={(e) => setFormHarga(e.target.value)}
               className="form-input"
@@ -243,7 +264,9 @@ const RawMaterialsTable = () => {
           <tr>
             <th>No</th>
             <th>Bahan Baku</th>
-            <th>Harga/kg</th>
+            <th>Satuan</th>
+            <th>Harga/satuan</th>
+            <th>Terakhir Diperbarui</th>
             <th>Aksi</th>
           </tr>
         </thead>
@@ -252,7 +275,9 @@ const RawMaterialsTable = () => {
             <tr key={item.id}>
               <td>{index + 1}</td>
               <td>{item.BahanBaku}</td>
+              <td>{item.Satuan}</td>
               <td>{formatRupiah(item.Harga)}</td>
+              <td>{item.LastUpdated}</td>
               <td>
                 {/* Action Buttons - Visible to Admin, Operator, and User */}
                 {["Admin", "Operator", "User"].includes(role) ? (
