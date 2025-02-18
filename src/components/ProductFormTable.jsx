@@ -218,7 +218,7 @@ function ProductFormTable() {
                     <tr>
                       <th>Nomor</th>
                       <th>Bahan Baku</th>
-                      <th>Jumlah (gram)</th>
+                      <th>Satuan</th>
                       <th>Aksi</th>
                     </tr>
                   </thead>

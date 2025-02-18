@@ -187,6 +187,7 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
           <thead>
             <tr>
               <th rowSpan="2">No</th>
+              <th rowSpan="2">Kode Produksi</th>
               <th rowSpan="2">Produk</th>
               <th rowSpan="2">HPP</th>
               <th colSpan="9">Margin</th>
@@ -209,6 +210,7 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
               filteredProducts.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
+                  <td></td>
                   <td>{product.namaProduk}</td>
                   <td>{`Rp. ${parseFloat(product.hpp).toLocaleString()}`}</td>
                   <td>{`Rp. ${parseFloat(
