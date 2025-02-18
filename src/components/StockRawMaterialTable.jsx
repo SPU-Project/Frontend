@@ -97,11 +97,7 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
                         item.Stok
                       )}
                     </td>
-                    <td>
-                      {new Date(item.TanggalPembaruan).toLocaleDateString(
-                        "id-ID"
-                      )}
-                    </td>
+                    <td>{new Date(item.TanggalPembaruan).toLocaleString()}</td>
                     <td>
                       {editingRow === item.id ? (
                         <button
