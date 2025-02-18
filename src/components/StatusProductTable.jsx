@@ -99,8 +99,6 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
               <th>Tanggal Produksi</th>
               <th>Nama Produk</th>
               <th>Batch</th>
-              <th>Bahan Baku</th>
-              <th>Jumlah Bahan Baku</th>
               <th>Satuan</th>
               <th>Jumlah Produksi</th>
               <th>Status Produksi</th>
@@ -116,8 +114,6 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
                   <td>{product.tanggalProduksi}</td>
                   <td>{product.namaProduk}</td>
                   <td>{product.batch}</td>
-                  <td>{product.bahanBaku}</td>
-                  <td>{product.jumlahBahanBaku}</td>
                   <td>{product.satuan}</td>
                   <td>{product.jumlahProduksi}</td>
                   <td>{product.statusProduksi}</td>
