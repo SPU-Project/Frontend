@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // Thunk untuk menambahkan Bahan Baku baru
 export const addBahanBaku = createAsyncThunk(
   "bahanBaku/addBahanBaku",
-  async ({ BahanBaku, Harga }, { rejectWithValue }) => {
+  async ({ BahanBaku, Satuan, Harga }, { rejectWithValue }) => {
     try {
       const response = await fetch("http://localhost:5000/bahanbaku", {
         method: "POST",
@@ -12,7 +12,7 @@ export const addBahanBaku = createAsyncThunk(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ BahanBaku, Harga }),
+        body: JSON.stringify({ BahanBaku, Satuan, Harga }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -67,14 +67,14 @@ export const deleteBahanBaku = createAsyncThunk(
 // Thunk untuk mengupdate Bahan Baku
 export const updateBahanBaku = createAsyncThunk(
   "bahanBaku/updateBahanBaku",
-  async ({ id, BahanBaku, Harga }, { rejectWithValue }) => {
+  async ({ id, BahanBaku, Satuan, Harga }, { rejectWithValue }) => {
     try {
       const response = await fetch(`http://localhost:5000/bahanbaku/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ BahanBaku, Harga }),
+        body: JSON.stringify({ BahanBaku, Satuan, Harga }),
         credentials: "include",
       });
 

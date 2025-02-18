@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef  } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBahanBaku,
@@ -117,7 +117,7 @@ const RawMaterialsTable = () => {
     setFormBahanBaku("");
     setFormHarga("");
     setFormSatuan("");
-    setLastUpdated(currentDate);
+    setLastUpdated("");
   };
 
   const handleUbah = (id) => {
@@ -126,7 +126,9 @@ const RawMaterialsTable = () => {
     if (itemToEdit) {
       setFormBahanBaku(itemToEdit.BahanBaku);
       setFormHarga(itemToEdit.Harga);
+      setFormSatuan(itemToEdit.Satuan);
       setEditId(id);
+      setLastUpdated(itemToEdit.updatedAt);
 
       if (formRef.current) {
         formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -277,7 +279,7 @@ const RawMaterialsTable = () => {
               <td>{item.BahanBaku}</td>
               <td>{item.Satuan}</td>
               <td>{formatRupiah(item.Harga)}</td>
-              <td>{item.LastUpdated}</td>
+              <td>{new Date(item.updatedAt).toLocaleString()}</td>
               <td>
                 {/* Action Buttons - Visible to Admin, Operator, and User */}
                 {["Admin", "Operator", "User"].includes(role) ? (
