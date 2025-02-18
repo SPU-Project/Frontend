@@ -51,8 +51,8 @@ const RawMaterialsTable = () => {
   const handleSimpan = async (e) => {
     e.preventDefault();
 
-    if (!formBahanBaku || !formHarga) {
-      setErrorMessage("Harap masukkan Bahan Baku dan Harga!");
+    if (!formBahanBaku || !formHarga || !formSatuan) {
+      setErrorMessage("Kolom harus lengkap terisi!");
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
@@ -75,9 +75,29 @@ const RawMaterialsTable = () => {
       return;
     }
 
+    if (!/^[A-Za-z]{1,3}$/.test(formSatuan)) {
+      setErrorMessage("Satuan harus terdiri dari maksimal 3 huruf saja");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+      return;
+    }
+
+    // **Cek apakah BahanBaku sudah ada di daftar**
+    const isDuplicate = bahanBaku.some(
+      (item) => item.BahanBaku.toLowerCase() === formBahanBaku.toLowerCase()
+    );
+    if (isDuplicate) {
+      setErrorMessage("Bahan Baku sudah ada, tidak dapat menambahkan!");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+      return;
+    }
+
     setErrorMessage("");
     setLoading(true);
-    const currentDate = new Date().toLocaleString();
+    // const currentDate = new Date().toLocaleString();
 
     if (editId) {
       await dispatch(
@@ -86,7 +106,7 @@ const RawMaterialsTable = () => {
           BahanBaku: formBahanBaku,
           Harga: formHarga,
           Satuan: formSatuan,
-          LastUpdated: currentDate,
+          LastUpdated: lastUpdated,
         })
       )
         .unwrap()
@@ -102,7 +122,7 @@ const RawMaterialsTable = () => {
           BahanBaku: formBahanBaku,
           Harga: formHarga,
           Satuan: formSatuan,
-          LastUpdated: currentDate,
+          LastUpdated: lastUpdated,
         })
       )
         .unwrap()
