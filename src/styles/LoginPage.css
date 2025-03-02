@@ -12,6 +12,12 @@
   color: #009844;
 }
 
+.login-background {
+  background-image: url("../assets/images/login.png"); /* Sesuaikan path */
+  background-size: cover;
+  background-position: center;
+}
+
 .login-container {
   display: flex;
   justify-content: center;

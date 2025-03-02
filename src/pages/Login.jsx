@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser, fetchUser } from "../redux/userSlice";
 import {
   CButton,
   CCard,
@@ -15,10 +17,6 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
-import { useDispatch } from "react-redux";
-import { loginUser, fetchUser } from "../redux/userSlice";
-import "../styles/LoginPage.css"; // Import CSS for background styling
-import logo from "../assets/images/Logo.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -29,11 +27,14 @@ const Login = () => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
+
     if (!email || !password) {
       setErrorMessage("Email dan password harus diisi.");
       return;
     }
+
     setErrorMessage("");
+
     try {
       await dispatch(loginUser({ email, password })).unwrap();
       await dispatch(fetchUser()).unwrap();
@@ -44,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-background min-vh-100 d-flex flex-row align-items-center">
+    <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -52,70 +53,44 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={handleLogin}>
-                    <h1 style={{ color: "#009844" }}>Sistem Informasi Produksi</h1>
-                    <p className="text-body-secondary">
-                      Masuk ke akun Anda
-                    </p>
+                    <h1>Login</h1>
+                    <p className="text-body-secondary">Sign in to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput
-                        name="email"
-                        placeholder="Email"
-                        autoComplete="username"
-                      />
+                      <CFormInput type="email" name="email" placeholder="Email" autoComplete="username" required />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <CIcon icon={cilLockLocked} />
                       </CInputGroupText>
-                      <CFormInput
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                        autoComplete="current-password"
-                      />
+                      <CFormInput type="password" name="password" placeholder="Password" autoComplete="current-password" required />
                     </CInputGroup>
-                    {errorMessage && (
-                      <p style={{ color: "red" }}>{errorMessage}</p>
-                    )}
+                    {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
                     <CRow>
                       <CCol xs={6}>
-                        <CButton
-                          type="submit"
-                          style={{
-                            backgroundColor: "#009844",
-                            borderColor: "#009844",
-                          }}
-                          className="px-4 text-white"
-                        >
-                          Masuk
+                        <CButton type="submit" color="primary" className="px-4">
+                          Login
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
+                        <CButton color="link" className="px-0">
+                          Forgot password?
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard
-                className="text-white py-5"
-                style={{ width: "44%", backgroundColor: "#009844" }}
-              >
+              <CCard className="text-white bg-primary py-5" style={{ width: "44%" }}>
                 <CCardBody className="text-center">
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <img
-                      src={logo}
-                      alt="Logo"
-                      style={{
-                        width: "250px",
-                        height: "250px",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                        padding: "10px",
-                      }}
-                    />
+                  <div>
+                    <h2>Sign up</h2>
+                    <p>Belum punya akun? Daftar sekarang!</p>
+                    <CButton color="light" className="mt-3" active tabIndex={-1} onClick={() => navigate("/register")}>
+                      Register Now!
+                    </CButton>
                   </div>
                 </CCardBody>
               </CCard>
