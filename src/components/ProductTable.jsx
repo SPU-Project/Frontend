@@ -45,8 +45,9 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
     const tableData = filteredProducts.map((product, index) => [
       index + 1,
       product.namaProduk,
-      `Rp. ${parseFloat(product.hpp).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin20).toLocaleString()}`,
+      (
+        <td>{`Rp. ${parseFloat(product.hpp).toLocaleString()}`}</td>
+      )`Rp. ${parseFloat(product.margin20).toLocaleString()}`,
       `Rp. ${parseFloat(product.margin30).toLocaleString()}`,
       `Rp. ${parseFloat(product.margin40).toLocaleString()}`,
       `Rp. ${parseFloat(product.margin50).toLocaleString()}`,
@@ -212,34 +213,36 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
                   <td>{index + 1}</td>
                   <td></td>
                   <td>{product.namaProduk}</td>
-                  <td>{`Rp. ${parseFloat(product.hpp).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin20
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin30
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin40
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin50
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin60
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin70
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin80
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin90
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.margin100
-                  ).toLocaleString()}`}</td>
+                  <td>{`Rp. ${parseFloat(product.hpp).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin20).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin30).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin40).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin50).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin60).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin70).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin80).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin90).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
+                  <td>{`Rp. ${parseFloat(product.margin100).toLocaleString(
+                    "id-ID"
+                  )}`}</td>
                   <td>
                     <button
                       className="edit-product-button"

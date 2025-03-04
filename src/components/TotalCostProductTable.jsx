@@ -59,14 +59,14 @@ function TotalCostProductTable() {
           (storedOverheads || []).map((overhead, index) => ({
             id: index,
             name: overhead.name,
-            hpp: overhead.harga,
+            hpp: parseFloat(overhead.harga),
           }))
         );
         setTable3Products(
           (storedKemasans || []).map((kemasan, index) => ({
             id: index,
             name: kemasan.name,
-            hpp: kemasan.harga,
+            hpp: parseFloat(kemasan.harga),
           }))
         );
         setNewProductName(storedProductName || "");
@@ -134,8 +134,8 @@ function TotalCostProductTable() {
         index + 1,
         product.name,
         product.quantity,
-        `Rp. ${parseFloat(product.pricePerKg).toLocaleString()}`,
-        `Rp. ${calculateProductCost(product).toLocaleString()}`,
+        `Rp. ${parseFloat(product.pricePerKg).toLocaleString("id-ID")}`,
+        `Rp. ${calculateProductCost(product).toLocaleString("id-ID")}`,
       ]),
       foot: [
         [
@@ -157,9 +157,7 @@ function TotalCostProductTable() {
         product.name,
         `Rp. ${parseFloat(product.hpp).toLocaleString()}`,
       ]),
-      foot: [
-        ["", "Total Biaya Overhead", `Rp. ${totalCostTable2.toLocaleString()}`],
-      ],
+      foot: [["", "Total Biaya Overhead", `Rp. ${totalCostTable2}`]],
     });
 
     // Table 3: Kemasan
@@ -193,7 +191,10 @@ function TotalCostProductTable() {
     );
     setCurrentTable(table);
     setEditRowId(id);
-    setEditedProduct({ name: productToEdit.name, hpp: productToEdit.hpp });
+    setEditedProduct({
+      name: productToEdit.name,
+      hpp: productToEdit.hpp,
+    });
   };
 
   const handleSaveEdit = (id) => {
@@ -201,6 +202,7 @@ function TotalCostProductTable() {
       ...editedProduct,
       hpp: parseFloat(editedProduct.hpp),
     };
+
     if (currentTable === 2) {
       setTable2Products(
         table2Products.map((product) =>
@@ -346,7 +348,7 @@ function TotalCostProductTable() {
   };
 
   const calculateProductCost = (product) => {
-    const pricePerGram = product.pricePerKg / 1000;
+    const pricePerGram = product.pricePerKg;
     const quantityInGrams = parseFloat(product.quantity);
     const cost = pricePerGram * quantityInGrams;
     return cost;
@@ -358,12 +360,12 @@ function TotalCostProductTable() {
   }, 0);
 
   const totalCostTable2 = table2Products.reduce((total, product) => {
-    const cost = parseFloat(product.hpp) || 0;
+    const cost = product.hpp || 0;
     return total + cost;
   }, 0);
 
   const totalCostTable3 = table3Products.reduce((total, product) => {
-    const cost = parseFloat(product.hpp) || 0;
+    const cost = product.hpp || 0;
     return total + cost;
   }, 0);
 
@@ -414,7 +416,7 @@ function TotalCostProductTable() {
                     <td>
                       Rp. {parseFloat(product.pricePerKg).toLocaleString()}
                     </td>
-                    <td>Rp. {cost.toLocaleString()}</td>
+                    <td>Rp. {cost.toLocaleString("id-ID")}</td>
                   </tr>
                 );
               })
@@ -427,7 +429,7 @@ function TotalCostProductTable() {
               <td colSpan="4" style={{ textAlign: "center" }}>
                 Total Biaya Bahan Baku:
               </td>
-              <td>Rp. {totalCostProducts.toLocaleString()}</td>
+              <td>Rp. {totalCostProducts.toLocaleString("id-ID")}</td>
             </tr>
           </tbody>
         </table>
@@ -476,15 +478,26 @@ function TotalCostProductTable() {
                       <input
                         type="number"
                         value={editedProduct.hpp}
-                        onChange={(e) =>
-                          setEditedProduct({
-                            ...editedProduct,
-                            hpp: e.target.value,
-                          })
-                        }
+                        onChange={(e) => {
+                          // Hanya ambil digit dengan menghapus titik dan karakter non-digit
+                          const value = e.target.value
+                            .replace(/\./g, "")
+                            .replace(/\D/g, "");
+                          setEditedProduct({ ...editedProduct, hpp: value });
+                        }}
+                        onBlur={(e) => {
+                          const rawValue = e.target.value.replace(/\./g, "");
+                          if (rawValue) {
+                            const formatted = rawValue;
+                            setEditedProduct({
+                              ...editedProduct,
+                              hpp: formatted,
+                            });
+                          }
+                        }}
                       />
                     ) : (
-                      `Rp. ${parseFloat(product.hpp).toLocaleString()}`
+                      `Rp. ${parseFloat(product.hpp).toLocaleString("id-ID")}`
                     )}
                   </td>
                   <td>
@@ -521,7 +534,7 @@ function TotalCostProductTable() {
               <td colSpan="2" style={{ textAlign: "center" }}>
                 Total Biaya Overhead:
               </td>
-              <td>Rp. {totalCostTable2.toLocaleString()}</td>
+              <td>Rp. {totalCostTable2.toLocaleString("id-ID")}</td>
             </tr>
           </tbody>
         </table>
@@ -570,15 +583,28 @@ function TotalCostProductTable() {
                       <input
                         type="number"
                         value={editedProduct.hpp}
-                        onChange={(e) =>
-                          setEditedProduct({
-                            ...editedProduct,
-                            hpp: e.target.value,
-                          })
-                        }
+                        onChange={(e) => {
+                          // Hilangkan titik dan karakter non-digit
+                          const value = e.target.value
+                            .replace(/\./g, "")
+                            .replace(/\D/g, "");
+                          setEditedProduct({ ...editedProduct, hpp: value });
+                        }}
+                        onBlur={(e) => {
+                          // Ambil nilai mentah tanpa titik
+                          const rawValue = e.target.value.replace(/\./g, "");
+                          if (rawValue) {
+                            // Format hanya jika perlu (misal, "1" dan "10" akan tetap seperti itu)
+                            const formatted = rawValue;
+                            setEditedProduct({
+                              ...editedProduct,
+                              hpp: formatted,
+                            });
+                          }
+                        }}
                       />
                     ) : (
-                      `Rp. ${parseFloat(product.hpp).toLocaleString()}`
+                      `Rp. ${parseFloat(product.hpp).toLocaleString("id-ID")}`
                     )}
                   </td>
                   <td>
@@ -615,14 +641,14 @@ function TotalCostProductTable() {
               <td colSpan="2" style={{ textAlign: "center" }}>
                 Total Biaya Kemasan:
               </td>
-              <td>Rp. {totalCostTable3.toLocaleString()}</td>
+              <td>Rp. {totalCostTable3.toLocaleString("id-ID")}</td>
             </tr>
           </tbody>
         </table>
       </div>
       {/* Grand Total Cost */}
       <div className="grand-total">
-        <h2>Grand Total Biaya: Rp. {grandTotalCost.toLocaleString()}</h2>
+        <h2>Grand Total Biaya: Rp. {grandTotalCost.toLocaleString("id-ID")}</h2>
       </div>
       {/* Save All Products Button */}
       <div
@@ -633,7 +659,7 @@ function TotalCostProductTable() {
         }}
       >
         <button className="save-all-button" onClick={handleSaveProduct}>
-          Perbarui Produk
+          {id ? "Perbarui Produk" : "Simpan Produk"}
         </button>
       </div>
 

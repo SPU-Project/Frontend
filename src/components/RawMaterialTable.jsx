@@ -83,17 +83,17 @@ const RawMaterialsTable = () => {
       return;
     }
 
-    // **Cek apakah BahanBaku sudah ada di daftar**
-    const isDuplicate = bahanBaku.some(
-      (item) => item.BahanBaku.toLowerCase() === formBahanBaku.toLowerCase()
-    );
-    if (isDuplicate) {
-      setErrorMessage("Bahan Baku sudah ada, tidak dapat menambahkan!");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 3000);
-      return;
-    }
+    // // **Cek apakah BahanBaku sudah ada di daftar**
+    // const isDuplicate = bahanBaku.some(
+    //   (item) => item.BahanBaku.toLowerCase() === formBahanBaku.toLowerCase()
+    // );
+    // if (isDuplicate) {
+    //   setErrorMessage("Bahan Baku sudah ada, tidak dapat menambahkan!");
+    //   setTimeout(() => {
+    //     setErrorMessage("");
+    //   }, 3000);
+    //   return;
+    // }
 
     setErrorMessage("");
     setLoading(true);
@@ -237,7 +237,7 @@ const RawMaterialsTable = () => {
 
           <div className="form-group">
             <label htmlFor="formHargaKilo" className="text-form">
-              Harga/Kilo
+              Harga/Satuan
             </label>
             <input
               type="text"
@@ -330,7 +330,7 @@ const RawMaterialsTable = () => {
         <Modal.Header closeButton>
           <Modal.Title>Informasi</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Body>{modalMessage}</Modal.Body>local
         <Modal.Footer>
           {showDeleteConfirmation && (
             <>
