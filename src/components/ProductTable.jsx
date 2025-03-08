@@ -211,7 +211,7 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
               filteredProducts.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
-                  <td></td>
+                  <td>{product.KodeProduksi}</td>
                   <td>{product.namaProduk}</td>
                   <td>{`Rp. ${parseFloat(product.hpp).toLocaleString(
                     "id-ID"

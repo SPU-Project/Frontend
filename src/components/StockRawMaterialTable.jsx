@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles/StockRawMaterialTable.css";
 import "../styles/RawMaterialTable.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
 import { fetchStockItems, updateStockItem } from "../redux/stokbahanbakuSlice";
 
 function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
@@ -33,7 +32,6 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
   const handleSaveClick = (stockItemId) => {
     const updatedStock = tempStock[stockItemId];
 
-    // Dispatch the updateStockItem action
     dispatch(updateStockItem({ id: stockItemId, Stok: updatedStock }))
       .unwrap()
       .then(() => {
@@ -62,6 +60,7 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
           />
         </div>
       </div>
+
       <div className="table-wrapper">
         {status === "loading" ? (
           <p>Loading...</p>
@@ -73,7 +72,8 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
               <tr>
                 <th>No</th>
                 <th>Bahan Baku</th>
-                <th>Stok (kg)</th>
+                <th>Stok</th>
+                <th>Satuan</th>
                 <th>Tanggal Pembaruan</th>
                 <th>Aksi</th>
               </tr>
@@ -97,7 +97,11 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
                         item.Stok
                       )}
                     </td>
+                    {/* Bungkus Satuan dalam <td> */}
+                    <td>{item.Satuan}</td>
+
                     <td>{new Date(item.TanggalPembaruan).toLocaleString()}</td>
+
                     <td>
                       {editingRow === item.id ? (
                         <button
@@ -119,7 +123,7 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5">Tidak ada stok bahan baku yang ditemukan</td>
+                  <td colSpan="6">Tidak ada stok bahan baku yang ditemukan</td>
                 </tr>
               )}
             </tbody>
