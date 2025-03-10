@@ -170,6 +170,13 @@ function StatusProductForm() {
                   onChange={(date) => setDate(date)}
                 />
               </div>
+              <div className="form-group">
+                <label>Tanggal Selesai</label>
+                <DatePicker
+                  selected={date}
+                  onChange={(date) => setDate(date)}
+                />
+              </div>
 
               <div className="form-group">
                 <label>Batch</label>
