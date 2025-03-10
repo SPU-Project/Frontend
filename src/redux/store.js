@@ -7,6 +7,7 @@ import productTableReducer from "./productTableSlice";
 import userManagementReducer from "./userManagementSlice";
 import riwayatReducer from "./riwayatSlice"; // Import product
 import stokbahanbakuReducer from "./stokbahanbakuSlice";
+import statusprodukReducer from "./statusprodukSlice"; // Import status producer
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     userManagement: userManagementReducer,
     riwayat: riwayatReducer,
     stokbahanbaku: stokbahanbakuReducer,
+    statusproduksi: statusprodukReducer,
   },
 });

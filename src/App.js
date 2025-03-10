@@ -15,6 +15,8 @@ import StockRawMaterialPage from "./pages/StockRawMaterialPage";
 import LogHistoryPage from "./pages/LogHistoryPage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import ProtectedRoute from "./components/ProtectedRoute";
+import StatusProductForm from "./components/StatusProductForm";
+import StatusProductTable from "./components/StatusProductTable";
 
 //SPU_Tugas-Akhir_Local
 function App() {
@@ -152,6 +154,12 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Rute untuk edit (pakai :id) */}
+        <Route
+          path="/status-product-form/:id"
+          element={<StatusProductForm />}
+        />
+
         <Route path="*" element={<div>404 Page Not Found</div>} />
       </Routes>
     </Router>

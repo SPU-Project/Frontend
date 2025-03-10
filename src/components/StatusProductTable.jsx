@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, deleteProduct } from "../redux/productTableSlice";
+import {
+  fetchStatusProduksi,
+  deleteStatusProduksi,
+} from "../redux/statusprodukSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap";
 import "../styles/StatusProductTable.css";
@@ -10,9 +15,12 @@ import "../styles/StatusProductTable.css";
 function StatusProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector(
-    (state) => state.productTable
-  );
+  // Ambil state dari statusproduksi slice
+  const {
+    items: products,
+    loading,
+    error,
+  } = useSelector((state) => state.statusproduksi);
 
   // Modal States
   const [showModal, setShowModal] = useState(false);
@@ -21,17 +29,26 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
   const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    // Saat pertama kali mount, fetch data statusproduksi
+    dispatch(fetchStatusProduksi());
   }, [dispatch]);
 
+  // Filter pencarian
   const filteredProducts = products.filter((product) =>
-    product.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
+    product.NamaProduk.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleEdit = (product) => {
-    navigate(`/edit-product/${product.produkId}`, { state: { product } });
+  const handleAddProduct = () => {
+    // Navigasi ke form
+    navigate("/status-product-form");
   };
 
+  const handleEdit = (id) => {
+    // route ke form update
+    navigate(`/status-product-form/${id}`);
+  };
+
+  // 1) handleDelete -> menyiapkan konfirmasi
   const handleDelete = (id) => {
     setShowDeleteConfirmation(true);
     setIdToDelete(id);
@@ -39,21 +56,13 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
     setShowModal(true);
   };
 
+  // 2) handleDeleteConfirmation -> benar-benar menghapus
   const handleDeleteConfirmation = async () => {
-    try {
-      const { error } = await dispatch(deleteProduct(idToDelete));
-      if (error) {
-        setModalMessage("Terjadi kesalahan saat menghapus produk.");
-      } else {
-        setModalMessage("Produk berhasil dihapus!");
-        dispatch(fetchProducts());
-      }
-    } catch (error) {
-      setModalMessage("Terjadi kesalahan.");
-    } finally {
-      setShowDeleteConfirmation(false);
-      setTimeout(() => setShowModal(false), 2000);
-    }
+    await dispatch(deleteStatusProduksi(idToDelete));
+    setShowDeleteConfirmation(false);
+    setShowModal(false);
+    setIdToDelete(null);
+    // Jika perlu, panggil fetchStatusProduksi() atau setModalMessage dsb.
   };
 
   const handleCloseModal = () => {
@@ -61,12 +70,8 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
     setShowDeleteConfirmation(false);
   };
 
-  const handleAddProduct = () => {
-    navigate("/status-product-form");
-  };
-
   if (loading) {
-    return <div>Memuat data produk...</div>;
+    return <div>Memuat data status produksi...</div>;
   }
 
   if (error) {
@@ -110,19 +115,34 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
               filteredProducts.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
-                  <td>{}</td>
-                  <td>{product.tanggalProduksi}</td>
-                  <td>{}</td>
-                  <td>{}</td>
-                  <td>{product.satuan}</td>
-                  <td>{product.jumlahProduksi}</td>
-                  <td>{product.statusProduksi}</td>
-                  <td>{product.tanggalSelesai}</td>
+                  <td>{product.KodeProduksi}</td>
+                  <td>
+                    {product.TanggalProduksi
+                      ? new Date(product.TanggalProduksi).toLocaleString(
+                          "id-ID"
+                        )
+                      : ""}
+                  </td>
+                  <td>{product.NamaProduk}</td>
+                  <td>{product.Batch}</td>
+                  <td>{product.Satuan}</td>
+                  <td>{product.JumlahProduksi}</td>
+                  <td>{product.StatusProduksi}</td>
+                  <td>
+                    {product.TanggalSelesai
+                      ? new Date(product.TanggalSelesai).toLocaleString("id-ID")
+                      : ""}
+                  </td>
+                  <td>
+                    <button onClick={() => handleDelete(product.id)}>
+                      <FontAwesomeIcon icon={faTrash} /> Hapus
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="8">Tidak ada produk yang ditemukan</td>
+                <td colSpan="10">Tidak ada produk yang ditemukan</td>
               </tr>
             )}
           </tbody>

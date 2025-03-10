@@ -5,6 +5,11 @@ import AdminHeader from "./AdminHeader(UserManagement)"; // Import Header compon
 import Select from "react-select";
 import "../styles/StatusProductForm.css";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  createStatusProduksi,
+  fetchStatusProduksi,
+} from "../redux/statusprodukSlice";
+import { fetchProducts } from "../redux/productTableSlice"; // import
 import { addUser, updateUser, fetchUsers } from "../redux/userManagementSlice";
 import { Modal } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
@@ -17,10 +22,91 @@ function StatusProductForm() {
   const isEditing = !!id;
   const [date, setDate] = useState(new Date());
 
-  // Get user data from the Redux store if editing
-  const { users, loading, error } = useSelector(
-    (state) => state.userManagement
+  // State loading & error (opsional, bisa ambil dari store)
+  const { items, users, loading, error } = useSelector(
+    (state) => state.statusproduksi
   );
+
+  const { product } = useSelector((state) => state.productTable);
+
+  // Kita butuh men-load data KodeProduksi di awal
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+  // Form data
+  const [formData, setFormData] = useState({
+    KodeProduksi: "",
+    TanggalProduksi: new Date(), // pakai Date object
+    TanggalSelesai: null, // null awalnya
+    Batch: "",
+    Satuan: "",
+    JumlahProduksi: "",
+    StatusProduksi: "Dalam Proses",
+  });
+
+  // Modal states
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Kita ubah TanggalProduksi & TanggalSelesai ke format string (ISO)
+      const payload = {
+        ...formData,
+        TanggalProduksi: formData.TanggalProduksi
+          ? formData.TanggalProduksi.toISOString()
+          : null,
+        TanggalSelesai: formData.TanggalSelesai
+          ? formData.TanggalSelesai.toISOString()
+          : null,
+      };
+
+      // dispatch createStatusProduksi
+      const resultAction = await dispatch(
+        createStatusProduksi(payload)
+      ).unwrap();
+
+      // Jika sukses
+      setModalTitle("Sukses");
+      setModalMessage("StatusProduksi berhasil ditambahkan");
+      setShowModal(true);
+
+      // Tunggu 2 detik lalu tutup modal & navigate
+      setTimeout(() => {
+        setShowModal(false);
+        navigate("/status-product"); // misal route table
+      }, 2000);
+    } catch (err) {
+      setModalTitle("Error");
+      setModalMessage(`Gagal menambahkan: ${err}`);
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 2000);
+    }
+  };
+
+  const handleCancel = () => {
+    navigate("/status-product");
+  };
+
+  // Siapkan options untuk react-select
+  // Asumsinya items punya { KodeProduksi, ... }
+  const kodeProduksiOptions = items.map((item) => ({
+    value: item.KodeProduksi,
+    label: item.KodeProduksi,
+  }));
+
+  // Mencari object {value,label} yang sesuai formData.KodeProduksi
+  // agar select menampilkan pilihan
+  const selectedKode =
+    kodeProduksiOptions.find((opt) => opt.value === formData.KodeProduksi) ||
+    null;
+
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -28,10 +114,6 @@ function StatusProductForm() {
     confirmPassword: "",
     role: "",
   });
-
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalTitle, setModalTitle] = useState("");
 
   useEffect(() => {
     if (isEditing) {
@@ -57,88 +139,6 @@ function StatusProductForm() {
     }
   }, [dispatch, id, isEditing, users, navigate]);
 
-  const handleSave = (e) => {
-    e.preventDefault();
-
-    // Validasi password dan konfirmasi password
-    if (userData.password !== userData.confirmPassword) {
-      setModalTitle("Error");
-      setModalMessage("Password dan konfirmasi password tidak cocok");
-      setTimeout(() => setShowModal(false), 2000);
-      setShowModal(true);
-      return;
-    }
-
-    const { username, email, password, role } = userData;
-
-    if (isEditing) {
-      dispatch(
-        updateUser({
-          id,
-          userData: {
-            username,
-            email,
-            password,
-            confPassword: userData.confirmPassword,
-            role,
-          },
-        })
-      )
-        .unwrap()
-        .then(() => {
-          setModalTitle("Sukses");
-          setModalMessage("Pengguna berhasil diperbarui");
-          setShowModal(true);
-          setTimeout(() => {
-            setShowModal(false);
-            navigate("/user-management");
-          }, 2000);
-        })
-        .catch((error) => {
-          setModalTitle("Error");
-          setModalMessage(`Gagal memperbarui pengguna: ${error.msg || error}`);
-          setShowModal(true);
-          setTimeout(() => {
-            setShowModal(false);
-            navigate("/user-management");
-          }, 2000);
-        });
-    } else {
-      dispatch(
-        addUser({
-          username,
-          email,
-          password,
-          confPassword: userData.confirmPassword,
-          role,
-        })
-      )
-        .unwrap()
-        .then(() => {
-          setModalTitle("Sukses");
-          setModalMessage("Pengguna berhasil ditambahkan");
-          setShowModal(true);
-          setTimeout(() => {
-            setShowModal(false);
-            navigate("/user-management");
-          }, 2000);
-        })
-        .catch((error) => {
-          setModalTitle("Error");
-          setModalMessage(`Gagal menambahkan pengguna: ${error.msg || error}`);
-          setShowModal(true);
-          setTimeout(() => {
-            setShowModal(false);
-            navigate("/user-management");
-          }, 2000);
-        });
-    }
-  };
-
-  const handleCancel = () => {
-    navigate("/status-product");
-  };
-
   const roleOptions = [
     { value: "Admin", label: "Admin" },
     { value: "Operator", label: "Operator" },
@@ -146,50 +146,58 @@ function StatusProductForm() {
   ];
 
   return (
-    <div className="admin-dashboard">
+    <div className="status-product-form">
       <div className="main-section">
         <AdminHeader />
         <div className="user-management-container">
           <div className="user-management-form">
             <form onSubmit={handleSave}>
+              {/* Dropdown KodeProduksi */}
               <div className="form-group">
                 <label>Kode Produksi</label>
-                <input
-                  type="text"
-                  value={userData.kodeProduksi}
-                  onChange={(e) =>
-                    setUserData({ ...userData, username: e.target.value })
+                <Select
+                  options={kodeProduksiOptions}
+                  value={selectedKode}
+                  onChange={(selectedOption) =>
+                    setFormData({
+                      ...formData,
+                      KodeProduksi: selectedOption.value,
+                    })
                   }
-                  required
+                  placeholder="Pilih KodeProduksi..."
                 />
               </div>
+
               <div className="form-group">
                 <label>Tanggal Produksi</label>
                 <DatePicker
-                  selected={date}
-                  onChange={(date) => setDate(date)}
+                  selected={formData.TanggalProduksi}
+                  onChange={(date) =>
+                    setFormData({ ...formData, TanggalProduksi: date })
+                  }
+                  dateFormat="yyyy-MM-dd"
                 />
               </div>
+
               <div className="form-group">
                 <label>Tanggal Selesai</label>
                 <DatePicker
-                  selected={date}
-                  onChange={(date) => setDate(date)}
+                  selected={formData.TanggalSelesai}
+                  onChange={(date) =>
+                    setFormData({ ...formData, TanggalSelesai: date })
+                  }
+                  dateFormat="yyyy-MM-dd"
                 />
               </div>
 
               <div className="form-group">
                 <label>Batch</label>
                 <input
-                  type="batch"
-                  value={userData.batch}
+                  type="text"
+                  value={formData.Batch}
                   onChange={(e) =>
-                    setUserData({
-                      ...userData,
-                      batch: e.target.value,
-                    })
+                    setFormData({ ...formData, Batch: e.target.value })
                   }
-                  required={!isEditing} // Required only when adding a new user
                 />
               </div>
 
@@ -197,30 +205,24 @@ function StatusProductForm() {
                 <label>Satuan</label>
                 <input
                   type="text"
-                  value={userData.satuan}
+                  value={formData.Satuan}
                   onChange={(e) =>
-                    setUserData({
-                      ...userData,
-                      satuan: e.target.value,
-                    })
+                    setFormData({ ...formData, Satuan: e.target.value })
                   }
-                  required
                 />
               </div>
+
               <div className="form-group">
                 <label>Jumlah Produksi</label>
                 <input
                   type="number"
-                  value={userData.jumlahProduksi}
+                  value={formData.JumlahProduksi}
                   onChange={(e) =>
-                    setUserData({
-                      ...userData,
-                      jumlahProduksi: e.target.value,
-                    })
+                    setFormData({ ...formData, JumlahProduksi: e.target.value })
                   }
-                  required
                 />
               </div>
+
               <div className="form-actions">
                 <button type="submit" className="save-button">
                   Simpan
