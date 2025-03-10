@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/AdminSidebar.css";
 import UserPicPlaceholder from "../assets/images/UserPic.png"; // Placeholder image
 import { fetchUser, logoutUser } from "../redux/userSlice";
-import { fetchProfileImage } from "../redux/profileSlice"; // Import fetchProfileImage
+import { fetchProfileImage } from "../redux/profileSlice";
+import { FiEdit } from "react-icons/fi"; // Import fetchProfileImage
 
 function AdminSidebar() {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function AdminSidebar() {
   const profileImage = useSelector(
     (state) => state.profile.profileImage || UserPicPlaceholder
   );
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
     if (status === "idle") {
@@ -44,19 +46,40 @@ function AdminSidebar() {
     }
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Selected file:", file.name);
+      // Implementasi upload file dapat dilakukan di sini
+    }
+  };
+
   return (
     <nav className="admin-sidebar">
       <div className="profile">
-        <img
-          src={profileImage}
-          alt="Profile"
-          style={{
-            borderRadius: "50%",
-            width: "120px",
-            height: "120px",
-            objectFit: "cover",
-          }}
-        />
+        <div
+          className="profile-pic-container"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          <img
+            src={profileImage}
+            alt="Profile"
+            className="profile-pic"
+          />
+          {hover && (
+            <label htmlFor="file-upload" className="edit-icon">
+              <FiEdit />
+            </label>
+          )}
+          <input
+            type="file"
+            id="file-upload"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+        </div>
         <h3>{username}</h3>
       </div>
       <ul>
