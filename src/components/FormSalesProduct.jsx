@@ -36,8 +36,7 @@ function FormSalesProduct() {
             <thead>
               <tr>
                 <th>Nama Produk</th>
-                <th>Tanggal Produksi</th>
-                <th>Jumlah</th>
+                <th>Batch</th>
                 <th>Margin</th>
               </tr>
             </thead>
@@ -53,23 +52,15 @@ function FormSalesProduct() {
                     className="select-input"
                   />
                 </td>
+
                 <td>
-                  <input
-                    type="date"
-                    value={productionDate}
-                    onChange={(e) => setProductionDate(e.target.value)}
-                    required
-                    className="input-field"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    placeholder="Jumlah"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
-                    className="input-field"
+                  <Select
+                    options={[{ value: "product1", label: "Product 1" }]}
+                    onChange={(selectedOption) =>
+                      setProductName(selectedOption.value)
+                    }
+                    placeholder="Pilih Batch"
+                    className="select-input"
                   />
                 </td>
                 <td>

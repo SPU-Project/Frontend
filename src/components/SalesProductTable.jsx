@@ -96,7 +96,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
             <tr>
               <th>No</th>
               <th>Nama Produk</th>
-              <th>Tanggal Produksi</th>
+              <th>Batch</th>
               <th>Jumlah Produksi</th>
               <th>Terjual</th>
               <th>Harga Satuan</th>
@@ -109,7 +109,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
               filteredProducts.map((product, index) => (
                 <tr key={product.id}>
                   <td>{index + 1}</td>
-                  <td>{product.namaProduk}</td>
+                  <td>{product.namaProdu}</td>
                   <td>{product.tanggalProduksi}</td>
                   <td>{product.jumlahProduksi}</td>
                   <td>{product.terjual}</td>

@@ -134,8 +134,11 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
                       : ""}
                   </td>
                   <td>
-                    <button onClick={() => handleDelete(product.id)}>
-                      <FontAwesomeIcon icon={faTrash} /> Hapus
+                    <button
+                      className="delete-product-button"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      Hapus
                     </button>
                   </td>
                 </tr>

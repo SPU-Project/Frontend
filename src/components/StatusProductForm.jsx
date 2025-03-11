@@ -23,22 +23,22 @@ function StatusProductForm() {
   const [date, setDate] = useState(new Date());
 
   // State loading & error (opsional, bisa ambil dari store)
-  const { items, users, loading, error } = useSelector(
+  const { users, loading, error } = useSelector(
     (state) => state.statusproduksi
   );
 
-  const { product } = useSelector((state) => state.productTable);
+  const { products } = useSelector((state) => state.productTable);
 
-  // Kita butuh men-load data KodeProduksi di awal
+  // 2) Ketika mount, dispatch(fetchProducts) untuk mengisi productTable.products
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  // Form data
+  // 3) State form untuk StatusProduksi
   const [formData, setFormData] = useState({
     KodeProduksi: "",
-    TanggalProduksi: new Date(), // pakai Date object
-    TanggalSelesai: null, // null awalnya
+    TanggalProduksi: new Date(),
+    TanggalSelesai: null,
     Batch: "",
     Satuan: "",
     JumlahProduksi: "",
@@ -94,15 +94,12 @@ function StatusProductForm() {
     navigate("/status-product");
   };
 
-  // Siapkan options untuk react-select
-  // Asumsinya items punya { KodeProduksi, ... }
-  const kodeProduksiOptions = items.map((item) => ({
-    value: item.KodeProduksi,
-    label: item.KodeProduksi,
+  // 4) Buat options dari 'products'
+  const kodeProduksiOptions = products.map((p) => ({
+    value: p.KodeProduksi,
+    label: p.KodeProduksi,
   }));
 
-  // Mencari object {value,label} yang sesuai formData.KodeProduksi
-  // agar select menampilkan pilihan
   const selectedKode =
     kodeProduksiOptions.find((opt) => opt.value === formData.KodeProduksi) ||
     null;
