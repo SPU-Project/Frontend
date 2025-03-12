@@ -1,36 +1,126 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// FormSalesProduct.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import AdminHeader from "./AdminHeader(Sales)"; // Import AdminHeader
-import "../styles/FormSalesProduct.css"; // Import CSS file
+import AdminHeader from "./AdminHeader(Sales)";
+import "../styles/FormSalesProduct.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createPenjualanProduk,
+  updatePenjualanProduk,
+  fetchPenjualanProdukById,
+} from "../redux/penjualanProdukSlice";
+
+// Import slice fetch
+import { fetchStatusProduksi } from "../redux/statusprodukSlice";
 
 function FormSalesProduct() {
   const navigate = useNavigate();
-  const [productName, setProductName] = useState("");
-  const [productionDate, setProductionDate] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [margin, setMargin] = useState("");
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const isEditing = !!id;
 
-  const handleSave = (e) => {
+  // State penjualan
+  const { currentItem, loading, error } = useSelector(
+    (state) => state.penjualanproduk
+  );
+  // State statusProduksi
+  const { items: statusItems } = useSelector((state) => state.statusproduksi);
+
+  const [formData, setFormData] = useState({
+    NamaProduk: "",
+    Batch: "",
+    Margin: "",
+  });
+
+  // List margin
+  const marginOptions = [
+    { value: "20%", label: "20%" },
+    { value: "30%", label: "30%" },
+    { value: "40%", label: "40%" },
+    { value: "50%", label: "50%" },
+    { value: "60%", label: "60%" },
+    { value: "70%", label: "70%" },
+    { value: "80%", label: "80%" },
+    { value: "90%", label: "90%" },
+    { value: "100%", label: "100%" },
+  ];
+
+  // --- [1] Ambil data statusproduksi
+  useEffect(() => {
+    dispatch(fetchStatusProduksi()); // GET /status-produksi
+    if (isEditing) {
+      dispatch(fetchPenjualanProdukById(id));
+    }
+  }, [dispatch, isEditing, id]);
+
+  // --- [2] Jika edit, set formData dari currentItem
+  useEffect(() => {
+    if (isEditing && currentItem) {
+      setFormData({
+        NamaProduk: currentItem.NamaProduk,
+        Batch: currentItem.Batch,
+        Margin: currentItem.Margin,
+      });
+    }
+  }, [isEditing, currentItem]);
+
+  // --- [3] Buat array options untuk NamaProduk & Batch
+  // Mungkin Anda ingin unique NamaProduk
+  const uniqueNamaProduk = [...new Set(statusItems.map((s) => s.NamaProduk))];
+  const namaProdukOptions = uniqueNamaProduk.map((nama) => ({
+    value: nama,
+    label: nama,
+  }));
+
+  // Mungkin Anda ingin unique batch
+  const uniqueBatch = [...new Set(statusItems.map((s) => s.Batch))];
+  const batchOptions = uniqueBatch.map((b) => ({
+    value: b,
+    label: b,
+  }));
+
+  // onSubmit
+  const handleSave = async (e) => {
     e.preventDefault();
-    // Implement save functionality
-    console.log({
-      productName,
-      productionDate,
-      quantity,
-      margin,
-    });
+    try {
+      if (isEditing) {
+        await dispatch(
+          updatePenjualanProduk({
+            id,
+            updatedData: formData,
+          })
+        ).unwrap();
+      } else {
+        await dispatch(createPenjualanProduk(formData)).unwrap();
+      }
+      navigate("/sales-product");
+    } catch (err) {
+      console.error("Error:", err);
+    }
   };
 
   const handleCancel = () => {
     navigate("/sales-product");
-    console.log("Form canceled");
   };
+
+  // Mencari selectedNama & selectedBatch di react-select
+  const selectedNama =
+    namaProdukOptions.find((opt) => opt.value === formData.NamaProduk) || null;
+
+  const selectedBatch =
+    batchOptions.find((opt) => opt.value === formData.Batch) || null;
+
+  const selectedMargin =
+    marginOptions.find((m) => m.value === formData.Margin) || null;
 
   return (
     <div className="product-form-table">
       <AdminHeader />
       <div className="form-sales-product">
+        {loading && <p>Loading...</p>}
+        {error && <p>Error: {error}</p>}
+
         <form onSubmit={handleSave}>
           <table className="sales-product-table">
             <thead>
@@ -43,41 +133,51 @@ function FormSalesProduct() {
             <tbody>
               <tr>
                 <td>
+                  {/* Dropdown NamaProduk */}
                   <Select
-                    options={[{ value: "product1", label: "Product 1" }]}
-                    onChange={(selectedOption) =>
-                      setProductName(selectedOption.value)
+                    options={namaProdukOptions}
+                    value={selectedNama}
+                    onChange={(selected) =>
+                      setFormData({
+                        ...formData,
+                        NamaProduk: selected.value,
+                      })
                     }
-                    placeholder="Pilih Produk"
-                    className="select-input"
+                    placeholder="Pilih Nama Produk"
+                    isClearable
                   />
                 </td>
-
                 <td>
+                  {/* Dropdown Batch */}
                   <Select
-                    options={[{ value: "product1", label: "Product 1" }]}
-                    onChange={(selectedOption) =>
-                      setProductName(selectedOption.value)
+                    options={batchOptions}
+                    value={selectedBatch}
+                    onChange={(selected) =>
+                      setFormData({
+                        ...formData,
+                        Batch: selected.value,
+                      })
                     }
                     placeholder="Pilih Batch"
-                    className="select-input"
+                    isClearable
                   />
                 </td>
                 <td>
+                  {/* Dropdown Margin */}
                   <Select
-                    options={[{ value: "margin1", label: "Margin 1" }]}
-                    onChange={(selectedOption) =>
-                      setMargin(selectedOption.value)
+                    options={marginOptions}
+                    value={selectedMargin}
+                    onChange={(selected) =>
+                      setFormData({ ...formData, Margin: selected.value })
                     }
                     placeholder="Pilih Margin"
-                    className="select-input"
+                    isClearable
                   />
                 </td>
               </tr>
             </tbody>
           </table>
 
-          {/* Tombol aksi */}
           <div className="form-actions">
             <button type="submit" className="save-button">
               Simpan

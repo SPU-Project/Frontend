@@ -1,55 +1,97 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts, deleteProduct } from "../redux/productTableSlice";
+import {
+  fetchPenjualanProduks,
+  deletePenjualanProduk,
+  updatePenjualanProduk,
+} from "../redux/penjualanProdukSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faSearch,
+  faEdit,
+  faTrash,
+  faSave,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap";
 import "../styles/SalesProductTable.css";
 
 function SalesProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector(
-    (state) => state.productTable
+
+  // Ambil state dari penjualanproduk slice
+  const { items, loading, error } = useSelector(
+    (state) => state.penjualanproduk
   );
 
-  // Modal States
+  // State untuk inline editing kolom "Terjual"
+  const [editingRowTerjual, setEditingRowTerjual] = useState(null);
+  const [tempTerjual, setTempTerjual] = useState({});
+
+  // Modal States untuk delete confirmation
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    // Fetch data penjualan-produk saat komponen mount
+    dispatch(fetchPenjualanProduks());
   }, [dispatch]);
 
-  const filteredProducts = products.filter((product) =>
-    product.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter search
+  const filteredData = items.filter((prod) =>
+    prod.NamaProduk.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleEdit = (product) => {
-    navigate(`/edit-product/${product.produkId}`, { state: { product } });
+  // Untuk mengaktifkan mode edit inline di kolom "Terjual"
+  const handleEditTerjual = (prod) => {
+    setEditingRowTerjual(prod.id);
+    setTempTerjual({ ...tempTerjual, [prod.id]: prod.Terjual });
   };
 
+  // Simpan update terjual secara inline
+  const handleSaveTerjual = async (prod) => {
+    // Buat payload berdasarkan data yang ada, ganti Terjual dengan nilai baru
+    const updatedData = {
+      NamaProduk: prod.NamaProduk,
+      Batch: prod.Batch,
+      Margin: prod.Margin,
+      Terjual: tempTerjual[prod.id], // nilai baru dari state
+    };
+
+    try {
+      await dispatch(
+        updatePenjualanProduk({ id: prod.id, updatedData })
+      ).unwrap();
+      setEditingRowTerjual(null);
+    } catch (error) {
+      console.error("Gagal mengupdate Terjual:", error);
+    }
+  };
+
+  // Batalkan mode edit untuk kolom Terjual
+  const handleCancelTerjual = () => {
+    setEditingRowTerjual(null);
+  };
+
+  // Fungsi delete (sama seperti sebelumnya)
   const handleDelete = (id) => {
     setShowDeleteConfirmation(true);
     setIdToDelete(id);
-    setModalMessage("Apakah Anda yakin ingin menghapus produk ini?");
+    setModalMessage("Apakah Anda yakin ingin menghapus data penjualan ini?");
     setShowModal(true);
   };
 
   const handleDeleteConfirmation = async () => {
     try {
-      const { error } = await dispatch(deleteProduct(idToDelete));
-      if (error) {
-        setModalMessage("Terjadi kesalahan saat menghapus produk.");
-      } else {
-        setModalMessage("Produk berhasil dihapus!");
-        dispatch(fetchProducts());
-      }
-    } catch (error) {
-      setModalMessage("Terjadi kesalahan.");
+      await dispatch(deletePenjualanProduk(idToDelete));
+      setModalMessage("Data berhasil dihapus!");
+    } catch (err) {
+      setModalMessage("Terjadi kesalahan saat menghapus data.");
     } finally {
       setShowDeleteConfirmation(false);
       setTimeout(() => setShowModal(false), 2000);
@@ -62,11 +104,12 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
   };
 
   const handleAddProduct = () => {
+    // Navigasi ke form sales (create)
     navigate("/form-sales");
   };
 
   if (loading) {
-    return <div>Memuat data produk...</div>;
+    return <div>Memuat data penjualan produk...</div>;
   }
 
   if (error) {
@@ -83,7 +126,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
             type="text"
-            placeholder="    Cari Produk"
+            placeholder="Cari Penjualan Produk"
             value={searchTerm}
             onChange={onSearchChange}
             className="search-input"
@@ -105,45 +148,77 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product, index) => (
-                <tr key={product.id}>
+            {filteredData.length > 0 ? (
+              filteredData.map((prod, index) => (
+                <tr key={prod.id}>
                   <td>{index + 1}</td>
-                  <td>{product.namaProdu}</td>
-                  <td>{product.tanggalProduksi}</td>
-                  <td>{product.jumlahProduksi}</td>
-                  <td>{product.terjual}</td>
-                  <td>{`Rp. ${parseFloat(
-                    product.hargaSatuan
-                  ).toLocaleString()}`}</td>
-                  <td>{`Rp. ${(
-                    product.terjual * product.hargaSatuan
-                  ).toLocaleString()}`}</td>
+                  <td>{prod.NamaProduk}</td>
+                  <td>{prod.Batch}</td>
+                  <td>{prod.JumlahProduksi}</td>
                   <td>
-                    <button
-                      className="edit-product-button"
-                      onClick={() => handleEdit(product)}
-                    >
-                      Ubah
-                    </button>
-                    <button
-                      className="delete-product-button"
-                      onClick={() => handleDelete(product.produkId)}
-                    >
-                      Hapus
-                    </button>
+                    {editingRowTerjual === prod.id ? (
+                      <div>
+                        <input
+                          type="number"
+                          value={tempTerjual[prod.id] || ""}
+                          onChange={(e) =>
+                            setTempTerjual({
+                              ...tempTerjual,
+                              [prod.id]: e.target.value,
+                            })
+                          }
+                        />
+                        <button
+                          className="save-inline-button"
+                          onClick={() => handleSaveTerjual(prod)}
+                          style={{ marginLeft: "4px" }}
+                        >
+                          <FontAwesomeIcon icon={faSave} />
+                        </button>
+                        <button
+                          className="cancel-inline-button"
+                          onClick={handleCancelTerjual}
+                          style={{ marginLeft: "4px" }}
+                        >
+                          <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                      </div>
+                    ) : (
+                      prod.Terjual
+                    )}
+                  </td>
+                  <td>Rp {parseFloat(prod.HargaSatuan).toLocaleString()}</td>
+                  <td>Rp {parseFloat(prod.Pendapatan).toLocaleString()}</td>
+                  <td>
+                    {editingRowTerjual !== prod.id && (
+                      <>
+                        <button
+                          className="edit-product-button"
+                          onClick={() => handleEditTerjual(prod)}
+                          style={{ marginRight: "8px" }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} /> Ubah
+                        </button>
+                        <button
+                          className="delete-product-button"
+                          onClick={() => handleDelete(prod.id)}
+                        >
+                          <FontAwesomeIcon icon={faTrash} /> Hapus
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="8">Tidak ada produk yang ditemukan</td>
+                <td colSpan="8">Tidak ada data penjualan yang ditemukan</td>
               </tr>
             )}
           </tbody>
         </table>
 
-        {/* Modal */}
+        {/* Modal untuk konfirmasi delete */}
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>Konfirmasi</Modal.Title>

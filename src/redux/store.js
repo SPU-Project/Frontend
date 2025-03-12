@@ -8,6 +8,7 @@ import userManagementReducer from "./userManagementSlice";
 import riwayatReducer from "./riwayatSlice"; // Import product
 import stokbahanbakuReducer from "./stokbahanbakuSlice";
 import statusprodukReducer from "./statusprodukSlice"; // Import status producer
+import penjualanProdukReducer from "./penjualanProdukSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
     riwayat: riwayatReducer,
     stokbahanbaku: stokbahanbakuReducer,
     statusproduksi: statusprodukReducer,
+    penjualanproduk: penjualanProdukReducer,
   },
 });

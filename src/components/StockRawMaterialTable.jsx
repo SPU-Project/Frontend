@@ -99,9 +99,7 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
                     </td>
                     {/* Bungkus Satuan dalam <td> */}
                     <td>{item.Satuan}</td>
-
                     <td>{new Date(item.TanggalPembaruan).toLocaleString()}</td>
-
                     <td>
                       {editingRow === item.id ? (
                         <button

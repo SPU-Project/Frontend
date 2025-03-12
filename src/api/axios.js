@@ -2,7 +2,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000", // Sesuaikan dengan URL backend Anda
+  baseURL: "http://localhost:5000",
+  // // Sesuaikan dengan URL backend Anda
+  withCredentials: true, // pastikan cookie dikirim
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
