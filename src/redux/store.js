@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice"; // Import user slice
-import profileReducer from "./profileSlice"; // Import profile slice
 import bahanBakuReducer from "./bahanbakuslice";
 import produkReducer from "./produkSlice";
 import productTableReducer from "./productTableSlice";
@@ -9,11 +8,11 @@ import riwayatReducer from "./riwayatSlice"; // Import product
 import stokbahanbakuReducer from "./stokbahanbakuSlice";
 import statusprodukReducer from "./statusprodukSlice"; // Import status producer
 import penjualanProdukReducer from "./penjualanProdukSlice";
+import imageReducer from "./imageSlice"; // Import imageSlice
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    profile: profileReducer,
     bahanBaku: bahanBakuReducer,
     produk: produkReducer,
     productTable: productTableReducer,
@@ -22,5 +21,6 @@ export const store = configureStore({
     stokbahanbaku: stokbahanbakuReducer,
     statusproduksi: statusprodukReducer,
     penjualanproduk: penjualanProdukReducer,
+    image: imageReducer,
   },
 });

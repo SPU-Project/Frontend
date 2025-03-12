@@ -108,6 +108,7 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
               <th>Jumlah Produksi</th>
               <th>Status Produksi</th>
               <th>Tanggal Selesai</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -130,7 +131,7 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
                   <td>{product.StatusProduksi}</td>
                   <td>
                     {product.TanggalSelesai
-                      ? new Date(product.TanggalSelesai).toLocaleString("id-ID")
+                      ? new Date(product.TanggalSelesai).toLocaleDateString()
                       : ""}
                   </td>
                   <td>
