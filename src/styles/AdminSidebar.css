@@ -21,6 +21,36 @@
   margin-bottom: 0.5rem;
 }
 
+.profile-pic-container {
+  position: relative;
+  display: inline-block;
+  
+}
+
+.profile-pic {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.edit-icon {
+  position: absolute;
+  top: 80px;
+  left: 60px;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 2rem;
+}
+
 .profile h3 {
   margin: 0;
   font-size: 1.8rem;
