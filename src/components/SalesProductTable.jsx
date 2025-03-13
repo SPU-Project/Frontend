@@ -23,7 +23,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
   const dispatch = useDispatch();
 
   // Ambil state dari penjualanproduk slice
-  const { items, loading, error } = useSelector(
+  const { items, loading /*, error */ } = useSelector(
     (state) => state.penjualanproduk
   );
 
@@ -36,6 +36,10 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
   const [modalMessage, setModalMessage] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
+
+  // Modal State untuk update notifikasi (berhasil/gagal)
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [updateModalMessage, setUpdateModalMessage] = useState("");
 
   useEffect(() => {
     // Fetch data penjualan-produk saat komponen mount
@@ -53,7 +57,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
     setTempTerjual({ ...tempTerjual, [prod.id]: prod.Terjual });
   };
 
-  // Simpan update terjual secara inline
+  // Simpan update terjual secara inline dengan notifikasi modal
   const handleSaveTerjual = async (prod) => {
     // Buat payload berdasarkan data yang ada, ganti Terjual dengan nilai baru
     const updatedData = {
@@ -68,8 +72,17 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
         updatePenjualanProduk({ id: prod.id, updatedData })
       ).unwrap();
       setEditingRowTerjual(null);
+      // Tampilkan modal notifikasi berhasil
+      setUpdateModalMessage("Update berhasil!");
+      setShowUpdateModal(true);
+      setTimeout(() => setShowUpdateModal(false), 2000);
     } catch (error) {
-      console.error("Gagal mengupdate Terjual:", error);
+      console.error("Update Gagal", error);
+      const errMsg = error.message ? error.message : error;
+      // Tampilkan modal notifikasi error
+      setUpdateModalMessage("Update Gagal : " + errMsg);
+      setShowUpdateModal(true);
+      setTimeout(() => setShowUpdateModal(false), 2000);
     }
   };
 
@@ -110,10 +123,6 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
 
   if (loading) {
     return <div>Memuat data penjualan produk...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
   }
 
   return (
@@ -234,6 +243,16 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
               </Button>
             </Modal.Footer>
           )}
+        </Modal>
+
+        {/* Modal untuk notifikasi update */}
+        <Modal
+          show={showUpdateModal}
+          onHide={() => setShowUpdateModal(false)}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Body>{updateModalMessage}</Modal.Body>
         </Modal>
       </div>
     </div>

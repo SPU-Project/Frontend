@@ -10,9 +10,9 @@ import {
   updatePenjualanProduk,
   fetchPenjualanProdukById,
 } from "../redux/penjualanProdukSlice";
-
-// Import slice fetch
+// Import slice fetch status produksi
 import { fetchStatusProduksi } from "../redux/statusprodukSlice";
+import { Modal } from "react-bootstrap";
 
 function FormSalesProduct() {
   const navigate = useNavigate();
@@ -33,6 +33,10 @@ function FormSalesProduct() {
     Margin: "",
   });
 
+  // State modal untuk notifikasi error saat menyimpan
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveModalMessage, setSaveModalMessage] = useState("");
+
   // List margin
   const marginOptions = [
     { value: "20%", label: "20%" },
@@ -46,7 +50,7 @@ function FormSalesProduct() {
     { value: "100%", label: "100%" },
   ];
 
-  // --- [1] Ambil data statusproduksi
+  // --- [1] Ambil data statusproduksi dan data penjualan (jika edit)
   useEffect(() => {
     dispatch(fetchStatusProduksi()); // GET /status-produksi
     if (isEditing) {
@@ -66,14 +70,12 @@ function FormSalesProduct() {
   }, [isEditing, currentItem]);
 
   // --- [3] Buat array options untuk NamaProduk & Batch
-  // Mungkin Anda ingin unique NamaProduk
   const uniqueNamaProduk = [...new Set(statusItems.map((s) => s.NamaProduk))];
   const namaProdukOptions = uniqueNamaProduk.map((nama) => ({
     value: nama,
     label: nama,
   }));
 
-  // Mungkin Anda ingin unique batch
   const uniqueBatch = [...new Set(statusItems.map((s) => s.Batch))];
   const batchOptions = uniqueBatch.map((b) => ({
     value: b,
@@ -97,6 +99,11 @@ function FormSalesProduct() {
       navigate("/sales-product");
     } catch (err) {
       console.error("Error:", err);
+      // Tampilkan modal notifikasi error selama 2 detik
+      const errMsg = err.message ? err.message : err;
+      setSaveModalMessage("Gagal menyimpan data: " + errMsg);
+      setShowSaveModal(true);
+      setTimeout(() => setShowSaveModal(false), 2000);
     }
   };
 
@@ -104,7 +111,7 @@ function FormSalesProduct() {
     navigate("/sales-product");
   };
 
-  // Mencari selectedNama & selectedBatch di react-select
+  // Mendapatkan nilai selected untuk react-select
   const selectedNama =
     namaProdukOptions.find((opt) => opt.value === formData.NamaProduk) || null;
 
@@ -119,7 +126,8 @@ function FormSalesProduct() {
       <AdminHeader />
       <div className="form-sales-product">
         {loading && <p>Loading...</p>}
-        {error && <p>Error: {error}</p>}
+        {/* Error dari slice tidak ditampilkan secara blocking */}
+        {/* <p>{error && `Error: ${error}`}</p> */}
 
         <form onSubmit={handleSave}>
           <table className="sales-product-table">
@@ -133,7 +141,6 @@ function FormSalesProduct() {
             <tbody>
               <tr>
                 <td>
-                  {/* Dropdown NamaProduk */}
                   <Select
                     options={namaProdukOptions}
                     value={selectedNama}
@@ -148,7 +155,6 @@ function FormSalesProduct() {
                   />
                 </td>
                 <td>
-                  {/* Dropdown Batch */}
                   <Select
                     options={batchOptions}
                     value={selectedBatch}
@@ -163,7 +169,6 @@ function FormSalesProduct() {
                   />
                 </td>
                 <td>
-                  {/* Dropdown Margin */}
                   <Select
                     options={marginOptions}
                     value={selectedMargin}
@@ -192,6 +197,16 @@ function FormSalesProduct() {
           </div>
         </form>
       </div>
+
+      {/* Modal untuk notifikasi error saat menyimpan */}
+      <Modal
+        show={showSaveModal}
+        onHide={() => setShowSaveModal(false)}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Body>{saveModalMessage}</Modal.Body>
+      </Modal>
     </div>
   );
 }
