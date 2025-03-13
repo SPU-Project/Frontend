@@ -100,7 +100,7 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
           <thead>
             <tr>
               <th>No</th>
-              <th>Kode Produk</th>
+              <th>Kode Produksi</th>
               <th>Tanggal Produksi</th>
               <th>Nama Produk</th>
               <th>Batch</th>

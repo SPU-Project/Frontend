@@ -79,14 +79,14 @@ function StatusProductForm() {
       setTimeout(() => {
         setShowModal(false);
         navigate("/status-product"); // misal route table
-      }, 2000);
+      }, 1500);
     } catch (err) {
       setModalTitle("Error");
       setModalMessage(`Gagal menambahkan: ${err}`);
       setShowModal(true);
       setTimeout(() => {
         setShowModal(false);
-      }, 2000);
+      }, 5000);
     }
   };
 

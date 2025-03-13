@@ -94,7 +94,7 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
                           }
                         />
                       ) : (
-                        item.Stok
+                        item.Stok.toLocaleString()
                       )}
                     </td>
                     {/* Bungkus Satuan dalam <td> */}
