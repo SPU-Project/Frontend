@@ -42,21 +42,20 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
     doc.text(`Tanggal: ${new Date().toLocaleDateString()}`, 14, 30);
 
     // Data untuk tabel
-    const tableData = filteredProducts.map((product, index) => [
-      index + 1,
-      product.namaProduk,
-      (
-        <td>{`Rp. ${parseFloat(product.hpp).toLocaleString()}`}</td>
-      )`Rp. ${parseFloat(product.margin20).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin30).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin40).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin50).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin60).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin70).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin80).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin90).toLocaleString()}`,
-      `Rp. ${parseFloat(product.margin100).toLocaleString()}`,
-    ]);
+const tableData = filteredProducts.map((product, index) => [
+  index + 1,
+  product.namaProduk,
+  `Rp. ${parseFloat(product.hpp).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin20).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin30).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin40).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin50).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin60).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin70).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin80).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin90).toLocaleString("id-ID")}`,
+  `Rp. ${parseFloat(product.margin100).toLocaleString("id-ID")}`,
+]);
 
     // Kolom tabel
     const tableHeaders = [

@@ -7,6 +7,8 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRiwayat } from "../redux/riwayatSlice"; // Adjust the path as necessary
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 function LogHistoryTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
@@ -27,6 +29,23 @@ function LogHistoryTable({ searchTerm = "", onSearchChange }) {
       log.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+   const exportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Riwayat Log", 14, 10);
+    doc.autoTable({
+      startY: 20,
+      head: [["No", "Username", "Hak Akses", "Waktu", "Keterangan"]],
+      body: filteredLogs.map((log, index) => [
+        index + 1,
+        log.username,
+        log.role,
+        new Date(log.date).toLocaleString(),
+        log.description,
+      ]),
+    });
+    doc.save("Riwayat_Log.pdf");
+  };
+
   // Handle loading and error states
   if (loading) {
     return <div>Loading...</div>;
@@ -39,7 +58,9 @@ function LogHistoryTable({ searchTerm = "", onSearchChange }) {
   return (
     <div className="admin-table-container">
       <div className="table-controls">
+        <button onClick={exportPDF} className="export-pdf-button">Export PDF</button>
         <div className="search-container">
+          
           <FontAwesomeIcon
             icon={faSearch}
             className={`search-icon ${searchTerm ? "hidden" : ""}`}

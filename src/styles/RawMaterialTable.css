@@ -24,6 +24,21 @@
   margin-bottom: 1rem;
 }
 
+.export-pdf-button {
+  padding: 0.62rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  margin-left: 0rem;
+  cursor: pointer;
+}
+
+.export-pdf-button:hover {
+  background-color: #c82333;
+}
+
 .text-form {
   margin-bottom: 0.5rem;
   display: block;

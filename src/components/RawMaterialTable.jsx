@@ -10,6 +10,8 @@ import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const RawMaterialsTable = () => {
   const dispatch = useDispatch();
@@ -33,6 +35,33 @@ const RawMaterialsTable = () => {
   const [idToDelete, setIdToDelete] = useState(null);
 
   const formRef = useRef(null);
+
+const exportPDF = () => {
+  const doc = new jsPDF();
+  doc.text("Laporan Bahan Baku", 14, 10);
+
+  const tableColumn = ["No", "Bahan Baku", "Satuan", "Harga"];
+  const tableRows = [];
+
+  bahanBaku.forEach((item, index) => {
+    const rowData = [
+      index + 1,
+      item.BahanBaku,
+      item.Satuan,
+      formatRupiah(item.Harga),
+    ];
+    tableRows.push(rowData);
+  });
+
+  doc.autoTable({
+    head: [tableColumn],
+    body: tableRows,
+    startY: 20,
+  });
+
+  doc.save("Laporan_Bahan_Baku.pdf");
+};
+
 
   useEffect(() => {
     if (status === "idle") {
@@ -266,6 +295,10 @@ const RawMaterialsTable = () => {
 
       {/* Table and Search */}
       <div className="table-controls">
+        <button className="export-pdf-button" onClick={exportPDF}>
+  Export PDF
+</button>
+
         <div className="search-container">
           <FontAwesomeIcon
             icon={faSearch}

@@ -11,6 +11,8 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap";
 import "../styles/StatusProductTable.css";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 function StatusProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
@@ -70,6 +72,31 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
     setShowDeleteConfirmation(false);
   };
 
+ const exportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Laporan Status Produksi", 14, 10);
+
+    const tableColumn = ["No", "Kode Produksi", "Tanggal Produksi", "Nama Produk", "Batch", "Satuan", "Jumlah Produksi", "Status Produksi", "Tanggal Selesai"];
+    const tableRows = [];
+
+    products.forEach((product, index) => {
+      tableRows.push([
+        index + 1,
+        product.KodeProduksi,
+        product.TanggalProduksi ? new Date(product.TanggalProduksi).toLocaleString("id-ID") : "",
+        product.NamaProduk,
+        product.Batch,
+        product.Satuan,
+        product.JumlahProduksi,
+        product.StatusProduksi,
+        product.TanggalSelesai ? new Date(product.TanggalSelesai).toLocaleDateString("id-ID") : "",
+      ]);
+    });
+
+    doc.autoTable({ head: [tableColumn], body: tableRows, startY: 20 });
+    doc.save("Laporan_Status_Produksi.pdf");
+  };
+
   if (loading) {
     return <div>Memuat data status produksi...</div>;
   }
@@ -84,6 +111,7 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
         <button className="add-button" onClick={handleAddProduct}>
           <FontAwesomeIcon icon={faPlus} /> Tambah Produksi
         </button>
+        <button className="export-pdf-button" onClick={exportPDF}>Export PDF</button>
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input

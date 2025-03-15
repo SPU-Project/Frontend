@@ -17,6 +17,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap";
 import "../styles/SalesProductTable.css";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 function SalesProductTable({ searchTerm = "", onSearchChange }) {
   const navigate = useNavigate();
@@ -121,6 +123,24 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
     navigate("/form-sales");
   };
 
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Laporan Penjualan Produk", 14, 10);
+    doc.autoTable({
+      head: [["No", "Nama Produk", "Batch", "Jumlah Produksi", "Terjual", "Harga Satuan", "Pendapatan"]],
+      body: items.map((prod, index) => [
+        index + 1,
+        prod.NamaProduk,
+        prod.Batch,
+        prod.JumlahProduksi,
+        prod.Terjual,
+        `Rp ${parseFloat(prod.HargaSatuan).toLocaleString()}`,
+        `Rp ${parseFloat(prod.Pendapatan).toLocaleString()}`,
+      ]),
+    });
+    doc.save("Laporan_Penjualan_Produk.pdf");
+  };
+
   if (loading) {
     return <div>Memuat data penjualan produk...</div>;
   }
@@ -131,6 +151,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
         <button className="add-button" onClick={handleAddProduct}>
           <FontAwesomeIcon icon={faPlus} /> Tambah Produk
         </button>
+        <button className="export-pdf-button" onClick={handleExportPDF}> Export PDF </button>
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
