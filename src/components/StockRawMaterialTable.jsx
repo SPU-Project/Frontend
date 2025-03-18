@@ -93,8 +93,10 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
                             handleStockChange(item.id, e.target.value)
                           }
                         />
-                      ) : (
+                      ) : item.Stok !== null && item.Stok !== undefined ? (
                         item.Stok.toLocaleString()
+                      ) : (
+                        "Stok belum di tambahkan"
                       )}
                     </td>
                     {/* Bungkus Satuan dalam <td> */}
