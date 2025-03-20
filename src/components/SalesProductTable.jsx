@@ -127,7 +127,17 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
     const doc = new jsPDF();
     doc.text("Laporan Penjualan Produk", 14, 10);
     doc.autoTable({
-      head: [["No", "Nama Produk", "Batch", "Jumlah Produksi", "Terjual", "Harga Satuan", "Pendapatan"]],
+      head: [
+        [
+          "No",
+          "Nama Produk",
+          "Batch",
+          "Jumlah Produksi",
+          "Terjual",
+          "Harga Satuan",
+          "Pendapatan",
+        ],
+      ],
       body: items.map((prod, index) => [
         index + 1,
         prod.NamaProduk,
@@ -149,9 +159,12 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
     <div className="admin-table">
       <div className="table-controls">
         <button className="add-button" onClick={handleAddProduct}>
-          <FontAwesomeIcon icon={faPlus} /> Tambah Produk
+          <FontAwesomeIcon icon={faPlus} /> Tambah Penjualan Produk
         </button>
-        <button className="export-pdf-button" onClick={handleExportPDF}> Export PDF </button>
+        <button className="export-pdf-button" onClick={handleExportPDF}>
+          {" "}
+          Export PDF{" "}
+        </button>
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
@@ -168,7 +181,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
           <thead>
             <tr>
               <th>No</th>
-              <th>Nama Produk</th>
+              <th>Nama Penjualan Produk</th>
               <th>Batch</th>
               <th>Jumlah Produksi</th>
               <th>Terjual</th>

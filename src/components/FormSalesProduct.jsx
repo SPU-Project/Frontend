@@ -133,7 +133,7 @@ function FormSalesProduct() {
           <table className="sales-product-table">
             <thead>
               <tr>
-                <th>Nama Produk</th>
+                <th>Nama Penjualan Produk</th>
                 <th>Batch</th>
                 <th>Margin</th>
               </tr>
@@ -150,7 +150,7 @@ function FormSalesProduct() {
                         NamaProduk: selected.value,
                       })
                     }
-                    placeholder="Pilih Nama Produk"
+                    placeholder="Pilih Nama Penjualan Produk"
                     isClearable
                   />
                 </td>
