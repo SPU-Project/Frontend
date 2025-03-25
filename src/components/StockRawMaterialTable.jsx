@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles/StockRawMaterialTable.css";
 import "../styles/RawMaterialTable.css";
 import { fetchStockItems, updateStockItem } from "../redux/stokbahanbakuSlice";
+import jsPDF from "jspdf";
+import "jspdf-autotable"
 
 function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
   const dispatch = useDispatch();
@@ -46,9 +48,37 @@ function StockRawMaterialTable({ searchTerm = "", onSearchChange }) {
     setTempStock({ ...tempStock, [stockItemId]: value });
   };
 
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Laporan Stok Bahan Baku", 14, 10);
+  
+    const tableColumn = ["No", "Bahan Baku", "Stok", "Satuan", "Tanggal Pembaruan"];
+    const tableRows = [];
+  
+    filteredStockItems.forEach((item, index) => {
+      const rowData = [
+        index + 1,
+        item.BahanBaku,
+        item.Stok !== null && item.Stok !== undefined ? item.Stok.toLocaleString() : "N/A",
+        item.Satuan,
+        new Date(item.TanggalPembaruan).toLocaleString(),
+      ];
+      tableRows.push(rowData);
+    });
+  
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+  
+    doc.save("stok_bahan_baku.pdf");
+  };
+
   return (
     <div className="admin-table">
       <div className="table-controls">
+      <button className="export-pdf-button" onClick={exportPDF}>Export PDF</button>
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
