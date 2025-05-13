@@ -28,9 +28,20 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  const filteredProducts = products.filter((product) =>
-    product.namaProduk.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    const search = searchTerm.toLowerCase();
+
+    const matchesNamaProduk = product.namaProduk.toLowerCase().includes(search);
+    const matchesKodeProduksi =
+      product.KodeProduksi.toLowerCase().includes(search);
+    const matchesHPP =
+      product.hpp.toString().toLowerCase().includes(search) ||
+      `Rp. ${parseFloat(product.hpp).toLocaleString("id-ID")}`
+        .toLowerCase()
+        .includes(search);
+
+    return matchesNamaProduk || matchesKodeProduksi || matchesHPP;
+  });
 
   const handleExportPDF = () => {
     const doc = new jsPDF();
@@ -42,20 +53,20 @@ function ProductTable({ searchTerm = "", onSearchChange }) {
     doc.text(`Tanggal: ${new Date().toLocaleDateString()}`, 14, 30);
 
     // Data untuk tabel
-const tableData = filteredProducts.map((product, index) => [
-  index + 1,
-  product.namaProduk,
-  `Rp. ${parseFloat(product.hpp).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin20).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin30).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin40).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin50).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin60).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin70).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin80).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin90).toLocaleString("id-ID")}`,
-  `Rp. ${parseFloat(product.margin100).toLocaleString("id-ID")}`,
-]);
+    const tableData = filteredProducts.map((product, index) => [
+      index + 1,
+      product.namaProduk,
+      `Rp. ${parseFloat(product.hpp).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin20).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin30).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin40).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin50).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin60).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin70).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin80).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin90).toLocaleString("id-ID")}`,
+      `Rp. ${parseFloat(product.margin100).toLocaleString("id-ID")}`,
+    ]);
 
     // Kolom tabel
     const tableHeaders = [
