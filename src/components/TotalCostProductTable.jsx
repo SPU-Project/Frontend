@@ -399,7 +399,7 @@ function TotalCostProductTable() {
             <tr>
               <th style={{ width: "0.3%" }}>No</th>
               <th style={{ width: "5%" }}>Nama Bahan Baku</th>
-              <th style={{ width: "5%" }}>Satuan</th>
+              <th style={{ width: "5%" }}>Kuantitas</th>
               <th style={{ width: "5%" }}>Harga/Satuan</th>
               <th style={{ width: "5%" }}>Biaya</th>
             </tr>

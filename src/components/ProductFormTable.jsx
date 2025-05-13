@@ -53,6 +53,7 @@ function ProductFormTable() {
           name: bahanBaku.BahanBaku || "",
           quantity: bahanBaku.jumlah || 0,
           pricePerKg: bahanBaku.Harga || 0,
+          unit: bahanBaku.Satuan || "", // Pastikan satuan juga terambil
         }));
 
         setIngredients(mappedIngredients);
@@ -68,6 +69,7 @@ function ProductFormTable() {
           id: overhead.id || "",
           name: overhead.namaOverhead || "",
           price: overhead.harga || 0,
+          unit: overhead.Satuan || "", // Pastikan satuan juga terambil
         }));
 
         setOverheads(mappedOverheads);
@@ -99,6 +101,7 @@ function ProductFormTable() {
           value: bahanBaku.id,
           label: bahanBaku.BahanBaku,
           pricePerKg: bahanBaku.Harga,
+          unit: bahanBaku.Satuan, // Menambahkan unit ke options
         }));
         setIngredientOptions(options);
       } else {
@@ -116,7 +119,7 @@ function ProductFormTable() {
   const handleAddIngredient = () => {
     setIngredients([
       ...ingredients,
-      { id: "", name: "", quantity: "", pricePerKg: 0 },
+      { id: "", name: "", quantity: "", pricePerKg: 0, unit: "" }, // Menambahkan unit saat menambah bahan baku baru
     ]);
   };
 
@@ -132,6 +135,7 @@ function ProductFormTable() {
       id: selectedOption.value,
       name: selectedOption.label,
       pricePerKg: selectedOption.pricePerKg,
+      unit: selectedOption.unit || "", // Pastikan satuan ikut terupdate
     };
     setIngredients(newIngredients);
   };
@@ -245,14 +249,22 @@ function ProductFormTable() {
                           />
                         </td>
                         <td>
-                          <input
-                            type="number"
-                            name="quantity"
-                            value={ingredient.quantity}
-                            onChange={(e) => handleQuantityChange(index, e)}
-                            required
-                          />
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <input
+                              type="number"
+                              name="quantity"
+                              value={ingredient.quantity}
+                              onChange={(e) => handleQuantityChange(index, e)}
+                              required
+                              style={{ marginRight: "5px", flex: "1" }}
+                            />
+                            <span>{ingredient.unit || ""}</span>{" "}
+                            {/* Tampilkan satuan di sini */}
+                          </div>
                         </td>
+
                         <td>
                           <button
                             type="button"
