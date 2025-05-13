@@ -36,32 +36,36 @@ const RawMaterialsTable = () => {
 
   const formRef = useRef(null);
 
-const exportPDF = () => {
-  const doc = new jsPDF();
-  doc.text("Laporan Bahan Baku", 14, 10);
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Laporan Bahan Baku", 14, 10);
 
-  const tableColumn = ["No", "Bahan Baku", "Satuan", "Harga"];
-  const tableRows = [];
+    const tableColumn = ["No", "Bahan Baku", "Satuan", "Harga"];
+    const tableRows = [];
 
-  bahanBaku.forEach((item, index) => {
-    const rowData = [
-      index + 1,
-      item.BahanBaku,
-      item.Satuan,
-      formatRupiah(item.Harga),
-    ];
-    tableRows.push(rowData);
-  });
+    filteredStockItems.forEach((item, index) => {
+      const rowData = [
+        index + 1,
+        item.BahanBaku,
+        item.Satuan,
+        item.Harga,
+        formatRupiah(item.Harga),
+      ];
+      tableRows.push(rowData);
+    });
 
-  doc.autoTable({
-    head: [tableColumn],
-    body: tableRows,
-    startY: 20,
-  });
+    if (tableRows.length === 0) {
+      doc.text("Tidak ada data yang sesuai filter pencarian.", 14, 20);
+    } else {
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 20,
+      });
+    }
 
-  doc.save("Laporan_Bahan_Baku.pdf");
-};
-
+    doc.save("Laporan_Bahan_Baku.pdf");
+  };
 
   useEffect(() => {
     if (status === "idle") {
@@ -228,9 +232,21 @@ const exportPDF = () => {
     setShowDeleteConfirmation(false);
   };
 
-  const filteredData = bahanBaku.filter((item) =>
-    item.BahanBaku.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredStockItems = bahanBaku.filter((item) => {
+    const search = searchTerm.toLowerCase();
+    const hargaFormatted = formatRupiah(item.Harga).toLowerCase(); // ✅ Format harga ke Rupiah string
+
+    return (
+      item.BahanBaku.toLowerCase().includes(search) ||
+      item.Satuan.toLowerCase().includes(search) ||
+      hargaFormatted.includes(search) || // ✅ Cocokkan dengan harga dalam format Rupiah
+      (item.updatedAt &&
+        new Date(item.updatedAt)
+          .toLocaleString()
+          .toLowerCase()
+          .includes(search))
+    );
+  });
 
   return (
     <div className="admin-table-container">
@@ -296,8 +312,8 @@ const exportPDF = () => {
       {/* Table and Search */}
       <div className="table-controls">
         <button className="export-pdf-button" onClick={exportPDF}>
-  Export PDF
-</button>
+          Export PDF
+        </button>
 
         <div className="search-container">
           <FontAwesomeIcon
@@ -326,7 +342,7 @@ const exportPDF = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item, index) => (
+          {filteredStockItems.map((item, index) => (
             <tr key={item.id}>
               <td>{index + 1}</td>
               <td>{item.BahanBaku}</td>
@@ -363,7 +379,7 @@ const exportPDF = () => {
         <Modal.Header closeButton>
           <Modal.Title>Informasi</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{modalMessage}</Modal.Body>local
+        <Modal.Body>{modalMessage}</Modal.Body>localf
         <Modal.Footer>
           {showDeleteConfirmation && (
             <>
