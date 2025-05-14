@@ -138,6 +138,10 @@ function ProductFormTable() {
       unit: selectedOption.unit || "", // Pastikan satuan ikut terupdate
     };
     setIngredients(newIngredients);
+
+      // Simpan unit ke localStorage (kamu bisa simpan seluruh ingredients kalau mau)
+  const unitsToSave = newIngredients.map(item => item.unit);
+  localStorage.setItem("savedUnits", JSON.stringify(unitsToSave));
   };
 
   const handleQuantityChange = (index, event) => {

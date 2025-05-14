@@ -49,9 +49,26 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
   }, [dispatch]);
 
   // Filter search
-  const filteredData = items.filter((prod) =>
-    prod.NamaProduk.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredData = items.filter((prod) => {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+
+    // Format harga dan pendapatan menjadi string seperti "rp 2,000,000"
+    const formattedHarga = `rp ${parseFloat(
+      prod.HargaSatuan
+    ).toLocaleString()}`.toLowerCase();
+    const formattedPendapatan = `rp ${parseFloat(
+      prod.Pendapatan
+    ).toLocaleString()}`.toLowerCase();
+
+    return (
+      prod.NamaProduk.toLowerCase().includes(lowerSearchTerm) ||
+      prod.Batch.toString().toLowerCase().includes(lowerSearchTerm) ||
+      prod.JumlahProduksi.toString().toLowerCase().includes(lowerSearchTerm) ||
+      prod.Terjual.toString().toLowerCase().includes(lowerSearchTerm) ||
+      formattedHarga.includes(lowerSearchTerm) ||
+      formattedPendapatan.includes(lowerSearchTerm)
+    );
+  });
 
   // Untuk mengaktifkan mode edit inline di kolom "Terjual"
   const handleEditTerjual = (prod) => {
@@ -138,7 +155,7 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
           "Pendapatan",
         ],
       ],
-      body: items.map((prod, index) => [
+      body: filteredData.map((prod, index) => [
         index + 1,
         prod.NamaProduk,
         prod.Batch,
@@ -230,8 +247,12 @@ function SalesProductTable({ searchTerm = "", onSearchChange }) {
                       prod.Terjual
                     )}
                   </td>
-                  <td>Rp {parseFloat(prod.HargaSatuan).toLocaleString()}</td>
-                  <td>Rp {parseFloat(prod.Pendapatan).toLocaleString()}</td>
+                  <td>
+                    Rp {parseFloat(prod.HargaSatuan).toLocaleString("id-ID")}
+                  </td>
+                  <td>
+                    Rp {parseFloat(prod.Pendapatan).toLocaleString("id-ID")}
+                  </td>
                   <td>
                     {editingRowTerjual !== prod.id && (
                       <>
