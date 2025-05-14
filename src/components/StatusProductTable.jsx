@@ -36,9 +36,27 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
   }, [dispatch]);
 
   // Filter pencarian
-  const filteredProducts = products.filter((product) =>
-    product.NamaProduk.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      product.KodeProduksi?.toLowerCase().includes(term) ||
+      product.TanggalProduksi?.toLowerCase?.()?.includes(term) ||
+      new Date(product.TanggalProduksi)
+        .toLocaleDateString("id-ID")
+        .toLowerCase()
+        .includes(term) ||
+      product.NamaProduk?.toLowerCase().includes(term) ||
+      product.Batch?.toLowerCase().includes(term) ||
+      product.Satuan?.toLowerCase().includes(term) ||
+      product.JumlahProduksi?.toString().includes(term) ||
+      product.StatusProduksi?.toLowerCase().includes(term) ||
+      (product.TanggalSelesai &&
+        new Date(product.TanggalSelesai)
+          .toLocaleDateString("id-ID")
+          .toLowerCase()
+          .includes(term))
+    );
+  });
 
   const handleAddProduct = () => {
     // Navigasi ke form
@@ -72,24 +90,38 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
     setShowDeleteConfirmation(false);
   };
 
- const exportPDF = () => {
+  const exportPDF = () => {
     const doc = new jsPDF();
     doc.text("Laporan Status Produksi", 14, 10);
 
-    const tableColumn = ["No", "Kode Produksi", "Tanggal Produksi", "Nama Produk", "Batch", "Satuan", "Jumlah Produksi", "Status Produksi", "Tanggal Selesai"];
+    const tableColumn = [
+      "No",
+      "Kode Produksi",
+      "Tanggal Produksi",
+      "Nama Produk",
+      "Batch",
+      "Satuan",
+      "Jumlah Produksi",
+      "Status Produksi",
+      "Tanggal Selesai",
+    ];
     const tableRows = [];
 
-    products.forEach((product, index) => {
+    filteredProducts.forEach((product, index) => {
       tableRows.push([
         index + 1,
         product.KodeProduksi,
-        product.TanggalProduksi ? new Date(product.TanggalProduksi).toLocaleString("id-ID") : "",
+        product.TanggalProduksi
+          ? new Date(product.TanggalProduksi).toLocaleString("id-ID")
+          : "",
         product.NamaProduk,
         product.Batch,
         product.Satuan,
         product.JumlahProduksi,
         product.StatusProduksi,
-        product.TanggalSelesai ? new Date(product.TanggalSelesai).toLocaleDateString("id-ID") : "",
+        product.TanggalSelesai
+          ? new Date(product.TanggalSelesai).toLocaleDateString("id-ID")
+          : "",
       ]);
     });
 
@@ -111,7 +143,9 @@ function StatusProductTable({ searchTerm = "", onSearchChange }) {
         <button className="add-button" onClick={handleAddProduct}>
           <FontAwesomeIcon icon={faPlus} /> Tambah Produksi
         </button>
-        <button className="export-pdf-button" onClick={exportPDF}>Export PDF</button>
+        <button className="export-pdf-button" onClick={exportPDF}>
+          Export PDF
+        </button>
         <div className="search-container">
           <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
