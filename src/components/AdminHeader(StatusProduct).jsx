@@ -5,7 +5,7 @@ import Logo from "../assets/images/Logo.png"; // Import gambar
 function AdminHeader() {
   return (
     <header className="admin-header">
-      <h2>Status Produk</h2>
+      <h2>Status Produksi</h2>
       <img src={Logo} alt="Logo" className="logo" />
     </header>
   );
