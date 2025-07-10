@@ -36,6 +36,8 @@ function TotalCostProductTable() {
   const [editedProduct, setEditedProduct] = useState({ name: "", hpp: "" });
   const [currentTable, setCurrentTable] = useState(null);
 
+  const [savedUnits, setSavedUnits] = useState([]);
+
   useEffect(() => {
     if (id) {
       dispatch(fetchProductById(id));
@@ -43,6 +45,12 @@ function TotalCostProductTable() {
     setIsInitialLoad(false);
   }, [dispatch, id]);
 
+    useEffect(() => {
+    const unitsFromStorage = localStorage.getItem("savedUnits");
+    if (unitsFromStorage) {
+      setSavedUnits(JSON.parse(unitsFromStorage));
+    }
+  }, []);
   useEffect(() => {
     if (id && !isInitialLoad) {
       if (location.state) {
@@ -128,12 +136,13 @@ function TotalCostProductTable() {
     autoTable(doc, {
       startY: 30,
       head: [
-        ["No", "Nama Bahan Baku", "Jumlah (gram)", "Harga per Kg", "Biaya"],
+        ["No", "Nama Bahan Baku", "Kuantitas", "Satuan", "Harga per satuan", "Biaya"],
       ],
       body: products.map((product, index) => [
         index + 1,
         product.name,
         product.quantity,
+        savedUnits[index] || "-",
         `Rp. ${parseFloat(product.pricePerKg).toLocaleString("id-ID")}`,
         `Rp. ${calculateProductCost(product).toLocaleString("id-ID")}`,
       ]),
@@ -400,6 +409,7 @@ function TotalCostProductTable() {
               <th style={{ width: "0.3%" }}>No</th>
               <th style={{ width: "5%" }}>Nama Bahan Baku</th>
               <th style={{ width: "5%" }}>Kuantitas</th>
+              <th style={{ width: "5%" }}>Satuan</th>
               <th style={{ width: "5%" }}>Harga/Satuan</th>
               <th style={{ width: "5%" }}>Biaya</th>
             </tr>
@@ -413,6 +423,7 @@ function TotalCostProductTable() {
                     <td>{index + 1}</td>
                     <td>{product.name}</td>
                     <td>{product.quantity}</td>
+                    <td>{savedUnits[index] || "-"}</td>
                     <td>
                       Rp. {parseFloat(product.pricePerKg).toLocaleString()}
                     </td>
@@ -426,8 +437,8 @@ function TotalCostProductTable() {
               </tr>
             )}
             <tr>
-              <td colSpan="4" style={{ textAlign: "center" }}>
-                Total Biaya Bahan Baku:
+              <td colSpan="5" style={{ textAlign: "center" }}>
+                Total Biaya Bahan Baku
               </td>
               <td>Rp. {totalCostProducts.toLocaleString("id-ID")}</td>
             </tr>
@@ -532,7 +543,7 @@ function TotalCostProductTable() {
             )}
             <tr>
               <td colSpan="2" style={{ textAlign: "center" }}>
-                Total Biaya Overhead:
+                Total Biaya Overhead
               </td>
               <td>Rp. {totalCostTable2.toLocaleString("id-ID")}</td>
             </tr>
@@ -639,7 +650,7 @@ function TotalCostProductTable() {
             )}
             <tr>
               <td colSpan="2" style={{ textAlign: "center" }}>
-                Total Biaya Kemasan:
+                Total Biaya Kemasan
               </td>
               <td>Rp. {totalCostTable3.toLocaleString("id-ID")}</td>
             </tr>
