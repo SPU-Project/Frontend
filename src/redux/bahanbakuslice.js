@@ -6,7 +6,7 @@ export const addBahanBaku = createAsyncThunk(
   "bahanBaku/addBahanBaku",
   async ({ BahanBaku, Satuan, Harga }, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/bahanbaku", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/bahanbaku", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -30,7 +30,7 @@ export const fetchBahanBaku = createAsyncThunk(
   "bahanBaku/fetchBahanBaku",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/bahanbaku", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/bahanbaku", {
         credentials: "include",
       }); // Ubah sesuai dengan endpoint backend Anda
       const data = await response.json();
@@ -49,7 +49,7 @@ export const deleteBahanBaku = createAsyncThunk(
   "bahanBaku/deleteBahanBaku",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/bahanbaku/${id}`, {
+      const response = await fetch(`https://apiv2.pabrikbumbu.com/bahanbaku/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -69,7 +69,7 @@ export const updateBahanBaku = createAsyncThunk(
   "bahanBaku/updateBahanBaku",
   async ({ id, BahanBaku, Satuan, Harga }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/bahanbaku/${id}`, {
+      const response = await fetch(`https://apiv2.pabrikbumbu.com/bahanbaku/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

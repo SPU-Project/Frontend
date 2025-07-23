@@ -13,7 +13,7 @@ const initialState = {
 export const fetchStockItems = createAsyncThunk(
   "stokbahanbaku/fetchStockItems",
   async () => {
-    const response = await fetch("http://localhost:5000/stokbahanbaku", {
+    const response = await fetch("https://apiv2.pabrikbumbu.com/stokbahanbaku", {
       credentials: "include",
     });
     if (!response.ok) {
@@ -28,7 +28,7 @@ export const fetchStockItems = createAsyncThunk(
 export const updateStockItem = createAsyncThunk(
   "stokbahanbaku/updateStockItem",
   async ({ id, Stok }) => {
-    const response = await fetch(`http://localhost:5000/stokbahanbaku/${id}`, {
+    const response = await fetch(`https://apiv2.pabrikbumbu.com/stokbahanbaku/${id}`, {
       method: "PATCH",
       credentials: "include",
       headers: {

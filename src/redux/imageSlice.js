@@ -9,7 +9,7 @@ export const uploadImage = createAsyncThunk(
       formData.append("profileImage", file);
 
       // Gunakan URL absolut jika tidak memakai proxy
-      const response = await fetch("http://localhost:5000/upload-profile", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/upload-profile", {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -34,7 +34,7 @@ export const fetchImage = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       // Gunakan URL absolut jika tidak memakai proxy
-      const response = await fetch("http://localhost:5000/profile-image", {
+      const response = await fetch("https://apiv2.pabrikbumbu.com/profile-image", {
         method: "GET",
         credentials: "include",
       });
