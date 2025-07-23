@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://apiv2.pabrikbumbu.com",
   // // Sesuaikan dengan URL backend Anda
   withCredentials: true, // pastikan cookie dikirim
   timeout: 10000,
