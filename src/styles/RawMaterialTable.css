@@ -25,7 +25,7 @@
 }
 
 .export-pdf-button {
-  padding: 0.62rem 1rem;
+  padding: 8px 12px;
   font-size: 1rem;
   border-radius: 0.25rem;
   background-color: #dc3545;
@@ -251,4 +251,65 @@
     font-size: 14px;
     margin: 0.3rem;
   }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.admin-table th {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.export-excel-button {
+  padding: 8px 12px;
+  margin-right: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.export-excel-button:hover {
+  background-color: #218838;
+}
+
+.entries-per-page {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.entries-per-page select {
+  padding: 4px;
+  border-radius: 4px;
+  border-radius: 8px;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  min-width: 50px;
+  max-width: 70px;
+  height: 30px;
+  background-color: white;
 }

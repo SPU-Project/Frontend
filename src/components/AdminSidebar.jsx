@@ -119,19 +119,21 @@ function AdminSidebar() {
       </div>
       <ul>
         {["Admin", "Operator", "User"].includes(role) && (
+          <>
           <li>
             <Link to="/raw-materials" className="sidebar-link">
               Bahan Baku
             </Link>
           </li>
-        )}
-        {["Admin", "Operator"].includes(role) && (
-          <>
             <li>
               <Link to="/stock-raw-materials" className="sidebar-link">
                 Stok Bahan Baku
               </Link>
             </li>
+          </>
+        )}
+        {["Admin", "Operator"].includes(role) && (
+          <>
             <li>
               <Link to="/products" className="sidebar-link">
                 Produk

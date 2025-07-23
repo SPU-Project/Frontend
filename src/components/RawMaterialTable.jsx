@@ -8,10 +8,13 @@ import {
 } from "../redux/bahanbakuslice";
 import "../styles/RawMaterialTable.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faSortUp, faSortDown, faSort } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
 
 const RawMaterialsTable = () => {
   const dispatch = useDispatch();
@@ -34,22 +37,26 @@ const RawMaterialsTable = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
 
+  const [sortConfig, setSortConfig] = useState({ key: "", direction: "ascending" });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5); 
+
   const formRef = useRef(null);
 
   const exportPDF = () => {
     const doc = new jsPDF();
     doc.text("Laporan Bahan Baku", 14, 10);
 
-    const tableColumn = ["No", "Bahan Baku", "Satuan", "Harga"];
+    const tableColumn = ["No", "Bahan Baku", "Satuan", "Harga", "Terakhir Diperbarui"];
     const tableRows = [];
 
-    filteredStockItems.forEach((item, index) => {
+    sortedItems.forEach((item, index) => {
       const rowData = [
         index + 1,
         item.BahanBaku,
         item.Satuan,
-        item.Harga,
         formatRupiah(item.Harga),
+        item.updatedAt ? new Date(item.updatedAt).toLocaleString() : "Tidak tersedia",
       ];
       tableRows.push(rowData);
     });
@@ -72,6 +79,35 @@ const RawMaterialsTable = () => {
       dispatch(fetchBahanBaku());
     }
   }, [dispatch, status]);
+
+  const exportExcel = () => {
+    const data = sortedItems.map((item, index) => ({
+      No: index + 1,
+      "Bahan Baku": item.BahanBaku,
+      Satuan: item.Satuan,
+      Harga: item.Harga,
+      "Harga (Rp)": formatRupiah(item.Harga),
+      "Terakhir Diperbarui": item.updatedAt
+        ? new Date(item.updatedAt).toLocaleString()
+        : "Tidak tersedia",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data Bahan Baku");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const dataBlob = new Blob([excelBuffer], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+
+    saveAs(dataBlob, "Laporan_Bahan_Baku.xlsx");
+  };
 
   // Fungsi untuk memformat harga ke dalam format Rupiah
   const formatRupiah = (angka) => {
@@ -247,6 +283,51 @@ const RawMaterialsTable = () => {
           .includes(search))
     );
   });
+  const handleSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedItems = [...filteredStockItems].sort((a, b) => {
+    if (sortConfig.key) {
+      const aVal = a[sortConfig.key];
+      const bVal = b[sortConfig.key];
+
+      if (typeof aVal === "string") {
+        return sortConfig.direction === "ascending"
+        ? aVal.localeCompare(bVal)
+        : bVal.localeCompare(aVal);
+      } else {
+        return sortConfig.direction === "ascending" ? aVal - bVal : bVal - aVal;
+      }
+    }
+  return 0;
+  });
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return <FontAwesomeIcon icon={faSort} />;
+    return sortConfig.direction === "ascending" ? (
+      <FontAwesomeIcon icon={faSortUp} />
+    ) : (
+      <FontAwesomeIcon icon={faSortDown} />
+    );
+  };
+
+  const indexOfLastItem = currentPage * (itemsPerPage === "All" ? sortedItems.length : itemsPerPage);
+  const indexOfFirstItem = indexOfLastItem - (itemsPerPage === "All" ? sortedItems.length : itemsPerPage);
+
+  const currentItems =
+    itemsPerPage === "All"
+      ? sortedItems
+      : sortedItems.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages =
+    itemsPerPage === "All"
+      ? 1
+      : Math.ceil(sortedItems.length / itemsPerPage);
 
   return (
     <div className="admin-table-container">
@@ -311,8 +392,28 @@ const RawMaterialsTable = () => {
 
       {/* Table and Search */}
       <div className="table-controls">
+        <div className="entries-per-page">
+          <label>Tampilkan&nbsp;</label>
+          <select
+            value={itemsPerPage}
+            onChange={(e) =>
+              setItemsPerPage(e.target.value === "All" ? "All" : parseInt(e.target.value))
+            }
+          >
+            <option value={5}>5</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={75}>75</option>
+            <option value="All">All</option>
+          </select>
+          <label>&nbsp;entri</label>
+        </div>
         <button className="export-pdf-button" onClick={exportPDF}>
           Export PDF
+        </button>
+
+        <button className="export-excel-button" onClick={exportExcel}>
+          Export Excel
         </button>
 
         <div className="search-container">
@@ -334,47 +435,44 @@ const RawMaterialsTable = () => {
         <thead>
           <tr>
             <th>No</th>
-            <th>Bahan Baku</th>
-            <th>Satuan</th>
-            <th>Harga/satuan</th>
-            <th>Terakhir Diperbarui</th>
+            <th onClick={() => handleSort("BahanBaku")}>Bahan Baku {getSortIcon("BahanBaku")}</th>
+            <th onClick={() => handleSort("Satuan")}>Satuan {getSortIcon("Satuan")}</th>
+            <th onClick={() => handleSort("Harga")}>Harga/satuan {getSortIcon("Harga")}</th>
+            <th onClick={() => handleSort("updatedAt")}>Terakhir Diperbarui {getSortIcon("updatedAt")}</th>
             <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
-          {filteredStockItems.map((item, index) => (
+          {currentItems.map((item, index) => (
             <tr key={item.id}>
-              <td>{index + 1}</td>
+              <td>{indexOfFirstItem + index + 1}</td>
               <td>{item.BahanBaku}</td>
               <td>{item.Satuan}</td>
               <td>{formatRupiah(item.Harga)}</td>
               <td>{new Date(item.updatedAt).toLocaleString()}</td>
               <td>
-                {/* Action Buttons - Visible to Admin, Operator, and User */}
                 {["Admin", "Operator", "User"].includes(role) ? (
                   <>
-                    <button
-                      onClick={() => handleUbah(item.id)}
-                      className="edit-raw-button"
-                    >
-                      Ubah
-                    </button>
-                    <button
-                      onClick={() => handleHapus(item.id)}
-                      className="delete-raw-button"
-                    >
-                      Hapus
-                    </button>
+                    <button onClick={() => handleUbah(item.id)} className="edit-raw-button">Ubah</button>
+                    <button onClick={() => handleHapus(item.id)} className="delete-raw-button">Hapus</button>
                   </>
                 ) : (
-                  <span>-</span> // Or leave it empty
+                  <span>-</span>
                 )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
+      <div className="pagination">
+        <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+          &laquo; Prev
+        </button>
+        <span> Halaman {currentPage} dari {totalPages} </span>
+        <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+          Next &raquo;
+        </button>
+      </div>
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Informasi</Modal.Title>
